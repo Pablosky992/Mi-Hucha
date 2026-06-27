@@ -3918,6 +3918,7 @@ body {
     .app-desktop-container {
         grid-template-columns: 1fr;
         min-height: 100vh;
+        z-index: auto !important;
     }
 
     /* Transform Sidebar into an Off-screen slide drawer */
