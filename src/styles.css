@@ -3862,3 +3862,215 @@ body {
     box-shadow: 0 0 8px var(--primary-glow) !important;
 }
 
+/* ====================================================
+   MOBILE RESPONSIVENESS AND PREMIUM GLASS DRAWER
+   ==================================================== */
+
+/* Hamburger menu button default state */
+.mobile-menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.mobile-menu-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-light);
+    color: var(--primary-light);
+}
+
+/* Backdrop for mobile sidebar drawer */
+.sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(2, 4, 10, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (max-width: 992px) {
+    body {
+        overflow-y: auto;
+    }
+    
+    .app-desktop-container {
+        grid-template-columns: 1fr;
+        min-height: 100vh;
+    }
+
+    /* Transform Sidebar into an Off-screen slide drawer */
+    .app-sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 260px;
+        height: 100vh;
+        z-index: 999;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .app-sidebar.active {
+        transform: translateX(280px);
+    }
+
+    /* Show hamburger toggle on header */
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    /* Adjust headers and main section spacing */
+    .app-top-header {
+        padding: 16px 20px;
+        justify-content: flex-start;
+    }
+    
+    .header-controls-wrapper {
+        margin-left: auto;
+        gap: 8px !important;
+    }
+
+    .app-main {
+        padding: 20px 16px;
+    }
+
+    .closed-month-banner {
+        margin: 16px 16px 0 16px;
+        padding: 10px 14px;
+    }
+
+    /* Grid adaptation */
+    .dashboard-grid, .expenses-grid, .closure-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    /* Visual adjustments for various containers */
+    .funnel-container {
+        padding: 10px;
+    }
+    
+    .funnel-entrance {
+        max-width: 100%;
+    }
+    
+    .form-row-grid-three {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .form-row-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    /* Make tables responsive */
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .premium-table {
+        min-width: 600px;
+    }
+    
+    .sandbox-grid-summary {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .view-title-container p {
+        display: none;
+    }
+    
+    .header-controls-wrapper {
+        gap: 6px !important;
+    }
+    
+    .month-selector-widget {
+        padding: 4px 8px;
+        gap: 6px;
+    }
+    
+    .current-month-text {
+        font-size: 0.85rem;
+        min-width: 80px;
+    }
+    
+    .btn-icon {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .btn-icon svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .stat-card {
+        padding: 16px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .modal-content {
+        width: 95% !important;
+        padding: 20px 16px !important;
+        margin: 10px auto;
+    }
+}
+
+/* Subpage mobile header helper */
+.mobile-only-header {
+    display: none;
+}
+
+@media (max-width: 992px) {
+    .mobile-only-header {
+        display: flex !important;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+        background: rgba(11, 15, 25, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-bottom: 1px solid var(--border-glass);
+        width: 100%;
+        padding: 16px 20px;
+        align-items: center;
+    }
+}
+
+
+
