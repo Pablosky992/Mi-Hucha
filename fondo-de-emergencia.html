@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cómo construir un Fondo de Emergencia desde cero - iFinance Artículos</title>
+    <title>Cómo construir un Fondo de Emergencia desde cero - Mi Hucha Artículos</title>
     
     <!-- Meta tags SEO -->
     <meta name="description" content="Aprende paso a paso cómo construir un fondo de emergencia sólido desde cero, incluso si crees que no puedes ahorrar, y protege tu economía mensual.">
     <meta name="keywords" content="fondo de emergencia, ahorrar, protección financiera, presupuesto, págate a ti mismo primero">
-    <meta name="author" content="iFinance">
+    <meta name="author" content="Mi Hucha">
     
     <!-- Open Graph (Redes Sociales) -->
     <meta property="og:title" content="Construye tu Fondo de Emergencia desde cero">
@@ -107,7 +107,12 @@
         <!-- CUERPO PRINCIPAL (APP BODY) -->
         <div class="app-body" style="overflow-y: auto;">
             <!-- Cabecera de artículo con botón atrás -->
-            <div style="padding: 20px 40px; border-bottom: 1px solid var(--border-glass); position: sticky; top: 0; background: rgba(11, 15, 25, 0.6); backdrop-filter: blur(20px); z-index: 90;">
+            <div class="app-top-header" style="padding: 20px 40px; border-bottom: 1px solid var(--border-glass); position: sticky; top: 0; background: rgba(11, 15, 25, 0.6); backdrop-filter: blur(20px); z-index: 90; display: flex; align-items: center; justify-content: flex-start; gap: 15px;">
+                <!-- Botón Toggle de Menú Móvil -->
+                <button id="btn-mobile-menu-toggle" class="mobile-menu-toggle" title="Abrir Menú" style="margin-right: 0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+
                 <a href="articulos.html" class="back-to-hub" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.95rem;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                     Volver a Artículos
@@ -173,8 +178,8 @@
                 <h3>Paso 4: Blindar el dinero físicamente</h3>
                 <p>El fondo de seguridad jamás debe residir en la misma cuenta corriente que utilizas para el día a día. Si ves ese saldo disponible al abrir la app de tu banco, la tentación de utilizarlo será altísima. Debes transferirlo a una cuenta de ahorro separada, garantizando que sacarlo requiera una decisión meditada y consciente.</p>
 
-                <h2>El papel de la automatización digital: La ventaja iFinance</h2>
-                <p>En las finanzas tradicionales, llevar el control de un fondo requería hacer malabares con libretas o Excel. Una plataforma moderna como iFinance elimina la fricción del cálculo manual al permitirte definir de manera exacta tus costes fijos recurrentes.</p>
+                <h2>El papel de la automatización digital: La ventaja Mi Hucha</h2>
+                <p>En las finanzas tradicionales, llevar el control de un fondo requería hacer malabares con libretas o Excel. Una plataforma moderna como Mi Hucha elimina la fricción del cálculo manual al permitirte definir de manera exacta tus costes fijos recurrentes.</p>
                 
                 <p>Al saber con precisión a cuánto ascienden tus gastos inevitables, la herramienta calcula automáticamente tu meta ideal de fondo de emergencia, dividiéndola en hitos visuales alcanzables. Ver avanzar una barra de progreso hacia tu objetivo de seguridad activa mecanismos de satisfacción, recordándote constantemente que cada pequeña peseta no gastada hoy se convierte en un ladrillo que consolida tu tranquilidad del mañana.</p>
 
@@ -199,7 +204,43 @@
     </div>
     
 
+    
+    <!-- Backdrop para cerrar el menú móvil al hacer clic fuera -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <!-- Script para control de menú móvil -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.querySelector('.app-sidebar');
+            const toggleBtn = document.getElementById('btn-mobile-menu-toggle');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const navElements = document.querySelectorAll('.app-sidebar .nav-btn, .app-sidebar .nav-link, .app-sidebar .profile-active-btn, .app-sidebar .btn-lock-session');
+
+            if (toggleBtn && sidebar && backdrop) {
+                const toggleSidebar = () => {
+                    sidebar.classList.toggle('active');
+                    backdrop.classList.toggle('active');
+                };
+
+                const closeSidebar = () => {
+                    sidebar.classList.remove('active');
+                    backdrop.classList.remove('active');
+                };
+
+                toggleBtn.addEventListener('click', toggleSidebar);
+                backdrop.addEventListener('click', closeSidebar);
+
+                navElements.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        setTimeout(closeSidebar, 150);
+                    });
+                });
+            }
+        });
+    </script>
+
     <script src="src/app.js"></script>
+
 </body>
 </html>
 
