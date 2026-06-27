@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Sistema del Embudo: Cómo automatizar tu salario el día 1 de cada mes - Mi Hucha Artículos</title>
+    
+    <!-- Meta tags SEO -->
+    <meta name="description" content="Aprende cómo configurar un embudo financiero digital para automatizar el ahorro de tu nómina el día 1 y gastar con culpa cero.">
+    <meta name="keywords" content="sistema del embudo, automatizar ahorro, presupuesto, finanzas personales, piloto automático">
+    <meta name="author" content="Mi Hucha">
+    
+    <!-- Open Graph (Redes Sociales) -->
+    <meta property="og:title" content="El Sistema del Embudo: Automatiza tu salario el día 1">
+    <meta property="og:description" content="Invierte la ecuación del ahorro y haz que tus finanzas funcionen en piloto automático.">
+    <meta property="og:image" content="img/sistema-embudo.png">
+    <meta property="og:type" content="article">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+
+    <style>
+        /* Override global body hidden overflow from main app */
+        body { overflow-y: auto !important; }
+
+        /* Estilos específicos para lectura */
+        .article-layout { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px 20px; }
+        .article-header { margin-bottom: 40px; text-align: center; }
+        .article-category { color: var(--primary-color); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; margin-bottom: 15px; display: inline-block; }
+        .article-title { font-size: 2.8rem; color: var(--text-primary); line-height: 1.2; margin-bottom: 20px; font-family: 'Outfit', sans-serif; }
+        .article-meta { color: var(--text-muted); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .hero-image-container { width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 50px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--border-glass); }
+        .hero-image { width: 100%; height: auto; display: block; }
+        .article-content { font-family: 'Inter', sans-serif; color: var(--text-secondary); font-size: 1.15rem; line-height: 1.8; }
+        .article-content p { margin-bottom: 24px; }
+        .article-content h2 { font-family: 'Outfit', sans-serif; font-size: 1.8rem; color: var(--text-primary); margin-top: 48px; margin-bottom: 20px; font-weight: 600; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; }
+        .article-content h3 { font-family: 'Outfit', sans-serif; font-size: 1.4rem; color: var(--text-primary); margin-top: 32px; margin-bottom: 16px; font-weight: 500; }
+        .article-content strong { color: var(--text-primary); font-weight: 600; }
+        .article-content .lead { font-size: 1.3rem; color: var(--text-primary); font-weight: 300; margin-bottom: 40px; line-height: 1.6; }
+        
+        /* Navegación */
+        .hub-nav { padding: 20px; display: flex; align-items: center; border-bottom: 1px solid var(--border-glass); background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .back-to-hub { color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; transition: color 0.2s ease; }
+        .back-to-hub:hover { color: var(--text-primary); }
+
+        /* Diagram wrapper style */
+        .diagram-container {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+            overflow-x: auto;
+            text-align: center;
+        }
+        .diagram-pre {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            color: var(--primary-light);
+            line-height: 1.4;
+            margin: 0;
+            display: inline-block;
+            text-align: left;
+        }
+    </style>
+</head>
+<body class="theme-dark">
+    <!-- Fondos Ambientales Fluidos -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+        <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link active" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <!-- Botón de Donación -->
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body" style="overflow-y: auto;">
+            <!-- Cabecera de artículo con botón atrás -->
+            <div class="app-top-header" style="padding: 20px 40px; border-bottom: 1px solid var(--border-glass); position: sticky; top: 0; background: rgba(11, 15, 25, 0.6); backdrop-filter: blur(20px); z-index: 90; display: flex; align-items: center; justify-content: flex-start; gap: 15px;">
+                <!-- Botón Toggle de Menú Móvil -->
+                <button id="btn-mobile-menu-toggle" class="mobile-menu-toggle" title="Abrir Menú" style="margin-right: 0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+
+                <a href="articulos.html" class="back-to-hub" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.95rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Volver a Artículos
+                </a>
+            </div>
+
+            <main class="article-layout">
+                <article>
+                    <header class="article-header">
+                        <span class="article-category">Automatización Financiera</span>
+                        <h1 class="article-title">El Sistema del Embudo: Cómo automatizar tu salario el día 1 de cada mes</h1>
+                        <div class="article-meta">
+                            <span>Publicado: 27 de Junio, 2026</span>
+                            <span>•</span>
+                            <span>5 min de lectura</span>
+                        </div>
+                    </header>
+
+                    <div class="hero-image-container">
+                        <img src="img/sistema-embudo.png" alt="Concepto 3D de embudo financiero de cristal e ingresos automáticos" class="hero-image">
+                    </div>
+
+                    <div class="article-content">
+                        <p class="lead">¿Te has preguntado alguna vez por qué es tan difícil ahorrar? La mayoría de las personas siguen la fórmula tradicional: reciben su nómina, pagan las facturas, asumen los gastos del día a día y, si a final de mes queda algo en la cuenta, lo guardan.</p>
+
+                        <p>El problema de este método es que casi nunca queda nada.</p>
+                        
+                        <p>Nuestra mente está programada para gastar el dinero que ve disponible en la cuenta corriente (un fenómeno psicológico conocido como la <strong>Ley de Parkinson</strong>). Si quieres romper este bucle y tomar el control real de tus finanzas, necesitas cambiar el chip y aplicar el Sistema del Embudo.</p>
+
+                        <h2>¿Qué es el Sistema del Embudo Financiero?</h2>
+                        <p>Imagina tu salario como un gran flujo de agua que cae una vez al mes. Si dejas que esa agua caiga libremente en el suelo, se dispersará, se evaporará y desaparecerá sin que te des cuenta.</p>
+                        
+                        <p>El Sistema del Embudo consiste en colocar un filtro inteligente justo debajo de ese flujo de agua el mismo día 1 del mes (o el día que recibas tus ingresos). En lugar de dejar el dinero estancado en una única cuenta corriente, utilizas un "embudo digital" para canalizar y distribuir de forma automática cada euro hacia su destino correcto:</p>
+                        
+                        <ul>
+                            <li>Gastos fijos e inevitables.</li>
+                            <li>Tus huchas de ahorro y fondos de tranquilidad.</li>
+                            <li>Tus objetivos de inversión a largo plazo.</li>
+                            <li>Tu presupuesto de ocio y estilo de vida.</li>
+                        </ul>
+
+                        <p>Al hacer esto, inviertes la ecuación clásica del ahorro. Ya no ahorras lo que te sobra después de gastar; gastas lo que te sobra después de haber ahorrado y cubierto tus obligaciones.</p>
+
+                        <div class="diagram-container">
+                            <pre class="diagram-pre">
+        [ TU NÓMINA (Ingreso Central) ]
+                     │
+              ▼ ───  ▼  ─── ▼
+             │  EL EMBUDO   │
+              ▼ ───  ▼  ─── ▼
+                     │
+     ┌───────────────┼───────────────┬───────────────┐
+     ▼               ▼               ▼               ▼
+[Gastos Fijos]   [Ahorro/Inv.]  [Var. Mes]        [Ocio]
+ (Vivienda/Luz)  (Fondo/Acción) (Ropa/Extras)  (Disfrutar)
+                            </pre>
+                        </div>
+
+                        <h2>Las 4 Tuberías del Embudo: ¿A dónde va el dinero?</h2>
+                        <p>Para que el embudo funcione a la perfección, tu dinero debe dividirse inmediatamente en cuatro grandes bloques o "tuberías". Aunque puedes adaptar los porcentajes a tu situación actual, una regla muy equilibrada es el famoso método 50/30/20, ligeramente optimizado para este sistema.</p>
+
+                        <h3>1. La Tubería de los Gastos Fijos (El motor de tu día a día)</h3>
+                        <p>Aquí se dirige aproximadamente el <strong>50%</strong> de tus ingresos. Es el dinero destinado a mantener tu estructura de vida básica: el alquiler o la hipoteca, las facturas de luz y agua, internet, la compra del supermercado, los seguros y los transportes. Este bloque debe ser predecible y estar muy acotado en tu calendario financiero mensual.</p>
+
+                        <h3>2. La Tubería del Ahorro e Inversión (Tu "Yo" del futuro)</h3>
+                        <p>El <strong>20%</strong> de tu nómina debería ir directo a esta sección en cuanto entra. Es el dinero con el que te pagas a ti mismo primero. Si estás empezando, este flujo llenará tu Fondo de Emergencia (una hucha con 3 a 6 meses de tus gastos fijos para imprevistos). Si ya tienes ese colchón, este dinero se desvía automáticamente a tus cuentas de inversión, planes de pensiones o proyectos a medio plazo (comprar un coche, la entrada de una vivienda, etc.).</p>
+
+                        <h3>3. La Tubería de los Gastos Variables (La vida real)</h3>
+                        <p>Destina alrededor del <strong>15% o 20%</strong> a esos gastos que cambian cada mes pero que son necesarios o inevitables: ropa, un arreglo rápido en casa, un regalo de cumpleaños o la gasolina extra de un viaje de fin de semana. Al tenerlo compartimentado, evitas que un mes de muchos cumpleaños arruine tus ahorros.</p>
+
+                        <h3>4. La Tubería del Ocio (Culpa Cero)</h3>
+                        <p>El <strong>10% o 15%</strong> restante se va a tu hucha de disfrutar de la vida: cenas fuera, conciertos, viajes, el gimnasio o tus caprichos tecnológicos. Lo maravilloso de este sistema es que, como ya has llenado las tres tuberías anteriores, puedes gastar este dinero hasta el último céntimo con absoluta tranquilidad y cero culpa.</p>
+
+                        <h2>Guía paso a paso para automatizar el sistema</h2>
+                        <p>La verdadera magia del embudo es que no depende de tu fuerza de voluntad. Si tienes que hacer transferencias manuales todos los meses, acabarás saltándote el sistema. El objetivo es que tus finanzas funcionen en piloto automático en tres sencillos pasos:</p>
+
+                        <h3>Paso 1: Mapea tus flujos financieros</h3>
+                        <p>Antes de mover un solo euro, necesitas saber cuánto mide tu embudo. Utiliza una herramienta de control financiero como <strong>Mi Hucha</strong> para listar tus ingresos medios y, sobre todo, consolidar tus gastos fijos y variables del pasado. No puedes automatizar lo que no conoces.</p>
+
+                        <h3>Paso 2: Configura la arquitectura de tus cuentas</h3>
+                        <p>Hoy en día, la banca digital permite crear "huchas", subcuentas o espacios separados a coste cero. Lo idóneo es contar con:</p>
+                        <ul>
+                            <li><strong>La cuenta nodriza:</strong> Donde cae la nómina y se cobran los recibos fijos.</li>
+                            <li><strong>La cuenta/hucha de ahorro:</strong> Separada de la tarjeta de débito habitual para no caer en la tentación.</li>
+                            <li><strong>La cuenta de ocio:</strong> Puede ser una tarjeta prepago o una subcuenta específica para tu día a día recreativo.</li>
+                        </ul>
+
+                        <h3>Paso 3: Programa las órdenes automáticas el Día +1</h3>
+                        <p>Si cobras el día 28 o 30, programa transferencias automáticas para el día 1 del mes siguiente:</p>
+                        <ul>
+                            <li>Transferencia automática de tu porcentaje fijado a la cuenta de ahorro/inversión.</li>
+                            <li>Transferencia automática de tu presupuesto asignado a tu tarjeta o cuenta de ocio.</li>
+                            <li>Deja el resto en la cuenta principal para los recibos fijos que irán cargándose automáticamente.</li>
+                        </ul>
+                        <p>A partir de ese momento, tu único trabajo será vigilar que los recibos fijos cargados coincidan con tus previsiones y consolidar el mes para ver cómo crece tu patrimonio neto.</p>
+
+                        <h2>Los beneficios psicológicos de presupuestar con el Embudo</h2>
+                        <p>Más allá de los números, el impacto más potente de este sistema es mental. Cuando dejas de ver tu dinero como una "masa única" en tu cuenta corriente, ocurren tres cosas:</p>
+                        
+                        <ul>
+                            <li><strong>Eliminas la ansiedad del "¿podré pagarlo?":</strong> Como los gastos fijos ya están separados y protegidos en la cuenta nodriza, sabes perfectamente que el alquiler y los recibos están cubiertos.</li>
+                            <li><strong>Sientes el progreso real:</strong> Ver cómo tus huchas de ahorro e inversión reciben su "comida" de forma automática el día 1 te da una inyección de dopamina financiera. El capital total real de tu patrimonio crece de manera constante.</li>
+                            <li><strong>Disfrutas más del dinero:</strong> Gastar dinero en una cena cara duele si piensas que quizás lo necesites para la factura de la luz el mes que viene. Con el embudo, si tu cuenta de ocio tiene saldo, ese dinero está diseñado exclusivamente para ser destruido y disfrutado.</li>
+                        </ul>
+
+                        <h2>Conclusión: Toma el control desde este mes</h2>
+                        <p>El Sistema del Embudo no va de recortar drásticamente tu estilo de vida ni de vivir en la austeridad. Al contrario: va de diseñar tu vida de forma consciente. Te da la libertad de decidir a dónde va cada euro antes de que tus impulsos decidan por ti.</p>
+                        
+                        <p>Aprovecha el cierre de este mes para consolidar tus datos en <strong>Mi Hucha</strong>, calcular el tamaño de tus tuberías y configurar tu embudo. Tu "Yo" del futuro te lo agradecerá.</p>
+                    </div>
+                </article>
+            </main>
+
+            <!-- FOOTER -->
+            <footer class="app-footer-bar">
+                <p>&copy; 2026 Mi Hucha - Peseta a Peseta. Desarrollado con 💖 y excelencia en Vanilla Stack.</p>
+                <p class="footer-legal-links" style="margin-top: 10px; opacity: 0.85;">
+                    <a href="aviso-legal.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px; font-weight: 500; transition: color 0.2s ease;">Aviso Legal</a> | 
+                    <a href="politica-privacidad.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px; font-weight: 500; transition: color 0.2s ease;">Política de Privacidad</a> | 
+                    <a href="politica-cookies.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px; font-weight: 500; transition: color 0.2s ease;">Política de Cookies</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- Backdrop para cerrar el menú móvil al hacer clic fuera -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <!-- Script para control de menú móvil -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.querySelector('.app-sidebar');
+            const toggleBtn = document.getElementById('btn-mobile-menu-toggle');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const navElements = document.querySelectorAll('.app-sidebar .nav-btn, .app-sidebar .nav-link, .app-sidebar .profile-active-btn, .app-sidebar .btn-lock-session');
+
+            if (toggleBtn && sidebar && backdrop) {
+                const toggleSidebar = () => {
+                    sidebar.classList.toggle('active');
+                    backdrop.classList.toggle('active');
+                };
+
+                const closeSidebar = () => {
+                    sidebar.classList.remove('active');
+                    backdrop.classList.remove('active');
+                };
+
+                toggleBtn.addEventListener('click', toggleSidebar);
+                backdrop.addEventListener('click', closeSidebar);
+
+                navElements.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        setTimeout(closeSidebar, 150);
+                    });
+                });
+            }
+        });
+    </script>
+    <script src="src/app.js"></script>
+</body>
+</html>
