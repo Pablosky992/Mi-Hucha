@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículos y Guías Financieras - Mi Hucha</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <meta name="description" content="Aprende sobre ahorro, inversión y finanzas personales con nuestras guías y artículos detallados.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+    
+    <style>
+        /* Override global body hidden overflow from main app */
+        body {
+            overflow-y: auto !important;
+        }
+        
+        /* Estilos específicos para el portal de artículos */
+        .articles-hub-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .hub-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .hub-header h1 {
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .hub-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        
+        .article-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .article-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-light);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .article-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-glass);
+        }
+        
+        .article-card-content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .article-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .article-card-title {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+        
+        .article-card-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .article-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            border-top: 1px solid var(--border-glass);
+            padding-top: 16px;
+        }
+        
+        .read-more-btn {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s ease;
+        }
+        
+        .read-more-btn:hover {
+            color: var(--primary-light);
+        }
+        
+        .read-more-btn svg {
+            transition: transform 0.2s ease;
+        }
+        
+        .read-more-btn:hover svg {
+            transform: translateX(4px);
+        }
+        
+        /* Top Navigation para salir del hub */
+        .hub-nav {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-to-app {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .back-to-app:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body class="theme-dark">
+    <!-- Fondos Ambientales Fluidos -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+                                                                                <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link active" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <!-- Botón de Donación -->
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body" style="overflow-y: auto;">
+
+    <main class="articles-hub-container">
+        <header class="hub-header">
+            <h1>Educación Financiera</h1>
+            <p>Guías, métodos y artículos para tomar el control de tu economía, peseta a peseta.</p>
+        </header>
+
+        <div class="articles-grid">
+            <!-- Artículo 1 -->
+            <article class="article-card">
+                <a href="el-metodo-peseta-a-peseta.html" style="display: block; text-decoration: none;">
+                    <img src="img/ahorro-hormiga.png" alt="Ahorro hormiga y tecnología" class="article-card-img">
+                </a>
+                <div class="article-card-content">
+                    <span class="article-tag">Ahorro y Hábitos</span>
+                    <a href="el-metodo-peseta-a-peseta.html" style="text-decoration: none;">
+                        <h2 class="article-card-title">El Método "Peseta a Peseta": Cómo el ahorro hormiga y la tecnología pueden salvar tu economía mensual</h2>
+                    </a>
+                    <p class="article-card-excerpt">Descubre cómo los micro-gastos invisibles están erosionando tus ahorros y aprende el método práctico de 4 fases para recuperar el control de tus finanzas usando la tecnología actual.</p>
+                    <div class="article-card-footer">
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">5 min de lectura</span>
+                        <a href="el-metodo-peseta-a-peseta.html" class="read-more-btn">
+                            Leer Artículo
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Artículo 2: Fondo de Emergencia -->
+            <article class="article-card">
+                <a href="fondo-de-emergencia.html" style="display: block; text-decoration: none;">
+                    <img src="img/fondo-emergencia.png" alt="Fondo de emergencia" class="article-card-img">
+                </a>
+                <div class="article-card-content">
+                    <span class="article-tag">Estrategia Financiera</span>
+                    <a href="fondo-de-emergencia.html" style="text-decoration: none;">
+                        <h2 class="article-card-title">Cómo construir un "Fondo de Emergencia" desde cero (Incluso si crees que no puedes ahorrar)</h2>
+                    </a>
+                    <p class="article-card-excerpt">Aprende paso a paso cómo construir un escudo financiero sólido aplicando metodologías reales para que los imprevistos dejen de ser tragedias.</p>
+                    <div class="article-card-footer">
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">6 min de lectura</span>
+                        <a href="fondo-de-emergencia.html" class="read-more-btn">
+                            Leer Artículo
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Artículo 3: 5 Sobres -->
+            <article class="article-card">
+                <a href="metodo-5-sobres.html" style="display: block; text-decoration: none;">
+                    <img src="img/5-sobres.png" alt="Método de los 5 sobres digitales" class="article-card-img">
+                </a>
+                <div class="article-card-content">
+                    <span class="article-tag">Sistemas y Métodos</span>
+                    <a href="metodo-5-sobres.html" style="text-decoration: none;">
+                        <h2 class="article-card-title">El Método de los 5 Sobres: Cómo adaptar el sistema de tus abuelos a la era digital</h2>
+                    </a>
+                    <p class="article-card-excerpt">La lógica psicológica del antiguo método de guardar efectivo sigue siendo la herramienta más potente para frenar el gasto impulsivo de hoy en día.</p>
+                    <div class="article-card-footer">
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">7 min de lectura</span>
+                        <a href="metodo-5-sobres.html" class="read-more-btn">
+                            Leer Artículo
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Aquí se pueden añadir más tarjetas en el futuro -->
+        </div>
+    </main>
+        </div>
+    </div>
+    
+
+    <script src="src/app.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+

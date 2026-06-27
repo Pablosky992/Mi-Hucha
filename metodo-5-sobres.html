@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Método de los 5 Sobres - iFinance Artículos</title>
+    
+    <!-- Meta tags SEO -->
+    <meta name="description" content="Descubre cómo adaptar el infalible sistema de ahorro de los 5 sobres de tus abuelos a la era digital y retoma el control de tus finanzas.">
+    <meta name="keywords" content="método 5 sobres, ahorrar, presupuesto, finanzas personales, sobres virtuales">
+    <meta name="author" content="iFinance">
+    
+    <!-- Open Graph (Redes Sociales) -->
+    <meta property="og:title" content="El Método de los 5 Sobres: Ahorro en la era digital">
+    <meta property="og:description" content="Adapta el sistema más infalible de la historia a tu economía moderna y recupera el control.">
+    <meta property="og:image" content="img/5-sobres.png">
+    <meta property="og:type" content="article">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+
+    <style>
+        /* Override global body hidden overflow from main app */
+        body { overflow-y: auto !important; }
+
+        /* Estilos específicos para lectura */
+        .article-layout { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px 20px; }
+        .article-header { margin-bottom: 40px; text-align: center; }
+        .article-category { color: var(--primary-color); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; margin-bottom: 15px; display: inline-block; }
+        .article-title { font-size: 2.8rem; color: var(--text-primary); line-height: 1.2; margin-bottom: 20px; font-family: 'Outfit', sans-serif; }
+        .article-meta { color: var(--text-muted); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .hero-image-container { width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 50px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--border-glass); }
+        .hero-image { width: 100%; height: auto; display: block; }
+        .article-content { font-family: 'Inter', sans-serif; color: var(--text-secondary); font-size: 1.15rem; line-height: 1.8; }
+        .article-content p { margin-bottom: 24px; }
+        .article-content h2 { font-family: 'Outfit', sans-serif; font-size: 1.8rem; color: var(--text-primary); margin-top: 48px; margin-bottom: 20px; font-weight: 600; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; }
+        .article-content h3 { font-family: 'Outfit', sans-serif; font-size: 1.4rem; color: var(--text-primary); margin-top: 32px; margin-bottom: 16px; font-weight: 500; }
+        .article-content strong { color: var(--text-primary); font-weight: 600; }
+        .article-content .lead { font-size: 1.3rem; color: var(--text-primary); font-weight: 300; margin-bottom: 40px; line-height: 1.6; }
+        
+        /* Navegación */
+        .hub-nav { padding: 20px; display: flex; align-items: center; border-bottom: 1px solid var(--border-glass); background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .back-to-hub { color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; transition: color 0.2s ease; }
+        .back-to-hub:hover { color: var(--text-primary); }
+    </style>
+</head>
+<body class="theme-dark">
+    <!-- Fondos Ambientales Fluidos -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+                                                                                <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link active" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <!-- Botón de Donación -->
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body" style="overflow-y: auto;">
+            <!-- Cabecera de artículo con botón atrás -->
+            <div style="padding: 20px 40px; border-bottom: 1px solid var(--border-glass); position: sticky; top: 0; background: rgba(11, 15, 25, 0.6); backdrop-filter: blur(20px); z-index: 90;">
+                <a href="articulos.html" class="back-to-hub" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.95rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Volver a Artículos
+                </a>
+            </div>
+
+    <main class="article-layout">
+        <article>
+            <header class="article-header">
+                <span class="article-category">Sistemas y Métodos</span>
+                <h1 class="article-title">El Método de los 5 Sobres: Cómo adaptar el sistema de ahorro de tus abuelos a la era digital</h1>
+                <div class="article-meta">
+                    <span>Publicado: 26 de Junio, 2026</span>
+                    <span>•</span>
+                    <span>7 min de lectura</span>
+                </div>
+            </header>
+
+            <div class="hero-image-container">
+                <img src="img/5-sobres.png" alt="Concepto 3D del Método de los 5 Sobres brillantes" class="hero-image">
+            </div>
+
+            <div class="article-content">
+                <h2>El regreso del sistema de ahorro más infalible de la historia</h2>
+                <p class="lead">En el universo de las finanzas personales existen cientos de teorías, fórmulas complejas y estrategias de inversión que prometen la riqueza inmediata. Sin embargo, cuando se analiza a las personas que logran mantener una economía doméstica saneada a largo plazo, el secreto casi nunca está en algoritmos sofisticados, sino en la simplicidad de la gestión.</p>
+
+                <p>Nuestros abuelos, sin saber lo que significaba la palabra fintech ni tener acceso a hojas de cálculo, lograban estirar sueldos modestos y proteger a sus familias de las crisis. ¿Su mayor arma? <strong>Una simple baraja de sobres de papel</strong>.</p>
+                
+                <p>El método de los sobres tradicional consistía en algo tan rudimentario como efectivo: el día que se cobraba el salario en efectivo, el dinero se dividía físicamente y se introducía en diferentes sobres rotulados: "Alquiler", "Comida", "Luz", "Ropa" y "Ahorro". Si el sobre de la ropa se vaciaba a mitad de mes, no se compraba más ropa hasta el mes siguiente. No había espacio para el autoengaño.</p>
+                
+                <p>En pleno siglo XXI, con unas finanzas completamente digitalizadas e invisibles, este sistema parece obsoleto. Sin embargo, su lógica psicológica sigue siendo la herramienta más potente que existe para frenar el gasto impulsivo. El reto actual no es cambiar el método, sino aprender a meter esos sobres de papel dentro de nuestros teléfonos móviles.</p>
+
+                <h2>Los 5 Sobres esenciales: Cómo fragmentar tus ingresos</h2>
+                <p>Para que el sistema funcione en la actualidad, no podemos complicar la estructura con decenas de categorías que generen pereza o confusión. La magia del método reside en simplificar tu vida financiera en cinco grandes bloques o "sobres virtuales". Al recibir tus ingresos mensuales, el dinero debe distribuirse inmediatamente bajo los siguientes criterios:</p>
+
+                <ul>
+                    <li><strong>Sobre 1: Gastos Fijos Inevitables (El sobre de la supervivencia)</strong>. Aquí se concentra el dinero destinado a la vivienda (alquiler o hipoteca), los suministros básicos (agua, luz, gas, internet) y los seguros obligatorios. Este dinero está "comprometido" desde el primer minuto y no se puede tocar bajo ninguna circunstancia.</li>
+                    <li><strong>Sobre 2: Consumo Diario Variable (El sobre del supermercado)</strong>. Incluye los gastos necesarios para vivir pero que puedes modular: la compra de alimentación, productos de limpieza, transporte diario o combustible. Es el sobre donde más dinero se suele fugar si no se le pone un límite estricto.</li>
+                    <li><strong>Sobre 3: El "Fondo de Emergencia" (El sobre del escudo)</strong>. Una parte de tus ingresos (idealmente entre el 5% y el 10%) debe ir directa a este sobre hasta consolidar tu colchón de seguridad. Es el dinero que compra tu paz mental.</li>
+                    <li><strong>Sobre 4: Objetivos a Medio/Largo Plazo (El sobre del futuro)</strong>. Este compartimento está destinado a tus metas deseadas: el dinero para las vacaciones de verano, los regalos de Navidad, la revisión anual del coche o la inversión de cara a la jubilación. Te permite pagar las cosas por adelantado en lugar de financiarlas.</li>
+                    <li><strong>Sobre 5: Ocio y Estilo de Vida (El sobre de la libertad)</strong>. El ahorro sostenible no se basa en el castigo. Este sobre contiene el dinero destinado a cenar fuera, ir al cine, tus pasatiempos o darte un capricho. La gran ventaja es que, al estar presupuestado, puedes gastártelo hasta el último céntimo con la conciencia totalmente tranquila.</li>
+                </ul>
+
+                <h2>La psicología del límite: Por qué el efectivo digital nos engaña</h2>
+                <p>El motivo por el cual el método analógico de los sobres era tan radicalmente efectivo es la fricción física. Cuando gastabas el dinero de un sobre, tenías que abrirlo, sacar los billetes y ver cómo el volumen de papel disminuía. Tu cerebro procesaba esa pérdida de inmediato.</p>
+                
+                <p>Hoy en día, cuando pagamos todo con la misma tarjeta de débito o mediante el teléfono, el dinero sale de un único "pozo ciego" (tu cuenta corriente). Al no ver los sobres separados, tu cerebro sufre una ilusión de riqueza a principio de mes. Ves un saldo de 1.500 euros y decides comprar un capricho de 50 euros pensando que "tienes margen". Lo que tu mente ignora es que parte de esos 1.500 euros ya pertenecen al recibo de la luz que llegará en diez días o a la comida de la última semana del mes.</p>
+                
+                <p>Al digitalizar el dinero, hemos eliminado los compartimentos estancos. Para recuperar el control, necesitamos obligatoriamente volver a parcelar nuestra cuenta bancaria, creando barreras visuales que emulen a los viejos sobres de papel de nuestros abuelos.</p>
+
+                <h2>Cómo digitalizar los sobres sin volverse loco en el intento</h2>
+                <p>Replicar este sistema hoy en día no significa que debas volver a usar dinero en efectivo ni guardar fajos de billetes debajo del colchón. Trabajar con efectivo en el siglo XXI es ineficiente, poco seguro y te impide aprovechar las ventajas de la automatización. La clave del éxito consiste en crear un sistema de sobres virtuales:</p>
+
+                <h3>Paso 1: El ecosistema de cuentas secundarias</h3>
+                <p>La mayoría de las entidades bancarias actuales permiten abrir "subcuentas", "huchas digitales" o "espacios" de forma totalmente gratuita. Lo ideal es tener, como mínimo, tres espacios diferenciados: la cuenta corriente principal, una subcuenta exclusiva para el fondo de emergencia y otra para tus objetivos a medio plazo.</p>
+
+                <h3>Paso 2: Automatización del día uno</h3>
+                <p>El día que cobres tu salario, configura transferencias automáticas e inmediatas hacia esas subcuentas. El dinero de los sobres de "Ahorro" y "Objetivos" debe desaparecer de tu cuenta principal en las primeras 24 horas. Lo que no se ve, no se gasta.</p>
+
+                <h3>Paso 3: El dinero de bolsillo estricto</h3>
+                <p>El dinero destinado al sobre de "Consumo Diario" y al de "Ocio" debe quedarse en tu cuenta principal. Sin embargo, para no mezclarlos, una estrategia excelente es utilizar una tarjeta de prepago gratuita o una tarjeta digital en el móvil cargada únicamente con el presupuesto mensual asignado a tus caprichos. Cuando esa tarjeta se quede a cero, el sobre de la diversión se habrá cerrado oficialmente hasta el mes que viene.</p>
+
+                <h2>iFinance: La evolución definitiva hacia los sobres inteligentes</h2>
+                <p>Aunque utilices diferentes cuentas bancarias, el gran problema del ecosistema digital es la falta de un mapa unificado. Aquí es exactamente donde un software de control como iFinance se convierte en una herramienta indispensable. iFinance actúa como el organizador visual de todos tus sobres de papel analógicos, pero potenciado por la inteligencia de datos.</p>
+                
+                <p>En lugar de tener que mover dinero de un lado a otro físicamente y apuntarlo en una libreta, el software te permite crear categorías estancas y presupuestos dinámicos. Al conectar tus movimientos, la herramienta asigna automáticamente cada gasto al "sobre digital" que le corresponde. Si configuras que tu sobre de "Alimentación" tiene un límite de 300 euros al mes, iFinance te mostrará en tiempo real, mediante gráficos limpios y barras de progreso intuitivas, cuánto dinero te queda disponible. Te avisa si el sobre de los caprichos se está vaciando demasiado rápido y te premia visualmente cuando logras mantener el sobre de ahorro intacto.</p>
+
+                <h2>Conclusión: La sencillez como la mayor sofisticación financiera</h2>
+                <p>El método de los 5 sobres ha sobrevivido al paso de las décadas por una razón muy sencilla: funciona porque entiende perfectamente las debilidades de la psicología humana. No nos pide que hagamos cálculos matemáticos complejos todos los días ni que renunciemos a nuestra felicidad; simplemente nos obliga a ser honestos con los recursos de los que disponemos y a tomar decisiones antes de que el dinero desaparezca de nuestras manos.</p>
+                
+                <p>Digitalizar este sistema a través de una plataforma como iFinance no es solo una forma de ordenar tus cuentas; es adoptar una filosofía de vida donde cada peseta tiene un propósito asignado desde el primer día del mes. Recupera la sabiduría financiera del pasado, aplica las herramientas tecnológicas del presente y empieza a estructurar tu economía, sobre a sobre, peseta a peseta.</p>
+            </div>
+        </article>
+    </main>
+        </div>
+    </div>
+    
+
+    <script src="src/app.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+

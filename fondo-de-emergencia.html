@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cómo construir un Fondo de Emergencia desde cero - iFinance Artículos</title>
+    
+    <!-- Meta tags SEO -->
+    <meta name="description" content="Aprende paso a paso cómo construir un fondo de emergencia sólido desde cero, incluso si crees que no puedes ahorrar, y protege tu economía mensual.">
+    <meta name="keywords" content="fondo de emergencia, ahorrar, protección financiera, presupuesto, págate a ti mismo primero">
+    <meta name="author" content="iFinance">
+    
+    <!-- Open Graph (Redes Sociales) -->
+    <meta property="og:title" content="Construye tu Fondo de Emergencia desde cero">
+    <meta property="og:description" content="Descubre la estrategia exacta para crear tu colchón financiero y dormir tranquilo.">
+    <meta property="og:image" content="img/fondo-emergencia.png">
+    <meta property="og:type" content="article">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+
+    <style>
+        /* Override global body hidden overflow from main app */
+        body { overflow-y: auto !important; }
+
+        /* Estilos específicos para lectura */
+        .article-layout { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px 20px; }
+        .article-header { margin-bottom: 40px; text-align: center; }
+        .article-category { color: var(--primary-color); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; margin-bottom: 15px; display: inline-block; }
+        .article-title { font-size: 2.8rem; color: var(--text-primary); line-height: 1.2; margin-bottom: 20px; font-family: 'Outfit', sans-serif; }
+        .article-meta { color: var(--text-muted); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .hero-image-container { width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 50px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--border-glass); }
+        .hero-image { width: 100%; height: auto; display: block; }
+        .article-content { font-family: 'Inter', sans-serif; color: var(--text-secondary); font-size: 1.15rem; line-height: 1.8; }
+        .article-content p { margin-bottom: 24px; }
+        .article-content h2 { font-family: 'Outfit', sans-serif; font-size: 1.8rem; color: var(--text-primary); margin-top: 48px; margin-bottom: 20px; font-weight: 600; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; }
+        .article-content h3 { font-family: 'Outfit', sans-serif; font-size: 1.4rem; color: var(--text-primary); margin-top: 32px; margin-bottom: 16px; font-weight: 500; }
+        .article-content strong { color: var(--text-primary); font-weight: 600; }
+        .article-content .lead { font-size: 1.3rem; color: var(--text-primary); font-weight: 300; margin-bottom: 40px; line-height: 1.6; }
+        
+        /* Navegación */
+        .hub-nav { padding: 20px; display: flex; align-items: center; border-bottom: 1px solid var(--border-glass); background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .back-to-hub { color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; transition: color 0.2s ease; }
+        .back-to-hub:hover { color: var(--text-primary); }
+    </style>
+</head>
+<body class="theme-dark">
+    <!-- Fondos Ambientales Fluidos -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+                                                                                <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link active" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <!-- Botón de Donación -->
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body" style="overflow-y: auto;">
+            <!-- Cabecera de artículo con botón atrás -->
+            <div style="padding: 20px 40px; border-bottom: 1px solid var(--border-glass); position: sticky; top: 0; background: rgba(11, 15, 25, 0.6); backdrop-filter: blur(20px); z-index: 90;">
+                <a href="articulos.html" class="back-to-hub" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.95rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Volver a Artículos
+                </a>
+            </div>
+
+    <main class="article-layout">
+        <article>
+            <header class="article-header">
+                <span class="article-category">Estrategia Financiera</span>
+                <h1 class="article-title">Cómo construir un "Fondo de Emergencia" desde cero (Incluso si crees que no puedes ahorrar)</h1>
+                <div class="article-meta">
+                    <span>Publicado: 26 de Junio, 2026</span>
+                    <span>•</span>
+                    <span>6 min de lectura</span>
+                </div>
+            </header>
+
+            <div class="hero-image-container">
+                <img src="img/fondo-emergencia.png" alt="Escudo de protección financiera y fondo de emergencia" class="hero-image">
+            </div>
+
+            <div class="article-content">
+                <h2>El escudo financiero que te permite dormir tranquilo</h2>
+                <p class="lead">La vida, por definición, es impredecible. Puedes tener un presupuesto perfectamente equilibrado, un control estricto de tus compras cotidianas y una estabilidad laboral aparentemente garantizada; sin embargo, los imprevistos no avisan.</p>
+
+                <p>Una avería inesperada en el motor del coche, una urgencia dental de varios cientos de euros, la rotura de un electrodoméstico esencial en el hogar o, en el peor de los escenarios, una pérdida repentina de empleo o una reducción de ingresos. Ante estas situaciones, la diferencia entre afrontar el bache con serenidad o caer en una espiral de estrés y deudas radica en un solo concepto: <strong>el fondo de emergencia</strong>.</p>
+                
+                <p>Lamentablemente, la cultura financiera convencional suele presentar la creación de este colchón de dinero como un objetivo inalcanzable, reservado únicamente para aquellos que ya disfrutan de una situación económica holgada. Esto genera una parálisis por análisis en la mayoría de los ciudadanos, quienes asumen que, como no pueden apartar 300 o 500 euros al mes de su nómina, es inútil siquiera intentarlo. Este artículo nace para demoler ese mito. Construir un fondo de seguridad no es una cuestión de cantidad inicial, sino de estrategia, constancia y, sobre todo, de aplicar la filosofía del ahorro "peseta a peseta" en el entorno digital.</p>
+
+                <h2>¿Qué es exactamente un fondo de emergencia y cuánto necesitas?</h2>
+                <p>Existe una confusión generalizada entre lo que es ahorrar para un objetivo concreto (como unas vacaciones, la entrada de un piso o cambiar de coche) y construir un fondo de emergencia. Este último es, en esencia, un dinero cuyo único propósito es comprar tranquilidad. No está diseñado para ser invertido en activos de riesgo, ni para ser gastado en "oportunidades" de compra; es un escudo financiero que debe permanecer líquido y accesible, listo para ser usado únicamente ante eventos urgentes, imprevistos e inevitables.</p>
+
+                <p>La regla de oro de las finanzas personales establece que un fondo de seguridad sólido debe cubrir <strong>entre 3 y 6 meses de tus gastos fijos reales</strong>. Es crucial matizar este punto: no se trata de replicar tu sueldo tres o seis veces, sino de calcular cuánto dinero necesitas estrictamente para sobrevivir si tus ingresos se detuvieran por completo.</p>
+
+                <p>Para calcular tu cifra objetivo, debes sumar tus costes inevitables:</p>
+                <ul>
+                    <li>Vivienda (hipoteca o alquiler).</li>
+                    <li>Suministros básicos (luz, agua, gas, internet).</li>
+                    <li>Alimentación y productos de primera necesidad.</li>
+                    <li>Seguros obligatorios y cuotas de deudas existentes.</li>
+                </ul>
+
+                <p>Si la suma de estos gastos fijos asciende, por ejemplo, a 1.200 euros al mes, tu fondo de emergencia mínimo (de tres meses) debería ser de 3.600 euros. Ver esa cifra de golpe puede resultar intimidante, pero el secreto para no rendirse antes de empezar es fragmentar el camino en micro-metas realistas.</p>
+
+                <h2>El peligro de la alternativa: Tarjetas de crédito y préstamos rápidos</h2>
+                <p>Para entender la urgencia de construir este colchón, es necesario analizar qué ocurre cuando no se tiene. Cuando surge un imprevisto de 600 euros y la cuenta corriente está a cero, la mayoría de las personas recurre a la solución más fácil y destructiva a largo plazo: la financiación inmediata. Ya sea mediante el uso de tarjetas de crédito con pago aplazado (revolving) o solicitando un préstamo rápido de consumo.</p>
+
+                <p>El problema de estas herramientas no es solo que resuelven el problema de hoy creando un problema mayor mañana, sino el coste financiero que conllevan. Estos productos suelen acarrear tasas de interés de usura que devoran la capacidad de maniobra de la economía familiar durante los meses siguientes. Al tener que pagar la cuota del préstamo más los intereses, el dinero disponible para el mes siguiente disminuye, lo que aumenta las probabilidades de tener que volver a endeudarse ante cualquier otro contratiempo mínimo. El fondo de emergencia rompe este círculo vicioso; actúa como un auto-préstamo a interés cero que protege tu futuro financiero.</p>
+
+                <h2>Estrategia paso a paso para arrancar el fondo "Peseta a Peseta"</h2>
+                <p>El error táctico más habitual es posponer la creación del fondo hasta que "sobre dinero" a final de mes. La cruda realidad de la economía doméstica es que el dinero rara vez sobra; si está disponible en la cuenta, tiende a gastarse de forma inconsciente. Por ello, es necesario aplicar una estrategia metodológica dividida en cuatro pasos:</p>
+
+                <h3>Paso 1: El hito de los primeros 500 euros</h3>
+                <p>Olvídate de la meta final de tres o seis meses de gastos; tu primer objetivo psicológico debe ser reunir 500 euros. Esta cantidad es el "umbral de la micro-tranquilidad". Con 500 euros en una cuenta separada ya puedes cubrir el 80% de los imprevistos cotidianos más comunes. Conseguir esta primera meta genera una inyección de confianza brutal en tu capacidad de ahorro.</p>
+
+                <h3>Paso 2: Aplicar la técnica del "Págate a ti mismo primero"</h3>
+                <p>Este es el principio fundacional de las finanzas personales modernas. En lugar de ahorrar lo que queda después de gastar, debes apartar tu cuota de ahorro <strong>en el instante exacto en el que ingresas tu nómina</strong>. Considera el ahorro para tu fondo de seguridad como una factura obligatoria más. Puedes empezar con una cifra extraordinariamente baja, como 20 o 30 euros al mes. Lo importante no es la cuantía, sino consolidar el automatismo en tu cerebro.</p>
+
+                <h3>Paso 3: Redirigir los ingresos extraordinarios</h3>
+                <p>A lo largo del año existen momentos puntuales donde se perciben entradas de dinero no contempladas: la devolución de la declaración de la renta, una paga extra, un regalo o la venta de algo de segunda mano. El destino automático del 100% de estos ingresos debe ser el fondo de emergencia hasta que esté completamente consolidado.</p>
+
+                <h3>Paso 4: Blindar el dinero físicamente</h3>
+                <p>El fondo de seguridad jamás debe residir en la misma cuenta corriente que utilizas para el día a día. Si ves ese saldo disponible al abrir la app de tu banco, la tentación de utilizarlo será altísima. Debes transferirlo a una cuenta de ahorro separada, garantizando que sacarlo requiera una decisión meditada y consciente.</p>
+
+                <h2>El papel de la automatización digital: La ventaja iFinance</h2>
+                <p>En las finanzas tradicionales, llevar el control de un fondo requería hacer malabares con libretas o Excel. Una plataforma moderna como iFinance elimina la fricción del cálculo manual al permitirte definir de manera exacta tus costes fijos recurrentes.</p>
+                
+                <p>Al saber con precisión a cuánto ascienden tus gastos inevitables, la herramienta calcula automáticamente tu meta ideal de fondo de emergencia, dividiéndola en hitos visuales alcanzables. Ver avanzar una barra de progreso hacia tu objetivo de seguridad activa mecanismos de satisfacción, recordándote constantemente que cada pequeña peseta no gastada hoy se convierte en un ladrillo que consolida tu tranquilidad del mañana.</p>
+
+                <h2>Conclusión: La tranquilidad no tiene precio</h2>
+                <p>Construir un fondo de emergencia desde cero no es un ejercicio de privación; es el mayor acto de amor propio y libertad financiera que puedes realizar. Vivir al día somete al sistema nervioso a un estrés crónico. Cualquier imprevisto desestabiliza tus planes.</p>
+                
+                <p>Cuando logras consolidar tu fondo, los problemas económicos dejan de ser tragedias y pasan a convertirse en simples inconvenientes logísticos. No importa si tu capacidad actual solo te permite guardar un euro al día; lo crucial es dar el primer paso hoy. Adopta la metodología del ahorro consciente y empieza a construir el escudo financiero que te devolverá el control absoluto sobre tu vida.</p>
+            </div>
+        </article>
+    </main>
+        </div>
+    </div>
+    
+
+    <script src="src/app.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+

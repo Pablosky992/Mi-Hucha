@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Mi Hucha - Peseta a Peseta</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+    <!-- Chart.js para Visualización de Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Fondos Ambientales Fluidos (Blobs de Luz Naranja/Azul) -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+        <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+            </div>
+
+            <!-- Menú de navegación vertical -->
+            <nav class="sidebar-nav">
+                <button id="tab-dashboard" class="nav-btn active" data-target="panel-dashboard">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </button>
+                <button id="tab-expenses" class="nav-btn" data-target="panel-expenses">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </button>
+                <button id="tab-closure" class="nav-btn" data-target="panel-closure">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </button>
+                <button id="tab-performance" class="nav-btn" data-target="panel-performance">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </button>
+                <button id="tab-projects" class="nav-btn" data-target="panel-projects" title="Proyectos Sandbox (Entorno Simulado)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </button>
+                
+                <!-- Enlace al portal de Artículos (SEO) -->
+                <a href="articulos.html" class="nav-link" title="Educación Financiera y Artículos">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <!-- Botón de Donación -->
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+
+            <!-- Panel del perfil abajo del todo de la barra lateral -->
+            <div class="sidebar-footer">
+                <div class="profile-widget" id="profile-widget">
+                    <button class="profile-active-btn" id="btn-profile-menu" title="Gestión de Perfiles y Usuarios">
+                        <div class="profile-avatar-circle" id="profile-avatar-initials">UP</div>
+                        <div class="profile-meta-info">
+                            <span class="profile-name-text" id="profile-display-name">Usuario</span>
+                            <span class="profile-role-tag">Propietario</span>
+                        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"></polyline></svg>
+                    </button>
+                    <button class="btn-lock-session" id="btn-lock-session" title="Bloquear Sesión Inmediatamente">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body">
+            <!-- CABECERA DE LA VISTA ACTIVA -->
+            <header class="app-top-header">
+                <div class="view-title-container">
+                    <h2 id="current-view-title">Tablero Principal</h2>
+                    <p id="current-view-subtitle">Resumen global de capital y balances</p>
+                </div>
+                
+                <!-- Controles de cabecera (Selector de mes + Modo Incógnito) -->
+                <div class="header-controls-wrapper" style="display: flex; align-items: center; gap: 15px;">
+                    <!-- Botón de Modo Incógnito -->
+                    <button id="btn-toggle-mask" class="btn-icon" title="Alternar Modo Incógnito (Ocultar Saldos)">
+                        <svg id="icon-mask-visible" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <svg id="icon-mask-hidden" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </button>
+
+                    <!-- Botón de Atajos de Teclado -->
+                    <button id="btn-keyboard-help" class="btn-icon" title="Atajos de Teclado y Ayuda">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6.01" y2="8"></line><line x1="10" y1="8" x2="10.01" y2="8"></line><line x1="14" y1="8" x2="14.01" y2="8"></line><line x1="18" y1="8" x2="18.01" y2="8"></line><line x1="6" y1="12" x2="6.01" y2="12"></line><line x1="18" y1="12" x2="18.01" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line><polyline points="10 12 12 12 14 12"></polyline></svg>
+                    </button>
+
+                    <!-- Botón de Guía de Inicio (Tour) -->
+                    <button id="btn-onboarding-help" class="btn-icon" title="Guía de Inicio y Funcionamiento">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </button>
+
+                    <!-- Botón de Consejo Diario -->
+                    <button id="btn-daily-advice" class="btn-icon" title="Consejo Financiero del Día">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A7 7 0 0 0 4 8c0 1.3.5 2.6 1.5 3.5.7.8 1.3 1.5 1.5 2.5"></path><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line></svg>
+                    </button>
+
+                    <!-- Selector de Mes Global en la cabecera -->
+                    <div class="month-selector-widget">
+                        <button id="btn-prev-month" class="btn-icon" title="Mes Anterior">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <span id="current-month-display" class="current-month-text">Mayo 2026</span>
+                        <button id="btn-next-month" class="btn-icon" title="Mes Siguiente">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- BANNER DE AVISO DE MES CONSOLIDADO -->
+            <div id="closed-month-banner" class="closed-month-banner hidden">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span><strong>Mes Consolidado (Cerrado)</strong>: Este mes ha sido cerrado y consolidado. Las operaciones de escritura (nuevos movimientos o cambios de presupuesto) están bloqueadas.</span>
+            </div>
+
+            <!-- PANEL DE MENSAJES NOTIFICACIONES FLOTANTES -->
+            <div id="toast-container" class="toast-container"></div>
+
+            <!-- CONTENIDO PRINCIPAL DE LA APP -->
+            <main class="app-main">
+
+            <!-- 1. MÓDULO DE TABLERO PRINCIPAL -->
+            <section id="panel-dashboard" class="tab-panel active">
+                <!-- Tarjetas de Estadísticas Globales -->
+                <div class="stats-grid">
+                    <div class="stat-card card-total">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Capital Total Real (Bancos)</span>
+                            <div class="stat-icon icon-indigo">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="global-total-balance">0.00 €</div>
+                        <p class="stat-info">Suma del saldo disponible en todos los bancos</p>
+                    </div>
+
+                    <div class="stat-card card-income">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Ingresos Reales del Mes</span>
+                            <div class="stat-icon icon-emerald">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="global-monthly-income">0.00 €</div>
+                        <p class="stat-info" id="global-monthly-income-details">Distribuidos en el mes actual</p>
+                    </div>
+
+                    <div class="stat-card card-expense">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Gastos Reales del Mes</span>
+                            <div class="stat-icon icon-rose">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="global-monthly-expense">0.00 €</div>
+                        <p class="stat-info" id="global-monthly-expense-details">Fijos y Variables del mes</p>
+                    </div>
+
+                    <div class="stat-card card-net">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Ahorro Real Neto (Mes)</span>
+                            <div class="stat-icon id-net-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="global-monthly-net">0.00 €</div>
+                        <p class="stat-info">Ingresos menos gastos en el mes actual</p>
+                    </div>
+                </div>
+
+                <!-- Bloques del Dashboard: Bancos y Embudo -->
+                <div class="dashboard-grid">
+                    <!-- Columna Izquierda: Bancos -->
+                    <div class="dashboard-column shadow-glass">
+                        <div class="column-header">
+                            <h2>Cuentas Bancarias y Saldos</h2>
+                            <button id="btn-show-add-bank" class="btn-primary-mini">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <span>Nuevo Banco</span>
+                            </button>
+                        </div>
+
+                        <!-- Formulario oculto/desplegable para añadir banco -->
+                        <form id="form-add-bank" class="card-form hidden">
+                            <h3>Añadir Nueva Cuenta</h3>
+                            <div class="form-group">
+                                <label for="bank-type">Tipo de Cuenta</label>
+                                <select id="bank-type" onchange="document.getElementById('pension-hint').classList.toggle('hidden', this.value !== 'pension'); document.getElementById('pension-balance-label').textContent = this.value === 'pension' ? 'Aportación Inicial (€)' : 'Saldo Inicial (€)';">
+                                    <option value="normal">🏦 Cuenta Bancaria / Cartera</option>
+                                    <option value="pension">📈 Plan de Pensiones</option>
+                                </select>
+                            </div>
+                            <div id="pension-hint" class="pension-form-hint hidden">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                <span>El saldo registrará tus <strong>aportaciones</strong>. Desde la edición podrás actualizar el <strong>valor real con interés</strong> según te indique tu entidad.</span>
+                            </div>
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label for="bank-name">Nombre</label>
+                                    <input type="text" id="bank-name" placeholder="Ej. BBVA, Plan Naranja..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bank-initial-balance" id="pension-balance-label">Saldo Inicial (€)</label>
+                                    <input type="number" id="bank-initial-balance" step="0.01" min="0" placeholder="0.00" required>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="btn-cancel-add-bank" class="btn-secondary">Cancelar</button>
+                                <button type="submit" class="btn-submit">Guardar</button>
+                            </div>
+                        </form>
+
+                        <!-- Contenedor de lista de bancos -->
+                        <div id="banks-list-container" class="banks-card-grid">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+
+                        <!-- 2.3 SUB-SECCIÓN: METAS DE AHORRO -->
+                        <div class="saving-goals-section" style="margin-top: 30px; border-top: 1px solid var(--border-glass); padding-top: 20px;">
+                            <div class="column-header">
+                                <h2>Objetivos y Metas de Ahorro</h2>
+                                <button id="btn-show-add-goal" class="btn-primary-mini">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    <span>Nueva Meta</span>
+                                </button>
+                            </div>
+
+                            <!-- Formulario oculto/desplegable para añadir meta -->
+                            <form id="form-add-saving-goal" class="card-form hidden" style="margin-top: 12px; background: rgba(15, 23, 42, 0.4);">
+                                <h3>Crear Nueva Meta de Ahorro</h3>
+                                <div class="form-row-grid">
+                                    <div class="form-group">
+                                        <label for="goal-name">Nombre de la Meta</label>
+                                        <input type="text" id="goal-name" placeholder="Ej. Coche, Vacaciones..." required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="goal-target-amount">Cantidad Objetivo (€)</label>
+                                        <input type="number" id="goal-target-amount" step="0.01" min="0.01" placeholder="0.00" required>
+                                    </div>
+                                </div>
+                                <div class="form-row-grid" style="margin-top: 10px;">
+                                    <div class="form-group">
+                                        <label for="goal-bank-id">Vincular a Cuenta/Banco</label>
+                                        <select id="goal-bank-id" required>
+                                            <!-- Inyectado dinámicamente -->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="goal-deadline">Fecha Límite</label>
+                                        <input type="date" id="goal-deadline" required>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" id="btn-cancel-add-goal" class="btn-secondary">Cancelar</button>
+                                    <button type="submit" class="btn-submit">Guardar Meta</button>
+                                </div>
+                            </form>
+
+                            <!-- Lista de metas de ahorro -->
+                            <div id="saving-goals-list-container" class="goals-card-grid" style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+                                <!-- Inyectado dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Embudo de Ingresos -->
+                    <div class="dashboard-column shadow-glass">
+                        <div class="column-header">
+                            <h2>El Embudo: Distribuidor de Ingresos</h2>
+                        </div>
+                        
+                        <!-- PANEL: INGRESO PREVISTO GUARDADO -->
+                        <div id="planned-income-banner" class="planned-income-banner hidden">
+                            <div class="planned-income-banner-info">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <div>
+                                    <strong id="planned-income-label">Previsto: 0.00 €</strong>
+                                    <span id="planned-income-desc">Sin descripción</span>
+                                </div>
+                            </div>
+                            <div class="planned-income-banner-actions">
+                                <button type="button" id="btn-load-planned" class="btn-helper btn-helper-green">Cargar plan</button>
+                                <button type="button" id="btn-delete-planned" class="btn-helper btn-helper-red">Eliminar</button>
+                            </div>
+                        </div>
+
+                        <div id="funnel-warning-no-banks" class="alert-info hidden">
+                            Debe registrar al menos un banco para poder procesar e ingresar capital a través del embudo.
+                        </div>
+
+                        <form id="form-income-funnel" class="funnel-form">
+                            <!-- Datos del Ingreso -->
+                            <div class="form-row-grid-three">
+                                <div class="form-group">
+                                    <label for="income-amount">Importe a Ingresar (€)</label>
+                                    <input type="number" id="income-amount" step="0.01" min="0.01" placeholder="Ej. 1800" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="income-type">Origen / Concepto</label>
+                                    <select id="income-type" required>
+                                        <option value="Nómina">💼 Nómina</option>
+                                        <option value="Freelance">🖥 Freelance / Proyecto</option>
+                                        <option value="Alquiler">🏠 Alquiler</option>
+                                        <option value="Dividendos">📈 Dividendos / Inversión</option>
+                                        <option value="Venta">🛒 Venta de activo</option>
+                                        <option value="Préstamo">🤝 Préstamo recibido</option>
+                                        <option value="Reembolso">↩ Reembolso / Devolución</option>
+                                        <option value="Extras">🎁 Extras / Bonus</option>
+                                        <option value="Otros">📋 Otros</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="income-description">Descripción Corta</label>
+                                    <input type="text" id="income-description" placeholder="Ej. Nómina Junio" required>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico Animado / Panel de Reparto del Embudo -->
+                            <div class="funnel-container">
+                                <div class="funnel-visual-wrapper">
+                                    <div class="funnel-entrance">
+                                        <span id="funnel-source-display">0.00 €</span>
+                                    </div>
+                                    <div class="funnel-neck"></div>
+                                    <div class="funnel-pipes" id="funnel-pipes-container">
+                                        <!-- Tuberías de distribución dinámicas -->
+                                    </div>
+                                </div>
+
+                                <div class="funnel-control-header">
+                                    <h3>Distribución del Capital</h3>
+                                    <div class="distribution-mode-selectors">
+                                        <button type="button" id="btn-mode-percent" class="btn-toggle active">Porcentajes (%)</button>
+                                        <button type="button" id="btn-mode-euro" class="btn-toggle">Euros (€)</button>
+                                    </div>
+                                </div>
+
+                                <!-- Entradas de distribución para cada banco -->
+                                <div id="funnel-distribution-list" class="funnel-dist-list">
+                                    <!-- Inyectado por Javascript -->
+                                </div>
+
+                                <!-- Validador del Embudo -->
+                                <div id="funnel-validator-bar" class="funnel-validator error">
+                                    <div class="validator-info">
+                                        <span class="validator-title">Estado del Reparto:</span>
+                                        <span id="funnel-status-text" class="validator-status">0% de 100% asignado (Falta 100%)</span>
+                                    </div>
+                                    <div class="validator-progress-bg">
+                                        <div id="funnel-validator-progress-bar" class="validator-progress-fill" style="width: 0%"></div>
+                                    </div>
+                                    <div class="validator-actions">
+                                        <button type="button" id="btn-funnel-equal" class="btn-helper">Reparto Equitativo</button>
+                                        <button type="button" id="btn-funnel-clear" class="btn-helper">Limpiar Todo</button>
+                                    </div>
+                                </div>
+
+                                <div class="funnel-action-row">
+                                    <button type="button" id="btn-save-planned" class="btn-save-planned">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                        <span>Guardar como Previsto</span>
+                                    </button>
+                                    <button type="submit" id="btn-submit-income" class="btn-submit-funnel" disabled>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                        <span>Aplicar Ingreso Real</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 2. MÓDULO DE GASTOS Y TRANSACCIONES -->
+            <section id="panel-expenses" class="tab-panel">
+                <div class="expenses-grid">
+                    <!-- Matriz de Gastos Fijos (Izquierda) -->
+                    <div class="expenses-column shadow-glass">
+                        <div class="column-header">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <h2>Matriz de Gastos Fijos (Recurrentes)</h2>
+                                <div class="sub-tab-selectors" style="margin: 0; padding: 0; border: none;">
+                                    <button type="button" id="btn-subtab-fixed-list" class="btn-subtab active">Listado</button>
+                                    <button type="button" id="btn-subtab-fixed-calendar" class="btn-subtab">Calendario</button>
+                                </div>
+                            </div>
+                            <button id="btn-show-add-fixed" class="btn-primary-mini">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <span>Añadir Fijo</span>
+                            </button>
+                        </div>
+
+                        <!-- Formulario Añadir Gasto Fijo -->
+                        <form id="form-add-fixed-expense" class="card-form hidden">
+                            <h3>Nuevo Gasto Fijo Recurrente</h3>
+                            <div class="form-row-grid-three">
+                                <div class="form-group">
+                                    <label for="fixed-name">Nombre / Concepto</label>
+                                    <input type="text" id="fixed-name" placeholder="Ej. Alquiler, Netflix..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fixed-amount">Importe (€)</label>
+                                    <input type="number" id="fixed-amount" step="0.01" min="0.01" placeholder="0.00" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fixed-bank-id">Banco de Cargo Obligatorio</label>
+                                    <select id="fixed-bank-id" required>
+                                        <!-- Inyectado dinámicamente -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row-grid-three" style="margin-top: 12px;">
+                                <div class="form-group">
+                                    <label for="fixed-day">Día de Cobro (1-31)</label>
+                                    <input type="number" id="fixed-day" min="1" max="31" value="1" placeholder="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fixed-periodicity">Periodicidad</label>
+                                    <select id="fixed-periodicity" required>
+                                        <option value="Mensual">Mensual</option>
+                                        <option value="Trimestral">Trimestral</option>
+                                        <option value="Semestral">Semestral</option>
+                                        <option value="Anual">Anual</option>
+                                    </select>
+                                </div>
+                                <div class="form-group hidden" id="fixed-charge-month-group">
+                                    <label for="fixed-charge-month">Mes de Cobro</label>
+                                    <select id="fixed-charge-month">
+                                        <option value="01">Enero</option>
+                                        <option value="02">Febrero</option>
+                                        <option value="03">Marzo</option>
+                                        <option value="04">Abril</option>
+                                        <option value="05">Mayo</option>
+                                        <option value="06">Junio</option>
+                                        <option value="07">Julio</option>
+                                        <option value="08">Agosto</option>
+                                        <option value="09">Septiembre</option>
+                                        <option value="10">Octubre</option>
+                                        <option value="11">Noviembre</option>
+                                        <option value="12">Diciembre</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="btn-cancel-add-fixed" class="btn-secondary">Cancelar</button>
+                                <button type="submit" class="btn-submit">Guardar Gasto Fijo</button>
+                            </div>
+                        </form>
+
+                        <!-- Botón de Ejecución de Gastos Fijos del Mes -->
+                        <div class="fixed-expenses-execution-bar">
+                            <div class="exec-info">
+                                <h3>Ejecución Mensual de Gastos Fijos</h3>
+                                <p>Aplica automáticamente la plantilla de gastos fijos al mes actual descontándolos de sus respectivos bancos.</p>
+                            </div>
+                            <button id="btn-execute-fixed-expenses" class="btn-action-apply">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                <span id="btn-execute-fixed-text">Aplicar Gastos Fijos del Mes</span>
+                            </button>
+                        </div>
+
+                        <!-- Lista de Gastos Fijos Registrados -->
+                        <div class="table-container" id="container-fixed-list">
+                            <table class="premium-table" id="table-fixed-expenses">
+                                <thead>
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th>Banco Asignado</th>
+                                        <th>Día Cobro</th>
+                                        <th>Frecuencia</th>
+                                        <th>Importe</th>
+                                        <th class="actions-col">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-fixed-expenses">
+                                    <!-- Inyectado dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Calendario de Cobros (Calendar View) -->
+                        <div class="calendar-container hidden" id="container-fixed-calendar" style="margin-top: 15px;">
+                            <div class="calendar-grid-weekdays" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 6px; text-align: center; font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">
+                                <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
+                            </div>
+                            <div class="calendar-grid" id="fixed-calendar-grid">
+                                <!-- Inyectado dinámicamente -->
+                            </div>
+                            <!-- Leyenda del calendario -->
+                            <div class="calendar-legend" style="display: flex; gap: 16px; margin-top: 12px; font-size: 0.68rem; justify-content: center; color: var(--text-muted); border-top: 1px solid var(--border-glass); padding-top: 8px;">
+                                <div style="display: flex; align-items: center; gap: 4px;">
+                                    <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--success-light); box-shadow: 0 0 6px var(--success-glow);"></div>
+                                    <span>Cobrado / Aplicado</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 4px;">
+                                    <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--warning-light); box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);"></div>
+                                    <span>Pendiente / Programado</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gastos Variables y Quick Form (Derecha) -->
+                    <div class="expenses-column shadow-glass">
+                        <div class="column-header flex-column" style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                            <h2>Registro de Gastos Variables</h2>
+                            <div class="sub-tab-selectors">
+                                <button type="button" id="btn-subtab-item" class="btn-subtab active">Item a Item</button>
+                                <button type="button" id="btn-subtab-balance" class="btn-subtab">Ajuste por Saldo Real</button>
+                            </div>
+                        </div>
+
+                        <!-- Formulario 1: Item a Item -->
+                        <form id="form-variable-expense" class="compact-form">
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label for="var-description">Descripción del Gasto</label>
+                                    <input type="text" id="var-description" placeholder="Ej. Compra supermercado, Gasolina..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="var-amount">Importe a Restar (€)</label>
+                                    <input type="number" id="var-amount" step="0.01" min="0.01" placeholder="0.00" required>
+                                </div>
+                            </div>
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label for="var-bank-id">Descontar del Banco</label>
+                                    <select id="var-bank-id" required>
+                                        <!-- Inyectado dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="var-date">Fecha de Transacción</label>
+                                    <input type="date" id="var-date" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-submit-danger">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <span>Restar Gasto Variable</span>
+                            </button>
+                        </form>
+
+                        <!-- Formulario 2: Ajuste por Saldo Real (Nuevo) -->
+                        <form id="form-balance-adjustment" class="compact-form hidden">
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label for="adj-bank-id">Seleccionar Banco</label>
+                                    <select id="adj-bank-id" required>
+                                        <!-- Inyectado dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="adj-new-balance">Nuevo Saldo Real en la App (€)</label>
+                                    <input type="number" id="adj-new-balance" step="0.01" min="0.00" placeholder="0.00" required>
+                                </div>
+                            </div>
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label for="adj-date">Fecha del Ajuste</label>
+                                    <input type="date" id="adj-date" required>
+                                </div>
+                                <div class="form-group" style="display: flex; align-items: center; justify-content: center; padding-top: 10px;">
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; border-left: 2px solid var(--border-glass-focus); padding-left: 10px;">
+                                        <em>El sistema creará un movimiento automático de ajuste para igualar el saldo registrado con el saldo real de tu cuenta.</em>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, var(--primary-light), var(--primary-color)); font-weight: 600;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                <span>Aplicar Ajuste de Saldo</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Historial de Transacciones Consolidadas del Mes -->
+                <div class="transactions-log-section shadow-glass">
+                    <div class="column-header">
+                        <h2>Historial de Movimientos de <span id="transactions-month-title">Mayo 2026</span></h2>
+                        <div class="header-filters" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <!-- Buscador en historial -->
+                            <div class="search-tx-wrapper" style="position: relative; display: flex; align-items: center;">
+                                <svg class="search-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 10px; color: var(--text-muted); pointer-events: none;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" id="search-tx" class="filter-select" placeholder="Buscar..." style="min-width: 160px; padding: 6px 12px 6px 28px; font-size: 0.82rem; border-radius: 6px;">
+                                <button id="btn-clear-search" class="hidden" style="position: absolute; right: 8px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 2px; display: flex; align-items: center; justify-content: center;" title="Limpiar búsqueda">&times;</button>
+                            </div>
+                            
+                            <select id="filter-tx-type" class="filter-select">
+                                <option value="all">Todos los Movimientos</option>
+                                <option value="income">Ingresos</option>
+                                <option value="expense">Gastos (Todos)</option>
+                                <option value="fixed">Gastos Fijos</option>
+                                <option value="variable">Gastos Variables</option>
+                            </select>
+
+                            <!-- Botón de Exportar a CSV -->
+                            <button id="btn-export-csv" class="btn-primary-mini" style="padding: 6px 12px; font-size: 0.82rem; border-radius: 6px;" title="Exportar Movimientos a Excel / CSV">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                <span>Exportar CSV</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="premium-table" id="table-transactions">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Concepto</th>
+                                    <th>Banco</th>
+                                    <th class="amount-col">Importe</th>
+                                    <th class="actions-col">Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-transactions">
+                                <!-- Inyectado dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 3. MÓDULO DE CIERRE DE MES (GRÁFICAS POR BANCO) -->
+            <section id="panel-closure" class="tab-panel">
+                <!-- Cabecera del módulo -->
+                <div class="closure-charts-header shadow-glass">
+                    <div class="closure-charts-header-left">
+                        <h2>Cierre de Mes — Análisis por Banco</h2>
+                        <p class="section-desc">Evolución del saldo y desglose de gastos para <span id="closure-month-badge" class="badge-month">Junio 2026</span></p>
+                    </div>
+                    <div class="closure-charts-header-right">
+                        <button id="btn-close-month" class="btn-primary-mini" style="background: linear-gradient(135deg, var(--accent), #ff8c00); border-color: rgba(255, 106, 0, 0.35); padding: 8px 16px; font-size: 0.84rem;" title="Consolidar mes actual y bloquear movimientos">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            <span id="btn-close-month-text">Cerrar Mes</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contenedor de gráficas por banco (inyectado por JS) -->
+                <div id="closure-charts-container">
+                    <!-- JS inyecta una card por banco -->
+                </div>
+
+                <!-- Estado vacío -->
+                <div id="closure-no-banks" class="alert-info hidden" style="margin-top: 24px;">
+                    Registre al menos un banco en el Tablero para visualizar el análisis de cierre.
+                </div>
+
+                <!-- Elementos ocultos requeridos por el sistema de cierre (compatibilidad) -->
+                <div id="budget-editor-container" class="hidden"></div>
+                <div id="budget-no-banks" class="hidden"></div>
+                <button id="btn-save-all-budgets" class="hidden"></button>
+                <table id="table-deviation-analysis" class="hidden"><tbody id="tbody-deviation-analysis"></tbody></table>
+            </section>
+
+
+            <!-- 2.5 MÓDULO DE RENDIMIENTO Y GRÁFICOS (NUEVO) -->
+            <section id="panel-performance" class="tab-panel">
+                <div class="performance-grid">
+                    <!-- Fila Superior: Resumen y Controles -->
+                    <div class="performance-card shadow-glass full-width">
+                        <div class="performance-header-controls">
+                            <div>
+                                <h2 style="font-family: var(--font-header); font-size: 1.25rem; font-weight: 700;">Rendimiento & Análisis de Capital</h2>
+                                <p class="section-desc" style="margin-top: 4px;">Evolución mensual consolidada y desglose analítico por cuenta bancaria.</p>
+                            </div>
+                            <div class="performance-selectors">
+                                <label for="perf-bank-selector" style="font-size: 0.75rem; font-weight:700; color: var(--text-secondary); text-transform:uppercase; margin-right: 8px;">Seleccionar Análisis:</label>
+                                <select id="perf-bank-selector" class="premium-select-inline" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-glass-focus); color: white; padding: 6px 12px; border-radius: 8px; font-family: var(--font-header); font-weight: 600; font-size: 0.86rem; outline: none; cursor: pointer;">
+                                    <!-- Inyectado dinámicamente -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila Central: Gráficos -->
+                    <div class="performance-charts-layout">
+                        <!-- Card Izquierda: Gráfico Principal de Evolución -->
+                        <div class="performance-card shadow-glass evolution-chart-card">
+                            <div class="column-header">
+                                <h3 id="perf-chart-title" style="font-family: var(--font-header); font-size: 1rem; font-weight: 700; color: var(--text-primary);">Evolución de Saldos Mensuales</h3>
+                            </div>
+                            <div class="chart-container-wrapper">
+                                <canvas id="chart-main-evolution"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Card Derecha: Desglose Categorías / Gastos -->
+                        <div class="performance-card shadow-glass breakdown-chart-card">
+                            <div class="column-header" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <h3 id="perf-breakdown-title" style="font-family: var(--font-header); font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">Desglose de Gastos del Mes</h3>
+                                <div class="segmented-control">
+                                    <button type="button" id="btn-perf-show-expenses" class="segmented-btn active">Gastos</button>
+                                    <button type="button" id="btn-perf-show-distribution" class="segmented-btn">Bancos</button>
+                                </div>
+                            </div>
+                            <div class="chart-container-wrapper compact">
+                                <canvas id="chart-secondary-breakdown"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila Inferior: Indicadores Financieros -->
+                    <div class="performance-stats-layout">
+                        <!-- Tarjeta 1: Ahorro Promedio -->
+                        <div class="perf-metric-card shadow-glass">
+                            <div class="metric-icon icon-indigo">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            </div>
+                            <div class="metric-info-text">
+                                <span class="metric-title">Ahorro Promedio Mensual</span>
+                                <span class="metric-value" id="perf-metric-avg-savings">0.00 €</span>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 2: Crecimiento Neto -->
+                        <div class="perf-metric-card shadow-glass">
+                            <div class="metric-icon icon-emerald">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                            </div>
+                            <div class="metric-info-text">
+                                <span class="metric-title">Crecimiento Neto (6m)</span>
+                                <span class="metric-value" id="perf-metric-net-growth">0.00 €</span>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 3: Ratio de Gastos -->
+                        <div class="perf-metric-card shadow-glass">
+                            <div class="metric-icon icon-rose">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+                            </div>
+                            <div class="metric-info-text">
+                                <span class="metric-title">Ratio de Gasto / Ingreso</span>
+                                <span class="metric-value" id="perf-metric-expense-ratio">0.0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 4: Tasa de Ahorro -->
+                        <div class="perf-metric-card shadow-glass">
+                            <div class="metric-icon icon-amber">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                            </div>
+                            <div class="metric-info-text">
+                                <span class="metric-title">Tasa de Ahorro Neto</span>
+                                <span class="metric-value" id="perf-metric-savings-rate">0.0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 5: Previsión a 90 días -->
+                        <div class="perf-metric-card shadow-glass">
+                            <div class="metric-icon icon-violet">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            </div>
+                            <div class="metric-info-text">
+                                <span class="metric-title">Previsión Saldo (90d)</span>
+                                <span class="metric-value" id="perf-metric-forecast">0.00 €</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila Adicional: Recomendaciones e Insights Financieros -->
+                    <div class="performance-card shadow-glass full-width" style="margin-top: 4px;">
+                        <div class="column-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; margin-bottom: 16px; text-align: left;">
+                            <h3 style="font-family: var(--font-header); font-size: 1.05rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; margin: 0;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-light)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline><polyline points="7.5 19.79 7.5 14.67 12 12.01 16.5 14.67 16.5 19.79"></polyline><polyline points="7.5 9.43 12 12.01 16.5 9.43"></polyline></svg>
+                                <span>Asistente Financiero Inteligente & Recomendaciones</span>
+                            </h3>
+                        </div>
+                        <div id="perf-insights-container" class="insights-flex-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 4. MÓDULO DE PROYECTOS (ENTORNO AISLADO / SANDBOX) -->
+            <section id="panel-projects" class="tab-panel">
+                <div class="sandbox-banner-warning">
+                    <div class="warning-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </div>
+                    <div>
+                        <h2>ENTORNO DE SIMULACIÓN AISLADO (SANDBOX)</h2>
+                        <p>Los proyectos a continuación funcionan de forma 100% independiente. Sus cobros, inversiones, gastos y ganancias son teóricos y no afectan al saldo real ni a los presupuestos de tus cuentas bancarias personales.</p>
+                    </div>
+                </div>
+
+                <!-- VISTA 4A: LISTADO DE PROYECTOS -->
+                <div id="project-list-view">
+                    <div class="column-header">
+                        <h2>Mis Proyectos Activos</h2>
+                        <button id="btn-show-add-project" class="btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Crear Ficha de Proyecto</span>
+                        </button>
+                    </div>
+
+                    <!-- Formulario de Creación de Proyecto -->
+                    <form id="form-add-project" class="card-form hidden shadow-glass">
+                        <h3>Crear Ficha de Nuevo Proyecto</h3>
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label for="project-name">Nombre del Proyecto</label>
+                                <input type="text" id="project-name" placeholder="Ej. Creación de SaaS de Productividad, Tienda Shopify..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="project-description">Descripción Corta / Objetivo</label>
+                                <input type="text" id="project-description" placeholder="Ej. Lanzar MVP con 500€ de capital inicial..." required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" id="btn-cancel-add-project" class="btn-secondary">Cancelar</button>
+                            <button type="submit" class="btn-submit">Inicializar Proyecto</button>
+                        </div>
+                    </form>
+
+                    <!-- Rejilla de Tarjetas de Proyecto -->
+                    <div id="projects-grid-container" class="projects-card-grid">
+                        <!-- Inyectado dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- VISTA 4B: PANEL DETALLADO DE UN PROYECTO SELECCIONADO (Oculto por defecto) -->
+                <div id="project-details-view" class="hidden">
+                    <div class="project-details-header">
+                        <button id="btn-back-to-projects" class="btn-back">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            <span>Volver a Proyectos</span>
+                        </button>
+                        <div class="project-details-title-area">
+                            <h2 id="project-detail-title">Nombre del Proyecto</h2>
+                            <p id="project-detail-desc">Descripción del proyecto</p>
+                        </div>
+                        <div class="project-header-actions" style="display: flex; gap: 10px;">
+                            <button id="btn-edit-project" class="btn-edit-proj-icon" title="Editar este Proyecto">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                <span>Editar Ficha</span>
+                            </button>
+                            <button id="btn-delete-project" class="btn-delete-proj-icon" title="Eliminar este Proyecto">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                <span>Eliminar Proyecto</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Resumen Financiero del Proyecto Aislado -->
+                    <div class="project-summary-cards">
+                        <div class="proj-stat-card card-total-inv">
+                            <span class="proj-stat-title">Inversión / Gastos Totales</span>
+                            <span class="proj-stat-value" id="proj-total-invested">0.00 €</span>
+                        </div>
+                        <div class="proj-stat-card card-total-ear">
+                            <span class="proj-stat-title">Ingresos / Ganancias Totales</span>
+                            <span class="proj-stat-value" id="proj-total-earned">0.00 €</span>
+                        </div>
+                        <div class="proj-stat-card card-net-profit" id="proj-card-net-profit">
+                            <span class="proj-stat-title">Beneficio Neto</span>
+                            <span class="proj-stat-value" id="proj-net-profit">0.00 €</span>
+                        </div>
+                        <div class="proj-stat-card card-roi" id="proj-card-roi">
+                            <span class="proj-stat-title">Margen de Rentabilidad (ROI)</span>
+                            <span class="proj-stat-value" id="proj-roi">0.0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Tablas de Movimientos Aislados -->
+                    <div class="project-sandbox-tables-grid">
+                        <!-- Gastos de Inversión del Proyecto -->
+                        <div class="sandbox-table-column shadow-glass">
+                            <div class="column-header">
+                                <h3>Gastos de Inversión</h3>
+                            </div>
+                            
+                            <!-- Formulario Inversión -->
+                            <form id="form-proj-investment" class="compact-proj-form">
+                                <div class="form-row-grid">
+                                    <input type="text" id="proj-inv-desc" placeholder="Concepto (Ej. Servidor, Publicidad...)" required>
+                                    <input type="number" id="proj-inv-amount" step="0.01" min="0.01" placeholder="Importe (€)" required>
+                                    <button type="submit" class="btn-submit-danger-mini" title="Añadir Inversión">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="table-container-mini">
+                                <table class="premium-table table-mini" id="table-proj-investments">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Concepto</th>
+                                            <th class="amount-col">Importe</th>
+                                            <th class="actions-col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-proj-investments">
+                                        <!-- Inyectado dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Ingresos del Proyecto -->
+                        <div class="sandbox-table-column shadow-glass">
+                            <div class="column-header">
+                                <h3>Ingresos / Ganancias</h3>
+                            </div>
+
+                            <!-- Formulario Ganancia -->
+                            <form id="form-proj-earning" class="compact-proj-form">
+                                <div class="form-row-grid">
+                                    <input type="text" id="proj-ear-desc" placeholder="Concepto (Ej. Primera venta, Suscriptor...)" required>
+                                    <input type="number" id="proj-ear-amount" step="0.01" min="0.01" placeholder="Importe (€)" required>
+                                    <button type="submit" class="btn-submit-success-mini" title="Añadir Ganancia">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="table-container-mini">
+                                <table class="premium-table table-mini" id="table-proj-earnings">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Concepto</th>
+                                            <th class="amount-col">Importe</th>
+                                            <th class="actions-col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-proj-earnings">
+                                        <!-- Inyectado dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="app-footer-bar">
+            <p>&copy; 2026 Mi Hucha - Peseta a Peseta. Desarrollado con 💖 y excelencia en Vanilla Stack.</p>
+        </footer>
+        </div> <!-- Fin de app-body -->
+    </div> <!-- Fin de app-desktop-container -->
+
+    <!-- MODAL DE EDICIÓN GLOBAL -->
+    <div id="modal-edit" class="modal hidden">
+        <div class="modal-content shadow-glass">
+            <div class="modal-header">
+                <h3 id="modal-edit-title">Editar Ficha</h3>
+                <button id="btn-close-modal" class="btn-close">&times;</button>
+            </div>
+            <form id="form-edit-global">
+                <div id="modal-edit-fields" class="modal-fields">
+                    <!-- Se inyecta dinámicamente según lo que se edite -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="btn-cancel-edit" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-submit">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE GESTIÓN DE PERFILES Y USUARIOS -->
+    <div id="modal-profiles" class="modal hidden">
+        <div class="modal-content profiles-modal shadow-glass">
+            <div class="modal-header">
+                <h3>Gestión de Usuarios y Perfiles</h3>
+                <button id="btn-close-profiles" class="btn-close">&times;</button>
+            </div>
+            
+            <div class="profiles-modal-body">
+                <!-- Perfil Activo Actual -->
+                <div class="current-profile-card">
+                    <div class="profile-avatar-large" id="modal-current-avatar">UP</div>
+                    <div class="current-profile-details">
+                        <span class="badge-active">Sesión Activa</span>
+                        <h4 id="modal-current-name">Usuario Principal</h4>
+                        <p id="modal-current-meta">Creado el --/--/----</p>
+                        <button type="button" id="btn-edit-active-profile" class="btn-action-outline" style="margin-top: 8px; font-size: 0.76rem; padding: 4px 8px; width: fit-content; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-glass); background: rgba(255,255,255,0.02); border-radius: 6px; color: var(--text-secondary); cursor: pointer; transition: var(--transition-fast);">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <span>Editar Perfil</span>
+                        </button>
+                        <button type="button" id="btn-view-activity-log" class="btn-action-outline" style="margin-top: 8px; margin-left: 6px; font-size: 0.76rem; padding: 4px 8px; width: fit-content; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-glass); background: rgba(255,255,255,0.02); border-radius: 6px; color: var(--text-secondary); cursor: pointer; transition: var(--transition-fast);">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span>Ver Bitácora</span>
+                        </button>
+                    </div>
+                    <div class="profile-current-actions">
+                        <!-- Guardar / Exportar copia -->
+                        <button id="btn-export-profile" class="btn-action-outline" title="Guardar Copia de Seguridad (Exportar toda tu base de datos a un archivo)">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Guardar Copia (.json)</span>
+                        </button>
+                        <!-- Recuperar / Importar copia -->
+                        <button id="btn-trigger-import" class="btn-action-outline" title="Recuperar / Abrir Copia de Seguridad (Importar desde un archivo)">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <span>Recuperar Copia (.json)</span>
+                        </button>
+                        <!-- Borrar todos los datos de esta cuenta -->
+                        <button id="btn-reset-profile-data" class="btn-action-outline" style="border: 1px solid rgba(244, 63, 94, 0.25); background: rgba(244, 63, 94, 0.02); color: var(--danger-light); grid-column: span 2; margin-top: 4px;" title="Borrar por completo todos los datos (bancos, transacciones, presupuestos y proyectos) de esta cuenta">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                            <span>Borrar Datos y Empezar de Cero</span>
+                        </button>
+                        <input type="file" id="file-import-profile" class="hidden" accept=".json">
+                    </div>
+                </div>
+
+                <!-- Formulario de edición de perfil activo -->
+                <form id="form-edit-profile" class="card-form hidden" style="margin-top: 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-glass-focus);">
+                    <h4 style="font-family: var(--font-header); font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: var(--text-primary);">Editar Mi Cuenta</h4>
+                    <div class="form-row-grid">
+                        <div class="form-group">
+                            <label for="edit-profile-username">Nuevo Nombre de Usuario</label>
+                            <input type="text" id="edit-profile-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-profile-pin">Contraseña / PIN de Privacidad (opcional)</label>
+                            <div class="password-field-wrapper">
+                                <input type="password" id="edit-profile-pin" placeholder="Dejar vacío para quitar contraseña o PIN">
+                                <button type="button" class="btn-toggle-password" tabindex="-1" title="Alternar visibilidad">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-closed hidden"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 4px; grid-column: span 2;">
+                            <input type="checkbox" id="edit-profile-autolock" style="width: auto; cursor: pointer;">
+                            <label for="edit-profile-autolock" style="cursor: pointer; margin: 0; font-size: 0.8rem; text-transform: none; color: var(--text-secondary);">Bloqueo automático por inactividad (5 min)</label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="btn-cancel-edit-profile" class="btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn-submit">Guardar Cambios</button>
+                    </div>
+                </form>
+
+                <!-- Lista de otros perfiles -->
+                <div class="profiles-list-section">
+                    <h4>Cuentas en este Navegador</h4>
+                    <div id="profiles-list-container" class="profiles-list-grid">
+                        <!-- Inyectado dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Formulario de nuevo perfil -->
+                <div class="add-profile-section">
+                    <button id="btn-toggle-add-profile" class="btn-primary-mini" style="width: 100%; justify-content: center; padding: 12px; font-weight: 700; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span>Crear Nuevo Usuario / Cuenta</span>
+                    </button>
+                    
+                    <form id="form-create-profile" class="card-form hidden" style="margin-top: 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-glass-focus);">
+                        <h4 style="font-family: var(--font-header); font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Registrar Nueva Cuenta</h4>
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label for="new-profile-username">Nombre de Usuario</label>
+                                <input type="text" id="new-profile-username" placeholder="Ej. Juan, María, Empresa..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-profile-pin">Contraseña / PIN de Privacidad (opcional)</label>
+                                <div class="password-field-wrapper">
+                                    <input type="password" id="new-profile-pin" placeholder="Ej. 1234 o mi_clave (vacío para ninguno)">
+                                    <button type="button" class="btn-toggle-password" tabindex="-1" title="Alternar visibilidad">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-closed hidden"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 4px; grid-column: span 2;">
+                                <input type="checkbox" id="new-profile-autolock" style="width: auto; cursor: pointer;" checked>
+                                <label for="new-profile-autolock" style="cursor: pointer; margin: 0; font-size: 0.8rem; text-transform: none; color: var(--text-secondary);">Bloqueo automático por inactividad (5 min)</label>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" id="btn-cancel-create-profile" class="btn-secondary">Cancelar</button>
+                            <button type="submit" class="btn-submit">Crear Cuenta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE VERIFICACIÓN DE PIN/CONTRASEÑA -->
+    <div id="modal-pin" class="modal hidden">
+        <div class="modal-content pin-modal shadow-glass" style="max-width: 380px;">
+            <div class="modal-header">
+                <h3>Verificación de Seguridad</h3>
+                <button id="btn-close-pin" class="btn-close">&times;</button>
+            </div>
+            <form id="form-pin-verify" style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 15px 0 0;">
+                <p style="font-size: 0.86rem; color: var(--text-secondary); text-align: center; line-height: 1.4;">
+                    La cuenta <strong id="pin-target-username" style="color: var(--primary-light);">Nombre</strong> está protegida. <br>Ingresa tu contraseña o PIN para acceder:
+                </p>
+                <div class="password-field-wrapper" style="width: 100%; max-width: 280px; position: relative; display: flex; align-items: center;">
+                    <input type="password" id="profile-access-password" required placeholder="Contraseña o PIN..." style="width: 100%; padding: 12px 40px 12px 16px; font-size: 1.05rem; border-radius: 10px; background: rgba(15, 23, 42, 0.8); border: 1.5px solid var(--border-glass); color: white; text-align: center; font-family: var(--font-body); letter-spacing: 0.1em; transition: var(--transition-smooth);">
+                    <button type="button" class="btn-toggle-password" tabindex="-1" title="Alternar visibilidad" style="position: absolute; right: 12px; background: transparent; border: none; color: var(--text-muted); cursor: pointer;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-closed hidden"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </button>
+                </div>
+                <div id="pin-error-message" class="error-text hidden" style="color: var(--danger-light); font-size: 0.82rem; font-weight: 700; text-align: center;">❌ Contraseña o PIN incorrecto. Inténtalo de nuevo.</div>
+                
+                <div class="form-actions" style="width: 100%; justify-content: center; margin-top: 10px; border-top: 1px solid var(--border-glass); padding-top: 16px;">
+                    <button type="button" id="btn-cancel-pin" class="btn-secondary" style="width: 100%;">Cancelar</button>
+                    <button type="submit" class="btn-submit" style="width: 100%;">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓN Y PROMPT PERSONALIZADO (PREMIUM DESKTOP DIALOG) -->
+    <div id="modal-custom-dialog" class="modal hidden" style="z-index: 10000;">
+        <div class="modal-content shadow-glass" style="max-width: 420px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 id="custom-dialog-title" style="font-family: var(--font-header); font-weight: 700; color: white; margin: 0; font-size: 1.1rem;">Confirmación</h3>
+            </div>
+            <div class="modal-body" style="padding: 16px 0; display: flex; flex-direction: column; gap: 14px;">
+                <p id="custom-dialog-message" style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; white-space: pre-wrap; margin: 0; text-align: left;"></p>
+                <div id="custom-dialog-input-container" class="hidden" style="display: flex; flex-direction: column; gap: 6px; text-align: left;">
+                    <label id="custom-dialog-input-label" for="custom-dialog-input" style="font-size: 0.74rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;"></label>
+                    <input type="text" id="custom-dialog-input" style="width: 100%; padding: 10px 14px; font-size: 0.95rem; border-radius: 8px; background: rgba(15, 23, 42, 0.8); border: 1.5px solid var(--border-glass); color: white; transition: var(--transition-smooth); outline: none; box-sizing: border-box;">
+                </div>
+            </div>
+            <div class="form-actions" style="border-top: 1px solid var(--border-glass); padding-top: 16px; margin-top: 4px; display: flex; justify-content: flex-end; gap: 10px; box-sizing: border-box;">
+                <button type="button" id="btn-custom-dialog-cancel" class="btn-secondary" style="margin: 0; min-width: 95px; padding: 10px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer;">Cancelar</button>
+                <button type="button" id="btn-custom-dialog-confirm" class="btn-submit" style="margin: 0; min-width: 95px; padding: 10px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none; color: white;">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE BLOQUEO DE SESIÓN ACTIVA (LOCK SCREEN) -->
+    <div id="screen-lock" class="modal hidden" style="z-index: 20000; background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(25px);">
+        <div class="lock-card shadow-glass">
+            <div class="profile-avatar-large" id="lock-avatar" style="width: 70px; height: 70px; font-size: 1.8rem; margin-bottom: 8px;">UP</div>
+            <div style="text-align: center;">
+                <span class="badge-active" style="background: rgba(244, 63, 94, 0.1); color: var(--danger-light); border-color: rgba(244, 63, 94, 0.2);">Sesión Bloqueada</span>
+                <h3 id="lock-username" style="font-family: var(--font-header); font-weight: 700; font-size: 1.35rem; margin-top: 6px; color: var(--text-primary);">Usuario Principal</h3>
+            </div>
+            
+            <form id="form-screen-unlock" style="display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%;">
+                <p id="lock-helper-text" style="font-size: 0.8rem; color: var(--text-secondary); text-align: center; line-height: 1.4; margin: 0;">
+                    Ingresa tu PIN/contraseña para desbloquear:
+                </p>
+                <div class="password-field-wrapper" style="width: 100%;">
+                    <input type="password" id="lock-password" required placeholder="Contraseña o PIN..." style="width: 100%; padding: 12px 16px; font-size: 1.05rem; border-radius: 10px; background: rgba(15, 23, 42, 0.8); border: 1.5px solid var(--border-glass); color: white; text-align: center; letter-spacing: 0.1em;">
+                    <button type="button" class="btn-toggle-password" tabindex="-1" title="Alternar visibilidad">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-closed hidden"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </button>
+                </div>
+                <div id="lock-error-message" class="error-text hidden" style="color: var(--danger-light); font-size: 0.82rem; font-weight: 700; text-align: center;">❌ Contraseña o PIN incorrecto.</div>
+                
+                <div style="display: flex; gap: 10px; width: 100%; margin-top: 10px;">
+                    <button type="button" id="btn-lock-switch-user" class="btn-secondary" style="flex: 1; padding: 12px; font-weight: 600;">Cambiar Cuenta</button>
+                    <button type="submit" class="btn-submit" style="flex: 1.2; padding: 12px; font-weight: 600; background: var(--primary); box-shadow: 0 4px 15px var(--primary-glow);">Desbloquear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE HISTORIAL DE ACTIVIDAD / BITÁCORA -->
+    <div id="modal-activity-log" class="modal hidden">
+        <div class="modal-content shadow-glass" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Bitácora de Actividad</h3>
+                <button id="btn-close-activity-log" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-fields">
+                <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.4;">
+                    Historial de eventos de seguridad y operaciones administrativas en esta cuenta:
+                </p>
+                <div class="activity-log-container" id="activity-log-container">
+                    <!-- Inyectado dinámicamente -->
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" id="btn-clear-activity-log" class="btn-secondary" style="border: 1px solid rgba(244, 63, 94, 0.25); background: rgba(244, 63, 94, 0.02); color: var(--danger-light); margin-right: auto;" title="Limpiar todo el historial de eventos">Limpiar Bitácora</button>
+                <button type="button" id="btn-close-activity-log-ok" class="btn-submit">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE ATAJOS DE TECLADO -->
+    <div id="modal-shortcuts" class="modal hidden">
+        <div class="modal-content shadow-glass" style="max-width: 420px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);">
+            <div class="modal-header">
+                <h3 style="font-family: var(--font-header); font-weight: 700; color: white; margin: 0; display: flex; align-items: center; gap: 8px;">⌨️ Atajos de Teclado & Ayuda</h3>
+                <button id="btn-close-shortcuts" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-fields" style="display: flex; flex-direction: column; gap: 14px; padding: 15px 0 0;">
+                <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
+                    Usa los siguientes atajos de teclado globales para agilizar la gestión de tus finanzas:
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 6px;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">Navegar al mes anterior</span>
+                        <kbd style="background: rgba(255,255,255,0.07); border: 1px solid var(--border-glass); border-radius: 4px; padding: 2px 6px; font-family: monospace; font-size: 0.74rem; color: var(--primary-light); box-shadow: 0 2px 0 rgba(0,0,0,0.3);">←</kbd>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 6px;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">Navegar al mes siguiente</span>
+                        <kbd style="background: rgba(255,255,255,0.07); border: 1px solid var(--border-glass); border-radius: 4px; padding: 2px 6px; font-family: monospace; font-size: 0.74rem; color: var(--primary-light); box-shadow: 0 2px 0 rgba(0,0,0,0.3);">→</kbd>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 6px;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">Cerrar modal o ventana abierta</span>
+                        <kbd style="background: rgba(255,255,255,0.07); border: 1px solid var(--border-glass); border-radius: 4px; padding: 2px 6px; font-family: monospace; font-size: 0.74rem; color: var(--primary-light); box-shadow: 0 2px 0 rgba(0,0,0,0.3);">Esc</kbd>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions" style="margin-top: 10px;">
+                <button type="button" id="btn-close-shortcuts-ok" class="btn-submit" style="width: 100%;">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONSEJO DIARIO -->
+    <div id="modal-daily-advice" class="modal hidden">
+        <div class="modal-content shadow-glass" style="max-width: 440px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);">
+            <div class="modal-header">
+                <h3 style="font-family: var(--font-header); font-weight: 700; color: white; margin: 0; display: flex; align-items: center; gap: 8px;">💡 Consejo Financiero del Día</h3>
+                <button id="btn-close-daily-advice" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px 0; display: flex; flex-direction: column; gap: 14px;">
+                <div style="background: rgba(255, 140, 0, 0.1); border: 1px solid rgba(255, 140, 0, 0.25); border-radius: 12px; padding: 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); text-align: center;">
+                    <span id="daily-advice-number" style="font-size: 0.74rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 8px;">Consejo nº X</span>
+                    <p id="daily-advice-text" style="font-size: 1.05rem; color: white; line-height: 1.5; font-family: var(--font-header); font-weight: 600; margin: 0; text-align: center;"></p>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4; margin: 0; text-align: center;">
+                    Un consejo diferente cada día para ayudarte a controlar y optimizar tu economía personal y familiar.
+                </p>
+            </div>
+            <div class="form-actions" style="border-top: 1px solid var(--border-glass); padding-top: 16px; margin-top: 4px; display: flex; justify-content: flex-end; gap: 10px; box-sizing: border-box; align-items: center;">
+                <button type="button" id="btn-next-advice" class="btn-secondary" style="margin: 0; margin-right: auto; padding: 10px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    <span>Ver otro</span>
+                </button>
+                <button type="button" id="btn-close-daily-advice-ok" class="btn-submit" style="margin: 0; min-width: 95px; padding: 10px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none; color: white;">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE BIENVENIDA / ONBOARDING -->
+    <div id="modal-onboarding" class="modal hidden" style="z-index: 15000;">
+        <div class="modal-content onboarding-modal shadow-glass" style="max-width: 600px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(25px); padding: 30px;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="font-family: var(--font-header); font-weight: 800; color: white; margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
+                    ✨ Guía de Inicio: Mi Hucha
+                </h3>
+                <button id="btn-close-onboarding" class="btn-close" style="font-size: 1.6rem; cursor: pointer;">&times;</button>
+            </div>
+            
+            <!-- Carrusel de diapositivas -->
+            <div class="onboarding-slides-container" style="position: relative; min-height: 320px; overflow: hidden; display: flex; flex-direction: column;">
+                
+                <!-- Diapositiva 1: Bienvenida y Seguridad de Datos -->
+                <div class="onboarding-slide active" data-step="1">
+                    <div style="text-align: center; margin-bottom: 18px;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">🛡️</span>
+                        <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--primary-light); margin: 0 0 6px 0;">Tus Datos y Privacidad al 100%</h4>
+                        <span class="badge-active" style="background: rgba(16, 185, 129, 0.1); color: var(--success-light); border-color: rgba(16, 185, 129, 0.2); font-size: 0.72rem; padding: 4px 10px;">Privacidad Local</span>
+                    </div>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; text-align: justify; margin-bottom: 12px;">
+                        Bienvenido a <strong>Mi Hucha - Peseta a Peseta</strong>. Para tu total seguridad y tranquilidad, <strong>esta aplicación no se conecta con ninguna entidad bancaria ni envía tus datos a ningún servidor externo</strong>.
+                    </p>
+                    <div style="background: rgba(245, 158, 11, 0.08); border: 1.5px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start;">
+                        <span style="font-size: 1.3rem; margin-top: -2px;">⚠️</span>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                            <strong style="color: var(--warning-light); display: block; margin-bottom: 2px;">¡Atención al almacenamiento!</strong>
+                            Toda tu información se almacena en el <strong>almacenamiento local (LocalStorage) de tu navegador</strong>. Si limpias el historial de navegación, las cookies o los datos de sitios, podrías perder todo tu progreso de forma irreversible.
+                        </div>
+                    </div>
+                    <div style="background: rgba(99, 102, 241, 0.08); border: 1.5px solid rgba(99, 102, 241, 0.25); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;">
+                        <span style="font-size: 1.3rem; margin-top: -2px;">💾</span>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                            <strong style="color: var(--primary-light); display: block; margin-bottom: 2px;">¿Cómo evitar pérdidas? Haz Copias de Seguridad</strong>
+                            Es muy recomendable hacer copias periódicas. Ve al panel de <strong>Tu Perfil</strong> (abajo a la izquierda en la barra lateral):
+                            <ul style="margin: 4px 0 0 16px; padding: 0;">
+                                <li>Haz clic en <strong>"Guardar Copia (.json)"</strong> para descargar tu archivo de respaldo en tu ordenador.</li>
+                                <li>Si necesitas restaurar tus datos o usarlos en otro navegador, haz clic en <strong>"Recuperar Copia (.json)"</strong> y selecciona ese archivo.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diapositiva 2: Tablero y Cuentas Bancarias -->
+                <div class="onboarding-slide hidden" data-step="2">
+                    <div style="text-align: center; margin-bottom: 18px;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">🏦</span>
+                        <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--primary-light); margin: 0 0 6px 0;">El Tablero Principal y tus Cuentas</h4>
+                    </div>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+                        El <strong>Tablero Principal</strong> te da una visión global e instantánea de tu salud financiera. Aquí verás tu balance total, ingresos, gastos y ahorro neto mensual.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <div style="background: rgba(255,255,255,0.04); border: 1.5px solid var(--border-glass); border-radius: 8px; padding: 6px 10px; font-weight: bold; color: var(--primary-light);">1</div>
+                            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; padding-top: 4px;">
+                                <strong>Cuentas y Bancos</strong>: Añade todas tus cuentas bancarias, carteras de efectivo o planes de pensiones para reflejar tu saldo real. Puedes editar sus nombres o saldos en cualquier momento.
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <div style="background: rgba(255,255,255,0.04); border: 1.5px solid var(--border-glass); border-radius: 8px; padding: 6px 10px; font-weight: bold; color: var(--primary-light);">2</div>
+                            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; padding-top: 4px;">
+                                <strong>Metas de Ahorro 🎯</strong>: Crea objetivos específicos (ej. Fondo de Emergencia, Vacaciones), asígnales un importe objetivo, asócialos a una cuenta y ponles una fecha límite para mantenerte motivado.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diapositiva 3: El Embudo -->
+                <div class="onboarding-slide hidden" data-step="3">
+                    <div style="text-align: center; margin-bottom: 18px;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">🌪️</span>
+                        <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--primary-light); margin: 0 0 6px 0;">El Embudo: Distribuidor de Ingresos</h4>
+                    </div>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+                        El <strong>Embudo</strong> es la herramienta central para repartir tus ingresos entre tus cuentas de forma inteligente.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <div style="font-size: 1.2rem; color: var(--accent);">📊</div>
+                            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                                <strong>Reparto Inteligente</strong>: Cuando recibas un ingreso (nómina, freelance, etc.), introdúcelo en el embudo y define qué porcentaje (%) o cantidad (€) va a cada una de tus cuentas.
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <div style="font-size: 1.2rem; color: var(--accent);">💾</div>
+                            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                                <strong>Ingresos Previstos</strong>: Puedes guardar tu plan de reparto habitual como "Previsto". Al mes siguiente, podrás cargarlo con un solo clic en lugar de volver a configurarlo.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diapositiva 4: Gastos y Cierre -->
+                <div class="onboarding-slide hidden" data-step="4">
+                    <div style="text-align: center; margin-bottom: 18px;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">📉</span>
+                        <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--primary-light); margin: 0 0 6px 0;">Gastos, Matriz y Cierre de Mes</h4>
+                    </div>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+                        Llevar el control de lo que gastas es crucial. La app divide tus salidas de dinero de forma muy estructurada:
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                            <strong>Matriz de Gastos Fijos (Recurrentes)</strong>: Registra suscripciones, alquileres o facturas periódicas. Conforme vaya avanzando el mes, pulsa <em>"Aplicar Gastos Fijos"</em> para restarlos automáticamente de las cuentas elegidas.
+                        </div>
+                        <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                            <strong>Gastos Variables e Historial</strong>: Registra tus compras del día a día de forma rápida o ajusta el saldo real de una cuenta si notas descuadres.
+                        </div>
+                        <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                            <strong>Cierre de Mes y Rendimiento 🔐</strong>: Cuando termine un mes, ve a <em>"Cierre de Mes"</em> para consolidarlo. Esto bloqueará los datos de ese periodo para que no haya modificaciones accidentales y te permitirá analizar históricos detallados en la pestaña de <em>"Rendimiento"</em>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diapositiva 5: Sandbox de Proyectos -->
+                <div class="onboarding-slide hidden" data-step="5">
+                    <div style="text-align: center; margin-bottom: 18px;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">🚀</span>
+                        <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--primary-light); margin: 0 0 6px 0;">Sandbox de Proyectos Sandbox</h4>
+                    </div>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+                        ¿Tienes ideas de negocio, trabajos freelance o quieres planificar una inversión separada de tu presupuesto diario?
+                    </p>
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1.5px solid var(--border-glass); border-radius: 12px; padding: 14px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+                        La pestaña de <strong>Proyectos</strong> funciona como un entorno de simulación (Sandbox). Puedes crear proyectos individuales y registrar en ellos sus inversiones (gastos) y retornos (ingresos) de forma totalmente aislada, calculando el ROI y rendimiento de tus iniciativas de forma independiente.
+                    </div>
+                    <p style="font-size: 0.82rem; color: var(--text-muted); text-align: center; margin-top: 15px; font-weight: 600;">
+                        💡 ¡Estás listo para tomar el control total de tu economía!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Controles del onboarding (Navegación e indicadores) -->
+            <div class="onboarding-controls" style="border-top: 1px solid var(--border-glass); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 15px;">
+                <button type="button" id="btn-onboarding-prev" class="btn-secondary" style="margin: 0; min-width: 90px; padding: 10px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; visibility: hidden;">
+                    Anterior
+                </button>
+                
+                <!-- Dots de progreso -->
+                <div class="onboarding-dots" style="display: flex; gap: 8px;">
+                    <span class="onboarding-dot active" data-step="1" style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary-light); opacity: 1; transition: all 0.3s ease; cursor: pointer;"></span>
+                    <span class="onboarding-dot" data-step="2" style="width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; transition: all 0.3s ease; cursor: pointer;"></span>
+                    <span class="onboarding-dot" data-step="3" style="width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; transition: all 0.3s ease; cursor: pointer;"></span>
+                    <span class="onboarding-dot" data-step="4" style="width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; transition: all 0.3s ease; cursor: pointer;"></span>
+                    <span class="onboarding-dot" data-step="5" style="width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; transition: all 0.3s ease; cursor: pointer;"></span>
+                </div>
+                
+                <button type="button" id="btn-onboarding-next" class="btn-submit" style="margin: 0; min-width: 90px; padding: 10px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none; color: white; background: var(--primary); box-shadow: 0 4px 12px var(--primary-glow);">
+                    Siguiente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consejos Financieros Array -->
+    <script src="src/consejos.js"></script>
+    <!-- Lógica Principal de la App -->
+    <script src="src/app.js"></script>
+</body>
+</html>
+

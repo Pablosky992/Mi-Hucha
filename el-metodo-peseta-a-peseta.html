@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Método Peseta a Peseta - Mi Hucha Artículos</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Meta tags SEO -->
+    <meta name="description" content="Descubre cómo los micro-gastos invisibles (ahorro hormiga) están erosionando tus ahorros y aprende un método práctico para recuperar el control de tus finanzas.">
+    <meta name="keywords" content="ahorro hormiga, finanzas personales, ahorrar dinero, control de gastos, método peseta a peseta">
+    <meta name="author" content="Mi Hucha">
+    
+    <!-- Open Graph (Redes Sociales) -->
+    <meta property="og:title" content="El Método Peseta a Peseta: Salva tu economía mensual">
+    <meta property="og:description" content="Aprende a controlar los gastos hormiga invisibles con este método paso a paso.">
+    <meta property="og:image" content="img/ahorro-hormiga.png">
+    <meta property="og:type" content="article">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+
+    <style>
+        /* Override global body hidden overflow from main app */
+        body {
+            overflow-y: auto !important;
+        }
+
+        /* Estilos específicos para lectura de artículos */
+        .article-layout {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px 80px 20px;
+        }
+
+        .article-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .article-category {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .article-title {
+            font-size: 2.8rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 20px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .article-meta {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .hero-image-container {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 50px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid var(--border-glass);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Estilos de contenido tipográfico */
+        .article-content {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            line-height: 1.8;
+        }
+
+        .article-content p {
+            margin-bottom: 24px;
+        }
+
+        .article-content h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-top: 48px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-glass);
+            padding-bottom: 10px;
+        }
+
+        .article-content h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-top: 32px;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .article-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .article-content .lead {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            font-weight: 300;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* Bloques de anuncios dentro del contenido */
+        .in-article-ad {
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 12px;
+            text-align: center;
+            border: 1px dashed var(--border-glass);
+        }
+        
+        .ad-label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        /* Navegación */
+        .hub-nav {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .back-to-hub {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .back-to-hub:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body class="theme-dark">
+    <!-- Fondos Ambientales Fluidos -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+                                                                                <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link active" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <!-- Botón de Donación -->
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body" style="overflow-y: auto;">
+            <!-- Cabecera de artículo con botón atrás -->
+            <div style="padding: 20px 40px; border-bottom: 1px solid var(--border-glass); position: sticky; top: 0; background: rgba(11, 15, 25, 0.6); backdrop-filter: blur(20px); z-index: 90;">
+                <a href="articulos.html" class="back-to-hub" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.95rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Volver a Artículos
+                </a>
+            </div>
+
+    <main class="article-layout">
+        <article>
+            <header class="article-header">
+                <span class="article-category">Ahorro y Hábitos</span>
+                <h1 class="article-title">El Método "Peseta a Peseta": Cómo el ahorro hormiga y la tecnología pueden salvar tu economía mensual</h1>
+                <div class="article-meta">
+                    <span>Publicado: 26 de Junio, 2026</span>
+                    <span>•</span>
+                    <span>5 min de lectura</span>
+                </div>
+            </header>
+
+            <div class="hero-image-container">
+                <img src="img/ahorro-hormiga.png" alt="Ilustración 3D de finanzas, ahorro y tecnología" class="hero-image">
+            </div>
+
+            <div class="article-content">
+                <p class="lead">Es una de las sensaciones más frustrantes y, a la vez, más comunes de la vida adulta moderna: revisas tu cuenta bancaria a mitad de mes y descubres, con sorpresa y algo de ansiedad, que el saldo es drásticamente inferior a lo que imaginabas. Repasas mentalmente los últimos quince días buscando un gran culpable. No has comprado billetes de avión, no has renovado el teléfono móvil ni has tenido ninguna avería de emergencia en el coche. Entonces, ¿a dónde ha ido a parar el dinero?</p>
+
+                <p>La respuesta no se encuentra en un gran desembolso, sino en una legión de micro-decisiones cotidianas. Hace décadas, nuestras familias gestionaban la economía doméstica bajo una premisa inquebrantable: <strong>"peseta a peseta se hace la peseta"</strong>. En la era del dinero físico, cada moneda que salía del bolsillo dejaba un vacío tangible; el peso del monedero disminuía y el control del gasto era puramente visual.</p>
+                
+                <p>Hoy, en un ecosistema dominado por las tarjetas de crédito, los pagos contactless y las transacciones instantáneas por móvil, el dinero se ha vuelto invisible. Al eliminar la fricción física de pagar, hemos abierto la puerta a un goteo constante e imperceptible que erosiona nuestra capacidad de ahorro sin que apenas nos demos cuenta.</p>
+
+                <h2>¿Qué es realmente el "Ahorro Hormiga" en la era digital?</h2>
+                <p>El concepto de "gasto hormiga" hace referencia a todas aquellas compras de escaso valor unitario que realizamos de forma reiterada, casi automática, y que consideramos insignificantes para nuestro presupuesto global. El café diario de máquina o de cafetería de especialidad, la botella de agua comprada sobre la marcha, las suscripciones a servicios digitales que apenas utilizamos, o las pequeñas propinas y picoteos entre horas son los ejemplos clásicos.</p>
+
+                <p>El verdadero peligro de estos gastos no radica en su cuantía, sino en su frecuencia y en su capacidad para camuflarse en el extracto bancario. Analicemos el impacto matemático real mediante un caso práctico:</p>
+                
+                <ul>
+                    <li>Un café de 1,80 € tomado fuera de casa de lunes a viernes representa un gasto semanal de 9 €. A final de mes, la cifra asciende a 36 €, lo que se traduce en <strong>432 € al año</strong>.</li>
+                    <li>Si a esto le sumamos un menú de comida a domicilio semanal por pereza de cocinar (unos 15 € mensuales = 180 € al año).</li>
+                    <li>Dos plataformas de streaming que mantienes activas pero apenas abres (20 € al mes = 240 € al año).</li>
+                </ul>
+
+                <p>Estamos hablando de una fuga silenciosa que supera holgadamente los <strong>1.000 € a 1.500 € anuales</strong>. Para una economía media, esa cantidad equivale al pago de unas vacaciones, a la amortización de una deuda o a un fondo de emergencia sólido. El cerebro humano está evolutivamente programado para reaccionar ante las grandes amenazas (un pago inesperado de 500 € en el taller enciende todas las alarmas), pero ignora por completo los micro-impactos de 3 €. Es ahí, en la suma de lo infinitesimal, donde se juega la verdadera salud de tus finanzas.</p>
+
+                <h2>La psicología detrás del "Peseta a Peseta": La fuerza del hábito</h2>
+                <p>El control de las finanzas personales rara vez es un problema de matemáticas; casi siempre es un problema de comportamiento y psicología. Existe el mito generalizado de que "solo aquellos que perciben grandes ingresos tienen la capacidad de ahorrar". Sin embargo, la literatura financiera demuestra que, sin una estructura de hábitos sólida, un aumento de ingresos suele ir acompañado de un aumento proporcional del gasto (fenómeno conocido como inflación del estilo de vida).</p>
+
+                <p>Adoptar la filosofía del "Peseta a Peseta" implica reconfigurar nuestra relación con la gratificación instantánea. Cada vez que realizamos un micro-gasto por impulso, nuestro cerebro recibe una pequeña descarga de dopamina. Es una recompensa inmediata a cambio de un coste que parece irrelevante. El desafío psicológico consiste en girar la tortilla y empezar a encontrar satisfacción en el acto consciente de <strong>no gastar</strong>.</p>
+                
+                <p>Decir "no" a un gasto superfluo hoy no debe entenderse como un ejercicio de privación o tacañería, sino como un acto de soberanía financiera. Cuando decides registrar y frenar una fuga de dinero, estás priorizando tu tranquilidad mental a largo plazo sobre un capricho que olvidarás en veinte minutos. La acumulación de estas micro-decisiones positivas genera un efecto de bola de nieve.</p>
+
+                <h2>Guía paso a paso para aplicar el método hoy mismo</h2>
+                <p>Pasar de la teoría a la práctica requiere método y disciplina. No basta con el simple propósito de "gastar menos"; es necesario establecer un marco operativo que reduzca la necesidad de fuerza de voluntad. A continuación, se detalla un plan de acción estructurado en cuatro fases:</p>
+
+                <h3>Fase 1: La auditoría forense de extractos</h3>
+                <p>El primer paso es puramente analítico. Debes sentarte con los extractos bancarios y los movimientos de las tarjetas de los últimos dos meses. Utiliza un bolígrafo rojo o un marcador digital para señalar cada transacción que sea inferior a 15 euros. Al final del ejercicio, suma todos esos importes. El objetivo de esta fase no es juzgar tus decisiones pasadas, sino forzar a tu cerebro a visualizar el impacto agregado de los microgastos que tu mente había clasificado como "insignificantes".</p>
+
+                <h3>Fase 2: La categorización y el aislamiento</h3>
+                <p>Una vez identificadas las fugas, clasifícalas en categorías muy específicas: cafés/desayunos fuera, suscripciones, compras por impulso en aplicaciones, transporte innecesario. Al categorizar, descubrirás cuál es tu verdadero punto débil. No intentes recortar todos los frentes a la vez; elige la categoría que sume el importe más alto y conviértela en tu objetivo prioritario para el primer mes.</p>
+
+                <h3>Fase 3: Presupuestar el capricho y el método del límite</h3>
+                <p>El error más común al intentar ahorrar es adoptar una postura espartana de privación absoluta. Esto genera fatiga de decisión y, eventualmente, un efecto rebote que destruye el progreso. El secreto del método "Peseta a Peseta" no es prohibir el gasto hormiga, sino <strong>ponerle un límite y un presupuesto</strong>. Si descubres que gastas 50 euros al mes en cafés de camino al trabajo, asígnate una partida fija de 20 euros mensuales para ese fin. Cuando el presupuesto asignado se agote, la alternativa obligatoria será la cafetera de casa hasta el mes siguiente.</p>
+
+                <h3>Fase 4: El registro en el momento cero</h3>
+                <p>El hábito definitivo que separa a quienes controlan su dinero de quienes son controlados por él es la inmediatez del registro. Si esperas al domingo o a final de mes para anotar un gasto de tres euros que hiciste el martes, lo habrás olvidado o te dará pereza hacerlo. El registro debe ocurrir en los sesenta segundos posteriores a la transacción. Esta pequeña fricción temporal actúa además como un freno psicológico para la siguiente compra impulsiva.</p>
+
+                <h2>El papel de la tecnología: De la libreta al software moderno</h2>
+                <p>Durante generaciones, nuestras abuelas aplicaron esta misma lógica utilizando herramientas analógicas. El método de los sobres físicos era infalible porque el límite era físico: si el sobre de los caprichos estaba vacío, no se gastaba más. En una sociedad donde el efectivo ha sido prácticamente desplazado por los ecosistemas digitales, replicar este control requiere un cambio de herramientas.</p>
+                
+                <p>Hoy en día, la tecnología ya no es el enemigo que facilita el gasto inconsciente, sino la mayor aliada para el ahorro estratégico. Los sistemas modernos de gestión de finanzas personales actúan como el panel de control de un coche: te indican la velocidad a la que gastas, el combustible (ahorro) que te queda y encienden luces de emergencia antes de que entres en zona de peligro. La tecnología actual permite que la vieja libreta de espiral evolucione hacia una plataforma inteligente que trabaja para ti en tiempo real.</p>
+
+                <h2>Conclusión: El poder de la acumulación consciente</h2>
+                <p>La salud financiera y la tranquilidad mental no son el resultado de un golpe de suerte ni de una herencia inesperada; se construyen día a día mediante la acumulación de decisiones conscientes. A menudo minusvaloramos el impacto de lo pequeño porque vivimos en la cultura de la inmediatez y los grandes números, pero las leyes de la matemática financiera no cambian: cada gran fortuna y cada fondo de emergencia sólido comenzaron con una sola moneda.</p>
+                
+                <p>Adoptar el método "Peseta a Peseta" es un viaje de transformación personal. Te enseña a mirar tus recursos con respeto. No esperes a tener un gran capital para empezar a gestionar tus finanzas. Empieza hoy, analiza tus extractos, apóyate en las herramientas digitales que tienes a tu disposición y recuerda que el camino hacia la libertad financiera se camina paso a paso, decisión a decisión, peseta a peseta.</p>
+            </div>
+        </article>
+    </main>
+        </div>
+    </div>
+    
+
+    <script src="src/app.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
