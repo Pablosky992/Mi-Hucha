@@ -94,6 +94,11 @@
         <div class="app-body">
             <!-- CABECERA DE LA VISTA ACTIVA -->
             <header class="app-top-header">
+                <!-- Botón Toggle de Menú Móvil -->
+                <button id="btn-mobile-menu-toggle" class="mobile-menu-toggle" title="Abrir Menú">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+
                 <div class="view-title-container">
                     <h2 id="current-view-title">Tablero Principal</h2>
                     <p id="current-view-subtitle">Resumen global de capital y balances</p>
@@ -1434,6 +1439,41 @@
             </div>
         </div>
     </div>
+
+    <!-- Backdrop para cerrar el menú móvil al hacer clic fuera -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <!-- Script para control de menú móvil -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.querySelector('.app-sidebar');
+            const toggleBtn = document.getElementById('btn-mobile-menu-toggle');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const navElements = document.querySelectorAll('.app-sidebar .nav-btn, .app-sidebar .nav-link, .app-sidebar .profile-active-btn, .app-sidebar .btn-lock-session');
+
+            if (toggleBtn && sidebar && backdrop) {
+                const toggleSidebar = () => {
+                    sidebar.classList.toggle('active');
+                    backdrop.classList.toggle('active');
+                };
+
+                const closeSidebar = () => {
+                    sidebar.classList.remove('active');
+                    backdrop.classList.remove('active');
+                };
+
+                toggleBtn.addEventListener('click', toggleSidebar);
+                backdrop.addEventListener('click', closeSidebar);
+
+                // Cerrar al pulsar cualquier opción del menú en móvil
+                navElements.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        setTimeout(closeSidebar, 150);
+                    });
+                });
+            }
+        });
+    </script>
 
     <!-- Consejos Financieros Array -->
     <script src="src/consejos.js"></script>
