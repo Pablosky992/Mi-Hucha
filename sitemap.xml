@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mihucha.es/</loc>
-    <lastmod>2026-06-27</lastmod>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://mihucha.es/articulos.html</loc>
-    <lastmod>2026-06-27</lastmod>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -27,6 +27,24 @@
   <url>
     <loc>https://mihucha.es/metodo-5-sobres.html</loc>
     <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mihucha.es/sistema-del-embudo.html</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mihucha.es/regla-72-horas.html</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mihucha.es/la-trampa-de-la-inflacion-del-estilo-de-vida.html</loc>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
