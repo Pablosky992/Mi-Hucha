@@ -5,6 +5,200 @@
 // 1. ESTADO DE LA APLICACIÓN (BASE DE DATOS LOCAL)
 // ----------------------------------------------------
 
+const CURRENCY_CONFIGS = {
+    EUR: { locale: 'de-DE', code: 'EUR', symbol: '€', name: 'Euros' },
+    USD: { locale: 'en-US', code: 'USD', symbol: '$', name: 'Dólares' },
+    GBP: { locale: 'en-GB', code: 'GBP', symbol: '£', name: 'Libras' },
+    JPY: { locale: 'ja-JP', code: 'JPY', symbol: '¥', name: 'Yenes' },
+    MXN: { locale: 'es-MX', code: 'MXN', symbol: '$', name: 'Pesos Mex' },
+    ARS: { locale: 'es-AR', code: 'ARS', symbol: '$', name: 'Pesos Arg' },
+    COP: { locale: 'es-CO', code: 'COP', symbol: '$', name: 'Pesos Col' },
+    CLP: { locale: 'es-CL', code: 'CLP', symbol: '$', name: 'Pesos Chi' }
+};
+
+// ====================================================
+// MOTOR DE ALMACENAMIENTO INDEXEDDB Y MIGRACIÓN
+// ====================================================
+const DB_NAME = "MiHuchaDB";
+const STORE_NAME = "keyvalue";
+
+function getDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME);
+            }
+        };
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
+    });
+}
+
+const dbStorage = {
+    async getItem(key) {
+        try {
+            const db = await getDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(STORE_NAME, "readonly");
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.get(key);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        } catch (e) {
+            console.error("IndexedDB error on getItem:", e);
+            return null;
+        }
+    },
+    async setItem(key, value) {
+        try {
+            const db = await getDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(STORE_NAME, "readwrite");
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.put(value, key);
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+        } catch (e) {
+            console.error("IndexedDB error on setItem:", e);
+        }
+    },
+    async removeItem(key) {
+        try {
+            const db = await getDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(STORE_NAME, "readwrite");
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.delete(key);
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+        } catch (e) {
+            console.error("IndexedDB error on removeItem:", e);
+        }
+    }
+};
+
+// ====================================================
+// COMPONENTE DE SELECCIÓN Y CREACIÓN DE ETIQUETAS/CATEGORÍAS
+// ====================================================
+const PRESET_BANK_TAGS = ["Nómina", "Ahorros", "Emergencias", "Gastos Diarios", "Viajes", "Facturas", "Seguro", "Colegiado", "Trastero", "Inversión"];
+
+function initTagSelector(containerId, initialTags = []) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let tags = [...initialTags].map(t => t.trim()).filter(t => t !== "");
+
+    const render = () => {
+        container.innerHTML = `
+            <div class="tags-input-wrapper" style="border:1px solid var(--border-color); padding:8px; border-radius:6px; background:var(--bg-input); display:flex; flex-wrap:wrap; gap:6px; align-items:center; min-height:42px;">
+                ${tags.map((tag, idx) => `
+                    <span class="tag-pill" style="background:var(--primary-dark); border:1px solid var(--primary-light); color:var(--text-light); padding:2px 8px; border-radius:4px; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px; user-select:none;">
+                        ${tag}
+                        <span class="tag-remove" data-index="${idx}" style="cursor:pointer; font-weight:bold; color:var(--text-muted);">&times;</span>
+                    </span>
+                `).join("")}
+                <input type="text" class="new-tag-input" placeholder="+ Añadir..." style="border:none; outline:none; background:transparent; color:var(--text-light); font-size:0.78rem; flex:1; min-width:80px; padding:0; height:auto;">
+            </div>
+            <div class="preset-tags" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; align-items: center;">
+                <span style="font-size:0.72rem; color:var(--text-muted); margin-right:4px;">Sugeridos:</span>
+                ${PRESET_BANK_TAGS.filter(pt => !tags.includes(pt)).map(pt => `
+                    <span class="preset-tag-pill" data-tag="${pt}" style="background:rgba(255,255,255,0.04); border:1px solid var(--border-color); color:var(--text-secondary); padding:2px 6px; border-radius:4px; font-size:0.7rem; cursor:pointer; transition: all 0.2s; user-select:none;">
+                        + ${pt}
+                    </span>
+                `).join("")}
+            </div>
+            <input type="hidden" id="${containerId}-value" value="${tags.join(",")}">
+        `;
+
+        const input = container.querySelector(".new-tag-input");
+        
+        const addTag = () => {
+            const val = input.value.trim().replace(/,/g, "");
+            if (val && !tags.includes(val)) {
+                tags.push(val);
+                render();
+            } else {
+                input.value = "";
+            }
+        };
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === ",") {
+                e.preventDefault();
+                addTag();
+            }
+        });
+        
+        input.addEventListener("blur", () => {
+            addTag();
+        });
+
+        container.querySelectorAll(".preset-tag-pill").forEach(el => {
+            el.addEventListener("click", () => {
+                const val = el.dataset.tag;
+                if (!tags.includes(val)) {
+                    tags.push(val);
+                    render();
+                }
+            });
+        });
+
+        container.querySelectorAll(".tag-remove").forEach(el => {
+            el.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const idx = parseInt(el.dataset.index, 10);
+                tags.splice(idx, 1);
+                render();
+            });
+        });
+    };
+
+    render();
+}
+
+
+async function migrateLocalStorageToIndexedDB() {
+    try {
+        const isMigrated = await dbStorage.getItem("migrated_from_localstorage");
+        if (isMigrated) return;
+
+        const storedProfiles = localStorage.getItem("finanzas_profiles");
+        const storedCurrentId = localStorage.getItem("finanzas_current_profile_id");
+
+        if (storedProfiles) {
+            const profiles = JSON.parse(storedProfiles);
+            await dbStorage.setItem("finanzas_profiles", profiles);
+            
+            if (storedCurrentId) {
+                await dbStorage.setItem("finanzas_current_profile_id", storedCurrentId);
+            }
+
+            for (const prof of profiles) {
+                const profileKey = "finanzas_db_" + prof.id;
+                const storedDb = localStorage.getItem(profileKey);
+                if (storedDb) {
+                    await dbStorage.setItem(profileKey, JSON.parse(storedDb));
+                }
+            }
+            console.log("Migración exitosa de LocalStorage a IndexedDB realizada.");
+        }
+        
+        const onboardingShown = localStorage.getItem("finanzas_onboarding_shown");
+        if (onboardingShown) {
+            await dbStorage.setItem("finanzas_onboarding_shown", onboardingShown);
+        }
+
+        await dbStorage.setItem("migrated_from_localstorage", true);
+    } catch (e) {
+        console.error("Error migrando base de datos a IndexedDB:", e);
+    }
+}
+
 let state = {
     banks: [],
     fixedExpenses: [],
@@ -16,7 +210,8 @@ let state = {
     maskMode: false,
     savingGoals: [],
     closedMonths: [],
-    plannedIncomes: {} // { "YYYY-MM": { amount, type, description, distributions: [{bankId, value}], mode } }
+    plannedIncomes: {}, // { "YYYY-MM": { amount, type, description, distributions: [{bankId, value}], mode } }
+    currency: "EUR"
 };
 
 // Variables globales de sesión y seguridad (declaradas al principio para evitar errores de inicialización por TDZ)
@@ -28,9 +223,9 @@ let autoLockInterval = null;
 // Configuración inicial de datos semilla (Mock Data) para causar impacto visual al cargar por primera vez
 const SEED_DATA = {
     banks: [
-        { id: "b_1", name: "BBVA (Nómina)", balance: 2450.00, createdAt: "2026-05-01T10:00:00.000Z" },
-        { id: "b_2", name: "Revolut (Gastos)", balance: 345.50, createdAt: "2026-05-01T10:00:00.000Z" },
-        { id: "b_3", name: "Banco Santander (Ahorros)", balance: 8000.00, createdAt: "2026-05-01T10:00:00.000Z" }
+        { id: "b_1", name: "BBVA (Nómina)", balance: 2450.00, purpose: "Nómina y gastos corrientes", minBalance: 1000.00, targetBalance: 3000.00, createdAt: "2026-05-01T10:00:00.000Z" },
+        { id: "b_2", name: "Revolut (Gastos)", balance: 345.50, purpose: "Gastos diarios y ocio", minBalance: 200.00, targetBalance: null, createdAt: "2026-05-01T10:00:00.000Z" },
+        { id: "b_3", name: "Banco Santander (Ahorros)", balance: 8000.00, purpose: "Fondo de Emergencia", minBalance: 5000.00, targetBalance: 12000.00, createdAt: "2026-05-01T10:00:00.000Z" }
     ],
     fixedExpenses: [
         { id: "fe_1", name: "Alquiler del Piso", amount: 650.00, bankId: "b_1" },
@@ -137,17 +332,13 @@ let profilesState = {
 };
 
 // Cargar la lista de perfiles y establecer el activo
-function loadProfiles() {
-    const storedProfiles = localStorage.getItem("finanzas_profiles");
-    const storedCurrentId = localStorage.getItem("finanzas_current_profile_id");
+async function loadProfiles() {
+    const storedProfiles = await dbStorage.getItem("finanzas_profiles");
+    const storedCurrentId = await dbStorage.getItem("finanzas_current_profile_id");
     
     if (storedProfiles) {
-        try {
-            profilesState.profiles = JSON.parse(storedProfiles);
-            profilesState.currentProfileId = storedCurrentId;
-        } catch (e) {
-            console.error("Error cargando perfiles:", e);
-        }
+        profilesState.profiles = storedProfiles;
+        profilesState.currentProfileId = storedCurrentId;
     }
     
     // Migración inteligente: Si no hay perfiles creados, pero existe la base de datos anterior 'finanzas_sandbox_db'
@@ -164,58 +355,61 @@ function loadProfiles() {
         profilesState.currentProfileId = defaultProfileId;
         
         // Guardar la lista de perfiles
-        localStorage.setItem("finanzas_profiles", JSON.stringify(profilesState.profiles));
-        localStorage.setItem("finanzas_current_profile_id", defaultProfileId);
+        await dbStorage.setItem("finanzas_profiles", profilesState.profiles);
+        await dbStorage.setItem("finanzas_current_profile_id", defaultProfileId);
         
         // Si hay datos legacy, migrarlos al nuevo perfil
         if (legacyData) {
-            localStorage.setItem("finanzas_db_" + defaultProfileId, legacyData);
+            try {
+                await dbStorage.setItem("finanzas_db_" + defaultProfileId, JSON.parse(legacyData));
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
     
     // Garantizar que currentProfileId sea válido
     const activeExists = profilesState.profiles.some(p => p.id === profilesState.currentProfileId);
-    if (!activeExists) {
+    if (!activeExists && profilesState.profiles.length > 0) {
         profilesState.currentProfileId = profilesState.profiles[0].id;
-        localStorage.setItem("finanzas_current_profile_id", profilesState.currentProfileId);
+        await dbStorage.setItem("finanzas_current_profile_id", profilesState.currentProfileId);
     }
 }
 
-// Cargar estado de localStorage o sembrar datos si está vacío
-function loadState() {
+// Cargar estado
+async function loadState() {
+    // Asegurar migración de datos a IndexedDB
+    await migrateLocalStorageToIndexedDB();
+    
     // Primero nos aseguramos de que los perfiles estén inicializados
-    loadProfiles();
+    await loadProfiles();
     
     const profileKey = "finanzas_db_" + profilesState.currentProfileId;
-    const stored = localStorage.getItem(profileKey);
+    const stored = await dbStorage.getItem(profileKey);
     
     if (stored) {
-        try {
-            state = JSON.parse(stored);
-            if (!state.activityLog) {
-                state.activityLog = [];
-            }
-            if (state.maskMode === undefined) {
-                state.maskMode = false;
-            }
-            if (!state.savingGoals) {
-                state.savingGoals = [];
-            }
-            if (!state.closedMonths) {
-                state.closedMonths = [];
-            }
-            if (!state.plannedIncomes) {
-                state.plannedIncomes = {};
-            }
-            // Asegurar que exista el mes actual
-            if (!state.currentMonth) {
-                state.currentMonth = getSystemCurrentMonth();
-            }
-
-        } catch (e) {
-            console.error("Error leyendo base de datos corrupta del perfil, reseteando...", e);
-            state = JSON.parse(JSON.stringify(SEED_DATA));
-            saveState();
+        state = stored;
+        if (!state.activityLog) {
+            state.activityLog = [];
+        }
+        if (state.maskMode === undefined) {
+            state.maskMode = false;
+        }
+        if (!state.savingGoals) {
+            state.savingGoals = [];
+        }
+        if (!state.closedMonths) {
+            state.closedMonths = [];
+        }
+        if (!state.plannedIncomes) {
+            state.plannedIncomes = {};
+        }
+        if (!state.currency) {
+            state.currency = "EUR";
+        }
+        // Asegurar que exista el mes actual
+        if (!state.currentMonth) {
+            state.currentMonth = getSystemCurrentMonth();
         }
     } else {
         // Datos semilla por defecto
@@ -234,7 +428,7 @@ function loadState() {
             });
         }
         
-        saveState();
+        await dbStorage.setItem(profileKey, state);
     }
 }
 
@@ -242,7 +436,12 @@ function loadState() {
 function saveState() {
     if (!profilesState.currentProfileId) return;
     const profileKey = "finanzas_db_" + profilesState.currentProfileId;
-    localStorage.setItem(profileKey, JSON.stringify(state));
+    
+    // Guardado asíncrono fire-and-forget en IndexedDB
+    dbStorage.setItem(profileKey, state).catch(e => console.error("Error guardando estado:", e));
+    dbStorage.setItem("finanzas_profiles", profilesState.profiles).catch(e => console.error("Error guardando perfiles:", e));
+    dbStorage.setItem("finanzas_current_profile_id", profilesState.currentProfileId).catch(e => console.error("Error guardando perfil activo:", e));
+    
     renderAll();
     
     // Actualizar la interfaz del perfil
@@ -260,15 +459,15 @@ function logActivity(description) {
         timestamp: timestamp,
         description: description
     });
-    // Limitar a los últimos 150 registros para evitar sobrecarga de LocalStorage
+    // Limitar a los últimos 150 registros para evitar sobrecarga
     if (state.activityLog.length > 150) {
         state.activityLog = state.activityLog.slice(0, 150);
     }
     
-    // Guardar directamente en localStorage sin llamar a saveState recursivamente
+    // Guardar directamente en base de datos en segundo plano
     if (profilesState.currentProfileId) {
         const profileKey = "finanzas_db_" + profilesState.currentProfileId;
-        localStorage.setItem(profileKey, JSON.stringify(state));
+        dbStorage.setItem(profileKey, state).catch(e => console.error("Error guardando log de actividad:", e));
     }
 }
 
@@ -320,6 +519,7 @@ function initNavigation() {
                 else if (targetId === "panel-closure") viewDesc = "Evolución del saldo y desglose de gastos por banco";
                 else if (targetId === "panel-performance") viewDesc = "Gráficos de rendimiento e historial consolidado";
                 else if (targetId === "panel-projects") viewDesc = "Simulador financiero y sandbox de proyectos independientes";
+                else if (targetId === "panel-investments") viewDesc = "Cartera de inversión, rentabilidades y planes de futuro";
                 
                 subtitleEl.textContent = viewDesc;
             }
@@ -485,9 +685,37 @@ function initBanksManager() {
         formAdd.classList.toggle("hidden");
     });
 
+    const bankTypeEl = document.getElementById("bank-type");
+    if (bankTypeEl) {
+        bankTypeEl.addEventListener("change", () => {
+            const isPension = bankTypeEl.value === 'pension' || bankTypeEl.value === 'investment';
+            document.getElementById('pension-hint').classList.toggle('hidden', !isPension);
+            const labelEl = document.getElementById('pension-balance-label');
+            if (labelEl) {
+                const config = CURRENCY_CONFIGS[state.currency || 'EUR'] || CURRENCY_CONFIGS.EUR;
+                labelEl.textContent = isPension ? `Aportación Inicial (${config.symbol})` : `Saldo Inicial (${config.symbol})`;
+                labelEl.dataset.baseText = isPension ? 'Aportación Inicial' : 'Saldo Inicial';
+            }
+        });
+    }
+
+    // Inicializar el selector de categorías/propósitos al arrancar
+    initTagSelector("bank-purpose-tags-container");
+
     btnCancel.addEventListener("click", () => {
         formAdd.classList.add("hidden");
         formAdd.reset();
+        if (bankTypeEl) bankTypeEl.value = "normal";
+        document.getElementById("pension-hint").classList.add("hidden");
+        // Forzar actualización de etiquetas de divisa en el formulario resetado
+        const config = CURRENCY_CONFIGS[state.currency || 'EUR'] || CURRENCY_CONFIGS.EUR;
+        const labelEl = document.getElementById('pension-balance-label');
+        if (labelEl) {
+            labelEl.textContent = `Saldo Inicial (${config.symbol})`;
+            labelEl.dataset.baseText = 'Saldo Inicial';
+        }
+        // Resetear selector de etiquetas
+        initTagSelector("bank-purpose-tags-container");
     });
 
     formAdd.addEventListener("submit", (e) => {
@@ -495,6 +723,9 @@ function initBanksManager() {
         const name = document.getElementById("bank-name").value.trim();
         const initialBalance = parseFloat(document.getElementById("bank-initial-balance").value);
         const bankType = document.getElementById("bank-type").value || "normal";
+        const purpose = document.getElementById("bank-purpose-tags-container-value")?.value.trim() || "";
+        const minVal = document.getElementById("bank-min-balance")?.value;
+        const minBalance = (minVal !== undefined && minVal !== "") ? parseFloat(minVal) : null;
 
         if (!name || isNaN(initialBalance)) {
             showToast("Por favor complete los campos correctamente.", "danger");
@@ -506,7 +737,11 @@ function initBanksManager() {
             name: name,
             balance: initialBalance,
             bankType: bankType,
-            estimatedValue: bankType === "pension" ? initialBalance : null,
+            purpose: purpose,
+            minBalance: isNaN(minBalance) ? null : minBalance,
+            targetBalance: null,
+            estimatedValue: (bankType === "pension" || bankType === "investment") ? initialBalance : null,
+            valuations: (bankType === "pension" || bankType === "investment") ? [{ date: new Date().toISOString().split('T')[0], balance: initialBalance, estimatedValue: initialBalance }] : null,
             createdAt: new Date().toISOString()
         };
 
@@ -528,7 +763,10 @@ function initBanksManager() {
         if (bankTypeEl) bankTypeEl.value = "normal";
         document.getElementById("pension-hint").classList.add("hidden");
         
-        const typeLabel = bankType === "pension" ? "Plan de Pensiones" : "Banco";
+        // Resetear el selector de etiquetas
+        initTagSelector("bank-purpose-tags-container");
+        
+        const typeLabel = (bankType === "pension" || bankType === "investment") ? "Plan/Inversión" : "Banco";
         showToast(`${typeLabel} "${name}" creado con éxito.`, "success");
         saveState();
     });
@@ -633,6 +871,71 @@ function initIncomeFunnel() {
         }
         validateFunnel();
     });
+
+    // Cubrir Mínimos de Seguridad de forma inteligente y priorizada
+    const fillMinBtn = document.getElementById("btn-funnel-fill-min");
+    if (fillMinBtn) {
+        fillMinBtn.addEventListener("click", () => {
+            const totalAmount = parseFloat(amountInput.value) || 0;
+            if (totalAmount <= 0) {
+                showToast("Introduce un importe a ingresar válido antes de cubrir mínimos.", "danger");
+                return;
+            }
+
+            const allocations = {};
+            state.banks.forEach(b => allocations[b.id] = 0);
+
+            // Cuentas con déficit de mínimos de seguridad
+            const deficitBanks = state.banks
+                .filter(b => b.minBalance !== null && b.minBalance !== undefined && b.balance < b.minBalance)
+                .map(b => ({ id: b.id, deficit: b.minBalance - b.balance }))
+                .sort((a, b) => b.deficit - a.deficit);
+
+            if (deficitBanks.length === 0) {
+                showToast("Todas tus cuentas cumplen con sus mínimos de seguridad.", "success");
+                return;
+            }
+
+            let remaining = totalAmount;
+            for (const item of deficitBanks) {
+                if (remaining <= 0) break;
+                const toAssign = Math.min(remaining, item.deficit);
+                allocations[item.id] = parseFloat(toAssign.toFixed(2));
+                remaining -= toAssign;
+            }
+
+            // Aplicar allocations a los inputs
+            state.banks.forEach(bank => {
+                const input = document.getElementById(`funnel-input-${bank.id}`);
+                if (input) {
+                    const allocatedAmount = allocations[bank.id] || 0;
+                    if (allocatedAmount > 0) {
+                        if (funnelMode === "percent") {
+                            input.value = ((allocatedAmount / totalAmount) * 100).toFixed(2);
+                        } else {
+                            input.value = allocatedAmount.toFixed(2);
+                        }
+                    } else {
+                        input.value = "";
+                    }
+                }
+            });
+
+            validateFunnel();
+
+            const coveredSum = totalAmount - remaining;
+            if (remaining > 0) {
+                showToast(`Se han asignado ${formatCurrency(coveredSum)} para cubrir mínimos. Quedan ${formatCurrency(remaining)} por distribuir manualmente.`, "success");
+            } else {
+                const totalDeficit = deficitBanks.reduce((sum, b) => sum + b.deficit, 0);
+                if (totalDeficit > totalAmount) {
+                    showToast(`Se asignó todo el capital (${formatCurrency(totalAmount)}) a cubrir mínimos de seguridad. Faltan ${formatCurrency(totalDeficit - totalAmount)} para cubrirlos todos.`, "warning");
+                } else {
+                    showToast("¡Mínimos de seguridad cubiertos al 100%!", "success");
+                }
+            }
+        });
+    }
 
     // Limpiar Reparto
     clearBtn.addEventListener("click", () => {
@@ -830,14 +1133,14 @@ function renderFunnelInputs() {
     }
 
     state.banks.forEach(bank => {
-        const isPension = bank.bankType === "pension";
+        const isPension = bank.bankType === "pension" || bank.bankType === "investment";
         const labelPrefix = isPension ? "Aportado: " : "Saldo: ";
         // 1. Crear el Input en la lista con vista previa de saldo
         const item = document.createElement("div");
         item.className = "funnel-dist-item";
         item.innerHTML = `
             <div class="funnel-bank-label">
-                <div class="funnel-bank-name">${bank.name} ${isPension ? '<span style="font-size: 0.7em;">(Pensión)</span>' : ''}</div>
+                <div class="funnel-bank-name">${bank.name} ${isPension ? '<span style="font-size: 0.7em;">(Inversión)</span>' : ''}</div>
                 <div id="funnel-balance-preview-${bank.id}" class="funnel-balance-preview">
                     <span class="balance-current">${labelPrefix}${formatCurrency(bank.balance)}</span>
                 </div>
@@ -953,7 +1256,7 @@ function validateFunnel() {
         const currentBalance = bank.balance || 0;
         const projectedBalance = parseFloat((currentBalance + allocatedAmount).toFixed(2));
 
-        const isPension = bank.bankType === "pension";
+        const isPension = bank.bankType === "pension" || bank.bankType === "investment";
         const labelPrefix = isPension ? "Aportado: " : "Saldo: ";
 
         // 1. Actualizar la vista previa de saldo en la lista de reparto
@@ -1031,6 +1334,7 @@ function initFixedExpenses() {
         const day = parseInt(document.getElementById("fixed-day").value) || 1;
         const periodicity = document.getElementById("fixed-periodicity").value;
         const chargeMonth = periodicity !== "Mensual" ? document.getElementById("fixed-charge-month").value : null;
+        const destBankId = document.getElementById("fixed-dest-bank-id")?.value || null;
 
         if (!name || isNaN(amount) || amount <= 0 || !bankId || isNaN(day) || day < 1 || day > 31) {
             showToast("Complete todos los campos del gasto fijo correctamente.", "danger");
@@ -1042,6 +1346,7 @@ function initFixedExpenses() {
             name: name,
             amount: amount,
             bankId: bankId,
+            destBankId: destBankId,
             day: day,
             periodicity: periodicity,
             chargeMonth: chargeMonth
@@ -1127,7 +1432,7 @@ function initFixedExpenses() {
                     bank.balance = parseFloat((bank.balance - fe.amount).toFixed(2));
                     const txDate = `${state.currentMonth}-${String(targetDay).padStart(2, "0")}`;
 
-                    // Crear transacción de gasto fijo aplicado
+                    // Crear transacción de gasto fijo aplicado (salida)
                     const newTx = {
                         id: "tx_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
                         type: "expense",
@@ -1139,6 +1444,30 @@ function initFixedExpenses() {
                         month: state.currentMonth
                     };
                     state.transactions.push(newTx);
+
+                    // Si tiene un destino de inversión asociado, aplicar transferencia automática
+                    if (fe.destBankId) {
+                        const destBank = state.banks.find(b => b.id === fe.destBankId);
+                        if (destBank) {
+                            destBank.balance = parseFloat((destBank.balance + fe.amount).toFixed(2));
+                            if (destBank.estimatedValue !== null && destBank.estimatedValue !== undefined) {
+                                destBank.estimatedValue = parseFloat((destBank.estimatedValue + fe.amount).toFixed(2));
+                            }
+                            // Crear transacción recíproca (entrada) en la cuenta de destino
+                            const destTx = {
+                                id: "tx_" + Date.now() + "_dest_" + Math.random().toString(36).substr(2, 5),
+                                type: "income",
+                                subtype: "Aportación",
+                                description: `Aportación: ${fe.name}`,
+                                amount: fe.amount,
+                                bankId: fe.destBankId,
+                                date: txDate,
+                                month: state.currentMonth
+                            };
+                            state.transactions.push(destTx);
+                        }
+                    }
+
                     appliedCount++;
                 }
             } else {
@@ -1417,10 +1746,10 @@ function renderBudgetEstimationsForm() {
 
             state.budgets[state.currentMonth][bankId][type] = value;
 
-            // Guardar directamente en localStorage
+            // Guardar directamente en base de datos en segundo plano
             if (profilesState.currentProfileId) {
                 const profileKey = "finanzas_db_" + profilesState.currentProfileId;
-                localStorage.setItem(profileKey, JSON.stringify(state));
+                dbStorage.setItem(profileKey, state).catch(err => console.error(err));
             }
 
             logActivity(`Autoguardado de presupuesto (${type === "expectedIncome" ? "Ingreso previsto" : "Gasto previsto"}) para ${bankId}: ${value} €`);
@@ -1605,6 +1934,7 @@ function renderAll() {
     // Actualizar visualizaciones por módulo
     renderGlobalStats();
     renderBanksList();
+    renderInvestmentsList();
     renderFunnelInputs();
     renderPlannedIncomeBanner();
     renderExpensesDropdowns();
@@ -1729,6 +2059,8 @@ function renderAll() {
             }
         }
     });
+
+    updateDOMCurrencySymbols();
 }
 
 // MÓDULO 1: ESTADÍSTICAS GLOBALES DEL TABLERO
@@ -1736,7 +2068,7 @@ function renderGlobalStats() {
     // 1. Balance total: para planes de pensión usa el valor estimado (con interés)
     let totalBanks = 0;
     state.banks.forEach(b => {
-        if (b.bankType === "pension") {
+        if (b.bankType === "pension" || b.bankType === "investment") {
             totalBanks += (b.estimatedValue ?? b.balance);
         } else {
             totalBanks += b.balance;
@@ -1776,59 +2108,20 @@ function renderBanksList() {
     const container = document.getElementById("banks-list-container");
     container.innerHTML = "";
 
-    if (state.banks.length === 0) {
-        container.innerHTML = `<div class="alert-info">No hay bancos creados. Use el botón superior para añadir uno.</div>`;
+    const activeNormalBanks = state.banks.filter(b => b.bankType === "normal" || !b.bankType);
+
+    if (activeNormalBanks.length === 0) {
+        container.innerHTML = `<div class="alert-info">No hay cuentas bancarias corrientes. Use el botón superior para añadir una.</div>`;
         return;
     }
 
-    state.banks.forEach(bank => {
-        const isPension = bank.bankType === "pension";
-
-        // ── Card especial para Plan de Pensiones ──
-        if (isPension) {
-            const estimatedValue = bank.estimatedValue ?? bank.balance;
-            const gains = estimatedValue - bank.balance;
-            const gainsClass = gains >= 0 ? "pension-gains-pos" : "pension-gains-neg";
-            const gainsSign = gains >= 0 ? "+" : "";
-
-            const card = document.createElement("div");
-            card.className = "bank-item-card bank-pension-card";
-            card.innerHTML = `
-                <div class="bank-card-info" style="flex:1;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <h3>${bank.name}</h3>
-                        <span class="badge-pension">🏦 Plan de Pensiones</span>
-                    </div>
-                    <div class="bank-meta">Creado el ${formatDate(bank.createdAt)}</div>
-                    <div class="pension-stats">
-                        <div class="pension-stat">
-                            <span class="pension-stat-label">Total Aportado</span>
-                            <span class="pension-stat-value">${formatCurrency(bank.balance)}</span>
-                        </div>
-                        <div class="pension-stat-divider"></div>
-                        <div class="pension-stat">
-                            <span class="pension-stat-label">Valor Estimado (con interés)</span>
-                            <span class="pension-stat-value" style="color:var(--primary-light);">${formatCurrency(estimatedValue)}</span>
-                        </div>
-                        <div class="pension-stat-divider"></div>
-                        <div class="pension-stat">
-                            <span class="pension-stat-label">Rentabilidad</span>
-                            <span class="pension-stat-value ${gainsClass}">${gainsSign}${formatCurrency(gains)}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="bank-card-balance-section" style="gap:8px; flex-direction:column; align-items:flex-end;">
-                    <button onclick="openEditModal('bank', '${bank.id}')" class="btn-edit-icon" title="Editar Plan de Pensiones">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                    </button>
-                    <button onclick="deleteBank('${bank.id}')" class="btn-delete-icon" title="Eliminar Plan de Pensiones">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                    </button>
-                </div>
-            `;
-            container.appendChild(card);
-            return;
-        }
+    activeNormalBanks.forEach(bank => {
+        const tags = bank.purpose ? bank.purpose.split(",").map(t => t.trim()).filter(t => t !== "") : [];
+        const purposeHTML = tags.length > 0
+            ? `<div class="bank-meta-tags" style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; margin-bottom:4px;">
+                ${tags.map(t => `<span class="badge-tag" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-color); color:var(--text-secondary); padding:2px 8px; border-radius:4px; font-size:0.68rem; font-weight:500;">🏷️ ${t}</span>`).join("")}
+               </div>`
+            : "";
 
         // ── Card normal ──
         let pendingFixedSum = 0;
@@ -1868,14 +2161,24 @@ function renderBanksList() {
             }
         });
 
-        let overdraftHTML = "";
+        let alertsHTML = "";
         if (bank.balance < pendingFixedSum) {
             const neededAmount = pendingFixedSum - bank.balance;
             const tooltipText = `Faltan ${formatCurrency(neededAmount)} para cubrir cobros fijos pendientes este mes:&#10;• ` + pendingExpensesNames.join("&#10;• ");
-            overdraftHTML = `
-                <div class="alert-overdraft" title="${tooltipText}">
+            alertsHTML += `
+                <div class="alert-overdraft" title="${tooltipText}" style="margin-top: 4px;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                    <span>Faltan ${formatCurrency(neededAmount)}</span>
+                    <span>Faltan ${formatCurrency(neededAmount)} (Fijos)</span>
+                </div>
+            `;
+        }
+
+        if (bank.minBalance !== null && bank.minBalance !== undefined && bank.balance < bank.minBalance) {
+            const deficit = bank.minBalance - bank.balance;
+            alertsHTML += `
+                <div class="alert-overdraft" title="Por debajo de tu mínimo de seguridad de ${formatCurrency(bank.minBalance)}" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); margin-top: 4px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <span>Mínimo: Faltan ${formatCurrency(deficit)}</span>
                 </div>
             `;
         }
@@ -1883,12 +2186,15 @@ function renderBanksList() {
         const card = document.createElement("div");
         card.className = "bank-item-card";
         card.innerHTML = `
-            <div class="bank-card-info">
+            <div class="bank-card-info" style="flex:1;">
                 <h3>${bank.name}</h3>
-                <div class="bank-meta">Creado el ${formatDate(bank.createdAt)}</div>
-                ${overdraftHTML}
+                ${purposeHTML}
+                <div class="bank-meta" style="margin-top: 4px;">Creado el ${formatDate(bank.createdAt)}</div>
+                <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                    ${alertsHTML}
+                </div>
             </div>
-            <div class="bank-card-balance-section" style="gap: 8px;">
+            <div class="bank-card-balance-section" style="gap: 8px; flex-direction: row; align-items: center; align-self: flex-start;">
                 <span class="bank-card-balance" style="margin-right: 8px;">${formatCurrency(bank.balance)}</span>
                 <button onclick="openEditModal('bank', '${bank.id}')" class="btn-edit-icon" title="Editar Banco">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -1902,15 +2208,262 @@ function renderBanksList() {
     });
 }
 
+function renderInvestmentsList() {
+    const container = document.getElementById("investments-list-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const activeInvestments = state.banks.filter(b => b.bankType === "pension" || b.bankType === "investment");
+
+    // Calcular agregados
+    let totalContributed = 0;
+    let currentValue = 0;
+
+    activeInvestments.forEach(b => {
+        totalContributed += b.balance || 0;
+        currentValue += b.estimatedValue ?? b.balance ?? 0;
+    });
+
+    const totalYield = currentValue - totalContributed;
+    const roi = totalContributed > 0 ? (totalYield / totalContributed) * 100 : 0;
+
+    const contributedEl = document.getElementById("investments-total-contributed");
+    const valueEl = document.getElementById("investments-current-value");
+    const yieldEl = document.getElementById("investments-total-yield");
+
+    if (contributedEl) contributedEl.textContent = formatCurrency(totalContributed);
+    if (valueEl) valueEl.textContent = formatCurrency(currentValue);
+    
+    if (yieldEl) {
+        const sign = totalYield >= 0 ? "+" : "";
+        yieldEl.textContent = `${sign}${formatCurrency(totalYield)} (${sign}${roi.toFixed(1)}%)`;
+        yieldEl.style.color = totalYield >= 0 ? "var(--success-light)" : "#ef4444";
+    }
+
+    if (activeInvestments.length === 0) {
+        container.innerHTML = `<div class="alert-info" style="grid-column: 1 / -1;">No hay planes de pensiones o fondos de inversión registrados. Usa el botón superior para añadir uno.</div>`;
+        return;
+    }
+
+    activeInvestments.forEach(bank => {
+        const estimatedValue = bank.estimatedValue ?? bank.balance;
+        const gains = estimatedValue - bank.balance;
+        const gainsClass = gains >= 0 ? "pension-gains-pos" : "pension-gains-neg";
+        const gainsSign = gains >= 0 ? "+" : "";
+        const bankRoi = bank.balance > 0 ? (gains / bank.balance) * 100 : 0;
+
+        const tags = bank.purpose ? bank.purpose.split(",").map(t => t.trim()).filter(t => t !== "") : [];
+        const purposeHTML = tags.length > 0
+            ? `<div class="bank-meta-tags" style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; margin-bottom:4px;">
+                ${tags.map(t => `<span class="badge-tag" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-color); color:var(--text-secondary); padding:2px 8px; border-radius:4px; font-size:0.68rem; font-weight:500;">🏷️ ${t}</span>`).join("")}
+               </div>`
+            : "";
+
+        // Calcular barra comparativa (Aportado vs Interés)
+        let progressBarHTML = "";
+        if (estimatedValue > 0) {
+            const contributedPercent = Math.min(100, Math.max(0, (bank.balance / estimatedValue) * 100));
+            const gainsPercent = 100 - contributedPercent;
+            progressBarHTML = `
+                <div class="investment-split-bar" style="margin-top:14px; width:100%;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">
+                        <span>Invertido: ${contributedPercent.toFixed(0)}%</span>
+                        <span>Ganado: ${gainsPercent.toFixed(0)}%</span>
+                    </div>
+                    <div class="progress-bar-bg" style="background: rgba(255,255,255,0.05); border-radius: 4px; height: 8px; overflow: hidden; display: flex; border: 1px solid var(--border-color);">
+                        <div style="background: var(--primary-light); width: ${contributedPercent}%; height: 100%; transition: width 0.3s;" title="Principal Aportado: ${formatCurrency(bank.balance)}"></div>
+                        ${gains > 0 ? `<div style="background: var(--success-light); width: ${gainsPercent}%; height: 100%; transition: width 0.3s;" title="Ganancias por Interés: ${formatCurrency(gains)}"></div>` : ""}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Alerta de Mínimo de Seguridad (si lo tuviera)
+        let minAlertHTML = "";
+        if (bank.minBalance !== null && bank.minBalance !== undefined && bank.balance < bank.minBalance) {
+            const deficit = bank.minBalance - bank.balance;
+            minAlertHTML = `
+                <div class="alert-overdraft" title="Por debajo de tu mínimo de seguridad de ${formatCurrency(bank.minBalance)}" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); margin-top: 6px; display:inline-flex;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <span style="margin-left:4px;">Mínimo: Faltan ${formatCurrency(deficit)}</span>
+                </div>
+            `;
+        }
+
+        const card = document.createElement("div");
+        card.className = "bank-item-card bank-pension-card";
+        card.style.borderLeft = "4px solid var(--primary-light)";
+        card.innerHTML = `
+            <div class="bank-card-info" style="flex:1;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap: wrap;">
+                    <h3>${bank.name}</h3>
+                    <span class="badge-pension" style="background: rgba(var(--primary-rgb), 0.1); color: var(--primary-light); border: 1px solid rgba(var(--primary-rgb), 0.2); padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold;">📈 Inversión / Plan</span>
+                </div>
+                ${purposeHTML}
+                <div class="bank-meta" style="margin-top: 4px;">Creado el ${formatDate(bank.createdAt)}</div>
+                
+                <div class="pension-stats" style="margin-top: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                    <div class="pension-stat">
+                        <span class="pension-stat-label" style="display:block; font-size:0.7rem; color:var(--text-muted);">Total Invertido</span>
+                        <span class="pension-stat-value" style="font-weight:600; font-size:0.9rem; color:var(--text-light);">${formatCurrency(bank.balance)}</span>
+                    </div>
+                    <div class="pension-stat">
+                        <span class="pension-stat-label" style="display:block; font-size:0.7rem; color:var(--text-muted);">Valoración Actual</span>
+                        <span class="pension-stat-value" style="font-weight:600; font-size:0.9rem; color:var(--primary-light);">${formatCurrency(estimatedValue)}</span>
+                    </div>
+                    <div class="pension-stat">
+                        <span class="pension-stat-label" style="display:block; font-size:0.7rem; color:var(--text-muted);">ROI Histórico</span>
+                        <span class="pension-stat-value ${gainsClass}" style="font-weight:600; font-size:0.9rem;">${gainsSign}${bankRoi.toFixed(1)}%</span>
+                    </div>
+                </div>
+                
+                ${progressBarHTML}
+                ${generateSparklineSVG(bank.valuations, bank.id)}
+                ${minAlertHTML}
+            </div>
+            <div class="bank-card-balance-section" style="gap:8px; flex-direction:column; align-items:flex-end; align-self: flex-start;">
+                <button onclick="openValuationModal('${bank.id}')" class="btn-edit-icon" title="Actualizar Valoración" style="color: var(--success-light); background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.15);">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                </button>
+                <button onclick="openEditModal('bank', '${bank.id}')" class="btn-edit-icon" title="Editar Inversión">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
+                <button onclick="deleteBank('${bank.id}')" class="btn-delete-icon" title="Eliminar Inversión">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    // Inicializar gráficos Chart.js para cada cartera
+    if (!window.investmentCharts) window.investmentCharts = {};
+    
+    activeInvestments.forEach(bank => {
+        if (!bank.valuations || bank.valuations.length < 2) return;
+        const canvasId = `chart-investment-${bank.id}`;
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        if (window.investmentCharts[bank.id]) {
+            window.investmentCharts[bank.id].destroy();
+        }
+
+        const labels = bank.valuations.map(v => {
+            const parts = v.date.split("-");
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}`;
+            }
+            return v.date;
+        });
+        const dataContrib = bank.valuations.map(v => v.balance || 0);
+        const dataEst = bank.valuations.map(v => v.estimatedValue ?? v.balance ?? 0);
+
+        // Determinar color de tendencia (ganancia o pérdida)
+        const isGain = dataEst[dataEst.length - 1] >= dataContrib[dataContrib.length - 1];
+        const estColor = isGain ? 'rgba(16, 185, 129, 0.95)' : 'rgba(239, 68, 68, 0.95)';
+        const estBg = isGain ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)';
+
+        window.investmentCharts[bank.id] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Aportado',
+                        data: dataContrib,
+                        borderColor: 'rgba(0, 229, 255, 0.85)',
+                        backgroundColor: 'rgba(0, 229, 255, 0.03)',
+                        borderWidth: 1.8,
+                        pointBackgroundColor: '#111827',
+                        pointBorderColor: 'rgba(0, 229, 255, 0.95)',
+                        pointBorderWidth: 1.5,
+                        pointRadius: 3.5,
+                        pointHoverRadius: 5,
+                        tension: 0.25,
+                        fill: false
+                    },
+                    {
+                        label: 'Valor Real',
+                        data: dataEst,
+                        borderColor: estColor,
+                        backgroundColor: estBg,
+                        borderWidth: 2,
+                        pointBackgroundColor: '#111827',
+                        pointBorderColor: estColor,
+                        pointBorderWidth: 1.5,
+                        pointRadius: 3.5,
+                        pointHoverRadius: 5,
+                        tension: 0.25,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                        titleColor: '#fff',
+                        bodyColor: '#94a3b8',
+                        borderColor: 'rgba(255,255,255,0.08)',
+                        borderWidth: 1,
+                        padding: 8,
+                        titleFont: { size: 9, family: 'Outfit, sans-serif' },
+                        bodyFont: { size: 9, family: 'Outfit, sans-serif' }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.02)'
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            font: {
+                                size: 8,
+                                family: 'Outfit, sans-serif'
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.02)'
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            font: {
+                                size: 8,
+                                family: 'Outfit, sans-serif'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+}
+
 // MÓDULO 2: ACTUALIZAR SELECTORES DE BANCOS EN GASTOS
 function renderExpensesDropdowns() {
     const fixedSelect = document.getElementById("fixed-bank-id");
     const varSelect = document.getElementById("var-bank-id");
     const adjSelect = document.getElementById("adj-bank-id");
+    const destSelect = document.getElementById("fixed-dest-bank-id");
 
     fixedSelect.innerHTML = "";
     varSelect.innerHTML = "";
     if (adjSelect) adjSelect.innerHTML = "";
+    if (destSelect) destSelect.innerHTML = `<option value="">-- Ninguno (Gasto Ordinario) --</option>`;
 
     if (state.banks.length === 0) {
         const opt = `<option value="">-- Cree un banco primero --</option>`;
@@ -1921,8 +2474,14 @@ function renderExpensesDropdowns() {
     }
 
     state.banks.forEach(bank => {
-        // Los planes de pensiones no participan en el sistema de gastos
-        if (bank.bankType === "pension") return;
+        // Los planes de pensiones e inversiones no participan en el sistema de gastos como origen, sino como destino
+        if (bank.bankType === "pension" || bank.bankType === "investment") {
+            if (destSelect) {
+                const valShow = bank.estimatedValue ?? bank.balance;
+                destSelect.innerHTML += `<option value="${bank.id}">${bank.name} (Valor: ${formatCurrency(valShow)})</option>`;
+            }
+            return;
+        }
         const option = `<option value="${bank.id}">${bank.name} (Saldo: ${formatCurrency(bank.balance)})</option>`;
         fixedSelect.innerHTML += option;
         varSelect.innerHTML += option;
@@ -1958,6 +2517,8 @@ function renderFixedExpensesTable() {
     sortedFixedExpenses.forEach(fe => {
         const bank = state.banks.find(b => b.id === fe.bankId);
         const bankName = bank ? bank.name : "Desconocido";
+        const destBank = fe.destBankId ? state.banks.find(b => b.id === fe.destBankId) : null;
+        const destBankHTML = destBank ? `<div style="font-size:0.7rem; color:var(--success-light); margin-top:4px; font-weight:500;">➡️ Destino: ${destBank.name}</div>` : "";
 
         const periodicity = fe.periodicity || "Mensual";
         const refM = parseInt(fe.chargeMonth || "01");
@@ -2039,6 +2600,7 @@ function renderFixedExpensesTable() {
                 <span class="bank-tag" style="background: rgba(0, 229, 255, 0.15); color: var(--primary-light); padding: 4px 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 600;">
                     ${bankName}
                 </span>
+                ${destBankHTML}
             </td>
             <td style="font-weight: 500; color: var(--text-primary);">Día ${fe.day || 1}</td>
             <td>${periodicityBadge}</td>
@@ -2723,7 +3285,37 @@ function renderProjectDetailView(projId) {
 // ----------------------------------------------------
 
 function formatCurrency(value) {
-    return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
+    const currencyKey = state.currency || 'EUR';
+    const config = CURRENCY_CONFIGS[currencyKey] || CURRENCY_CONFIGS.EUR;
+    return new Intl.NumberFormat(config.locale, { style: 'currency', currency: config.code }).format(value);
+}
+
+function updateDOMCurrencySymbols() {
+    const currencyKey = state.currency || 'EUR';
+    const config = CURRENCY_CONFIGS[currencyKey] || CURRENCY_CONFIGS.EUR;
+    const symbol = config.symbol;
+    const name = config.name;
+
+    // 1. Actualizar todas las etiquetas con clase .currency-label
+    document.querySelectorAll(".currency-label").forEach(el => {
+        if (!el.dataset.baseText) {
+            el.dataset.baseText = el.textContent.replace(/\s*\([^)]*\)\s*$/, '');
+        }
+        el.textContent = `${el.dataset.baseText} (${symbol})`;
+    });
+
+    // 2. Actualizar los placeholders de los inputs
+    const invInput = document.getElementById("proj-inv-amount");
+    if (invInput) invInput.setAttribute("placeholder", `Importe (${symbol})`);
+    
+    const earInput = document.getElementById("proj-ear-amount");
+    if (earInput) earInput.setAttribute("placeholder", `Importe (${symbol})`);
+
+    // 3. Actualizar el texto del botón del embudo
+    const btnModeEuro = document.getElementById("btn-mode-euro");
+    if (btnModeEuro) {
+        btnModeEuro.textContent = `${name} (${symbol})`;
+    }
 }
 
 function getTodayString() {
@@ -2783,8 +3375,17 @@ function initEditModal() {
                 if (newName && !isNaN(newBalance)) {
                     bank.name = newName;
                     bank.balance = newBalance;
-                    // Actualizar valor estimado si es plan de pensiones
-                    if (bank.bankType === "pension") {
+                    
+                    const purposeVal = document.getElementById("edit-bank-purpose-tags-container-value")?.value.trim() || "";
+                    const minVal = document.getElementById("edit-bank-min")?.value;
+                    const minBalance = (minVal !== undefined && minVal !== "") ? parseFloat(minVal) : null;
+                    
+                    bank.purpose = purposeVal;
+                    bank.minBalance = isNaN(minBalance) ? null : minBalance;
+                    bank.targetBalance = null;
+
+                    // Actualizar valor estimado si es plan de pensiones o inversión
+                    if (bank.bankType === "pension" || bank.bankType === "investment") {
                         const newEst = parseFloat(document.getElementById("edit-bank-estimated")?.value);
                         if (!isNaN(newEst) && newEst >= 0) {
                             bank.estimatedValue = newEst;
@@ -2799,6 +3400,7 @@ function initEditModal() {
             if (fe) {
                 const newName = document.getElementById("edit-fe-name").value.trim();
                 const newBankId = document.getElementById("edit-fe-bank").value;
+                const newDestBankId = document.getElementById("edit-fe-dest-bank")?.value || null;
                 const newAmount = parseFloat(document.getElementById("edit-fe-amount").value);
                 const newDay = parseInt(document.getElementById("edit-fe-day").value);
                 const newPeriodicity = document.getElementById("edit-fe-periodicity").value;
@@ -2807,6 +3409,7 @@ function initEditModal() {
                 if (newName && newBankId && !isNaN(newAmount) && newAmount > 0 && !isNaN(newDay) && newDay >= 1 && newDay <= 31) {
                     fe.name = newName;
                     fe.bankId = newBankId;
+                    fe.destBankId = newDestBankId;
                     fe.amount = newAmount;
                     fe.day = newDay;
                     fe.periodicity = newPeriodicity;
@@ -2869,6 +3472,98 @@ function initEditModal() {
     });
 }
 
+// --- MODAL DE VALORACIONES ---
+let currentValuationBankId = null;
+
+function initValuationModal() {
+    const modal = document.getElementById("modal-valuation");
+    const form = document.getElementById("form-valuation-global");
+    const btnCancel = document.getElementById("btn-cancel-val");
+    const btnClose = document.getElementById("btn-close-val-modal");
+
+    if (!modal || !form) return;
+
+    function closeValModal() {
+        modal.classList.add("hidden");
+        form.reset();
+        currentValuationBankId = null;
+    }
+
+    btnCancel.addEventListener("click", closeValModal);
+    btnClose.addEventListener("click", closeValModal);
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const bankId = document.getElementById("val-bank-id").value;
+        const date = document.getElementById("val-date").value;
+        const balance = parseFloat(document.getElementById("val-balance").value);
+        const estimated = parseFloat(document.getElementById("val-estimated").value);
+
+        if (!bankId || !date || isNaN(balance) || isNaN(estimated)) {
+            showToast("Complete los campos de valoración correctamente.", "danger");
+            return;
+        }
+
+        const bank = state.banks.find(b => b.id === bankId);
+        if (bank) {
+            if (!bank.valuations) bank.valuations = [];
+            
+            // Si ya existe valoración para esta fecha, la reemplazamos
+            const existingIndex = bank.valuations.findIndex(v => v.date === date);
+            if (existingIndex !== -1) {
+                bank.valuations[existingIndex] = { date, balance, estimatedValue: estimated };
+            } else {
+                bank.valuations.push({ date, balance, estimatedValue: estimated });
+            }
+
+            // Ordenar por fecha
+            bank.valuations.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Actualizar la última valoración como la valoración real actual
+            const latest = bank.valuations[bank.valuations.length - 1];
+            bank.balance = latest.balance;
+            bank.estimatedValue = latest.estimatedValue;
+
+            showToast(`Valoración para "${bank.name}" registrada correctamente.`, "success");
+            closeValModal();
+            renderAll();
+            saveState();
+        }
+    });
+}
+
+function openValuationModal(bankId) {
+    const bank = state.banks.find(b => b.id === bankId);
+    if (!bank) return;
+
+    currentValuationBankId = bankId;
+    document.getElementById("val-bank-id").value = bankId;
+    document.getElementById("modal-val-title").textContent = `Valoración: ${bank.name}`;
+    
+    // Rellenar con la valoración actual
+    document.getElementById("val-date").value = new Date().toISOString().split('T')[0];
+    document.getElementById("val-balance").value = bank.balance;
+    document.getElementById("val-estimated").value = bank.estimatedValue ?? bank.balance;
+
+    const modal = document.getElementById("modal-valuation");
+    modal.classList.remove("hidden");
+}
+
+function generateSparklineSVG(valuations, bankId) {
+    if (!Array.isArray(valuations) || valuations.length < 2) {
+        // Línea base gris neutra
+        return `
+        <svg viewBox="0 0 100 20" width="100%" height="30" style="display:block; overflow:visible; margin-top: 10px; opacity: 0.5;">
+            <line x1="0" y1="10" x2="100" y2="10" stroke="var(--border-color)" stroke-width="1" stroke-dasharray="2,2" />
+            <text x="50" y="14" fill="var(--text-muted)" font-size="4" text-anchor="middle" font-family="var(--font-primary)">Esperando histórico de valoraciones para graficar...</text>
+        </svg>`;
+    }
+    return `
+    <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 10px; margin-top: 12px; height: 165px; position: relative; width: 100%;">
+        <canvas id="chart-investment-${bankId}" style="width: 100%; height: 100%;"></canvas>
+    </div>`;
+}
+
 function openEditModal(type, id, extraId = null) {
     currentEditingItem = { type, id, extraId };
     const modal = document.getElementById("modal-edit");
@@ -2880,29 +3575,40 @@ function openEditModal(type, id, extraId = null) {
     if (type === "bank") {
         const bank = state.banks.find(b => b.id === id);
         if (!bank) return;
-        const isPension = bank.bankType === "pension";
-        titleEl.textContent = isPension ? "Editar Plan de Pensiones" : "Editar Cuenta Bancaria";
+        const isPension = bank.bankType === "pension" || bank.bankType === "investment";
+        titleEl.textContent = isPension ? "Editar Plan / Cartera de Inversiones" : "Editar Cuenta Bancaria";
         fieldsContainer.innerHTML = `
             <div class="form-group">
                 <label for="edit-bank-name">Nombre ${isPension ? "del Plan" : "del Banco"}</label>
                 <input type="text" id="edit-bank-name" value="${bank.name}" required>
             </div>
             <div class="form-group">
-                <label for="edit-bank-balance">${isPension ? "Total Aportado (€)" : "Saldo Real (€)"}</label>
+                <label for="edit-bank-balance" class="currency-label">${isPension ? "Total Aportado (€)" : "Saldo Real (€)"}</label>
                 <input type="number" id="edit-bank-balance" step="0.01" value="${bank.balance}" required>
+            </div>
+            <div class="form-group">
+                <label>Propósito / Uso de la Cuenta (Categorías)</label>
+                <div id="edit-bank-purpose-tags-container"></div>
+            </div>
+            <div class="form-group">
+                <label for="edit-bank-min" class="currency-label">Mínimo de Seguridad (€)</label>
+                <input type="number" id="edit-bank-min" step="0.01" min="0" value="${bank.minBalance !== null && bank.minBalance !== undefined ? bank.minBalance : ''}" placeholder="Opcional (Ej. 500.00)">
             </div>
             ${isPension ? `
             <div class="form-group">
-                <label for="edit-bank-estimated">Valor Estimado con Interés (€)</label>
+                <label for="edit-bank-estimated" class="currency-label">Valor Estimado con Interés (€)</label>
                 <input type="number" id="edit-bank-estimated" step="0.01" min="0" value="${bank.estimatedValue ?? bank.balance}">
                 <small style="color:var(--text-muted); font-size:0.72rem; margin-top:4px; display:block;">Introduce el valor actual del plan según tu entidad (incluye rentabilidad). No afecta al saldo aportado.</small>
             </div>` : ""}
         `;
+        initTagSelector("edit-bank-purpose-tags-container", bank.purpose ? bank.purpose.split(",") : []);
     } else if (type === "fixedExpense") {
         const fe = state.fixedExpenses.find(f => f.id === id);
         if (!fe) return;
         titleEl.textContent = "Editar Gasto Fijo Matriz";
-        const bankOptions = state.banks.map(b => `<option value="${b.id}" ${b.id === fe.bankId ? 'selected' : ''}>${b.name}</option>`).join('');
+        const bankOptions = state.banks.filter(b => b.bankType !== "pension" && b.bankType !== "investment").map(b => `<option value="${b.id}" ${b.id === fe.bankId ? 'selected' : ''}>${b.name}</option>`).join('');
+        const investments = state.banks.filter(b => b.bankType === "pension" || b.bankType === "investment");
+        const destBankOptions = `<option value="">-- Ninguno (Gasto Ordinario) --</option>` + investments.map(b => `<option value="${b.id}" ${b.id === fe.destBankId ? 'selected' : ''}>${b.name}</option>`).join('');
         fieldsContainer.innerHTML = `
             <div class="form-group">
                 <label for="edit-fe-name">Concepto</label>
@@ -2913,7 +3619,11 @@ function openEditModal(type, id, extraId = null) {
                 <select id="edit-fe-bank" required>${bankOptions}</select>
             </div>
             <div class="form-group">
-                <label for="edit-fe-amount">Importe (€)</label>
+                <label for="edit-fe-dest-bank">Destino de Inversión (Opcional)</label>
+                <select id="edit-fe-dest-bank">${destBankOptions}</select>
+            </div>
+            <div class="form-group">
+                <label for="edit-fe-amount" class="currency-label">Importe (€)</label>
                 <input type="number" id="edit-fe-amount" step="0.01" min="0.01" value="${fe.amount}" required>
             </div>
             <div class="form-group">
@@ -2986,7 +3696,7 @@ function openEditModal(type, id, extraId = null) {
                 <input type="text" id="edit-pinv-desc" value="${inv.description}" required>
             </div>
             <div class="form-group">
-                <label for="edit-pinv-amount">Importe (€)</label>
+                <label for="edit-pinv-amount" class="currency-label">Importe (€)</label>
                 <input type="number" id="edit-pinv-amount" step="0.01" min="0.01" value="${inv.amount}" required>
             </div>
         `;
@@ -3002,12 +3712,13 @@ function openEditModal(type, id, extraId = null) {
                 <input type="text" id="edit-pear-desc" value="${ear.description}" required>
             </div>
             <div class="form-group">
-                <label for="edit-pear-amount">Importe (€)</label>
+                <label for="edit-pear-amount" class="currency-label">Importe (€)</label>
                 <input type="number" id="edit-pear-amount" step="0.01" min="0.01" value="${ear.amount}" required>
             </div>
         `;
     }
 
+    updateDOMCurrencySymbols();
     modal.classList.remove("hidden");
 }
 
@@ -3524,11 +4235,11 @@ function renderSecondaryBreakdownChart() {
         }
 
         const activeBanks = state.banks.filter(b => {
-            const val = b.bankType === "pension" ? (b.estimatedValue ?? b.balance) : b.balance;
+            const val = (b.bankType === "pension" || b.bankType === "investment") ? (b.estimatedValue ?? b.balance) : b.balance;
             return val > 0;
         });
         const labels = activeBanks.map(b => b.name);
-        const values = activeBanks.map(b => b.bankType === "pension" ? (b.estimatedValue ?? b.balance) : b.balance);
+        const values = activeBanks.map(b => (b.bankType === "pension" || b.bankType === "investment") ? (b.estimatedValue ?? b.balance) : b.balance);
 
         if (values.length === 0) {
             window.mySecondaryBreakdownChart = new Chart(ctxSec, {
@@ -3881,7 +4592,7 @@ function initOnboarding() {
     
     const closeOnboarding = () => {
         modal.classList.add("hidden");
-        localStorage.setItem("finanzas_onboarding_shown", "true");
+        dbStorage.setItem("finanzas_onboarding_shown", "true");
     };
     
     btnPrev.addEventListener("click", () => {
@@ -3916,10 +4627,11 @@ function initOnboarding() {
     });
     
     // Auto abrir si no se ha mostrado antes
-    const onboardingShown = localStorage.getItem("finanzas_onboarding_shown");
-    if (!onboardingShown) {
-        setTimeout(openOnboarding, 800);
-    }
+    dbStorage.getItem("finanzas_onboarding_shown").then(onboardingShown => {
+        if (!onboardingShown) {
+            setTimeout(openOnboarding, 800);
+        }
+    });
 }
 
 // ----------------------------------------------------
@@ -4055,9 +4767,9 @@ function initContactModal() {
     }
 }
 
-function startApp() {
+async function startApp() {
     try {
-        loadState();
+        await loadState();
         initContactModal();
         
         // Check if we are on the main dashboard page
@@ -4073,6 +4785,7 @@ function startApp() {
             initBudgetClosure();
             initProjectsSandbox();
             initEditModal();
+            initValuationModal();
             initPerformanceTab();
             initDailyAdvice();
             initOnboarding();
@@ -4248,18 +4961,19 @@ function showCustomDialog({ title, message, isPrompt = false, isPassword = false
 function getProfileSummaryStats(profileId) {
     const profileKey = "finanzas_db_" + profileId;
     const stored = localStorage.getItem(profileKey);
-    if (!stored) return { totalBalance: 0, bankCount: 0 };
+    if (!stored) return { totalBalance: 0, bankCount: 0, currency: "EUR" };
     try {
         const parsedState = JSON.parse(stored);
         if (parsedState && Array.isArray(parsedState.banks)) {
             const totalBalance = parsedState.banks.reduce((sum, b) => sum + (b.balance || 0), 0);
             const bankCount = parsedState.banks.length;
-            return { totalBalance, bankCount };
+            const currency = parsedState.currency || "EUR";
+            return { totalBalance, bankCount, currency };
         }
     } catch (e) {
         console.error("Error al leer estadísticas rápidas del perfil " + profileId, e);
     }
-    return { totalBalance: 0, bankCount: 0 };
+    return { totalBalance: 0, bankCount: 0, currency: "EUR" };
 }
 
 // Renderiza el botón del perfil en el Header
@@ -4375,6 +5089,7 @@ function initProfilesManager() {
             localStorage.setItem("finanzas_current_profile_id", newProfileId);
             
             // Inicializar la base de datos de esta nueva cuenta completamente VACÍA y LIMPIA
+            const currencyVal = document.getElementById("new-profile-currency")?.value || "EUR";
             const emptyDb = {
                 banks: [],
                 fixedExpenses: [],
@@ -4382,7 +5097,8 @@ function initProfilesManager() {
                 budgets: {},
                 projects: [],
                 activityLog: [],
-                currentMonth: getSystemCurrentMonth()
+                currentMonth: getSystemCurrentMonth(),
+                currency: currencyVal
             };
             localStorage.setItem("finanzas_db_" + newProfileId, JSON.stringify(emptyDb));
             
@@ -4586,6 +5302,7 @@ function initProfilesManager() {
             document.getElementById("edit-profile-username").value = currentProfile.username;
             document.getElementById("edit-profile-pin").value = currentProfile.pin || "";
             document.getElementById("edit-profile-autolock").checked = currentProfile.autoLockEnabled !== false;
+            document.getElementById("edit-profile-currency").value = state.currency || "EUR";
             
             formEdit.classList.toggle("hidden");
             if (formCreate) formCreate.classList.add("hidden"); // Cerrar el de creación si está abierto
@@ -4608,6 +5325,7 @@ function initProfilesManager() {
             const newUsername = document.getElementById("edit-profile-username").value.trim();
             const newPin = document.getElementById("edit-profile-pin").value.trim();
             const newAutolock = document.getElementById("edit-profile-autolock").checked;
+            const newCurrency = document.getElementById("edit-profile-currency").value;
             
             if (!newUsername) {
                 showToast("El nombre de usuario no puede estar vacío.", "danger");
@@ -4630,6 +5348,9 @@ function initProfilesManager() {
             currentProfile.username = newUsername;
             currentProfile.pin = newPin || null;
             currentProfile.autoLockEnabled = newAutolock;
+            
+            // Guardar la nueva moneda en el estado
+            state.currency = newCurrency;
             
             // Guardar cambios en LocalStorage
             localStorage.setItem("finanzas_profiles", JSON.stringify(profilesState.profiles));
@@ -4673,7 +5394,8 @@ function renderProfilesList() {
         }
         
         const stats = getProfileSummaryStats(currentProfile.id);
-        const balanceFormatted = stats.totalBalance.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+        const configCur = CURRENCY_CONFIGS[stats.currency || 'EUR'] || CURRENCY_CONFIGS.EUR;
+        const balanceFormatted = new Intl.NumberFormat(configCur.locale, { style: 'currency', currency: configCur.code }).format(stats.totalBalance);
         const dateStr = currentProfile.createdAt ? new Date(currentProfile.createdAt).toLocaleDateString() : "--/--/----";
         
         document.getElementById("modal-current-meta").innerHTML = `
@@ -4701,7 +5423,8 @@ function renderProfilesList() {
         const dateStr = prof.createdAt ? new Date(prof.createdAt).toLocaleDateString() : "--/--/----";
         const hasPin = !!prof.pin;
         const stats = getProfileSummaryStats(prof.id);
-        const balanceFormatted = stats.totalBalance.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+        const configOther = CURRENCY_CONFIGS[stats.currency || 'EUR'] || CURRENCY_CONFIGS.EUR;
+        const balanceFormatted = new Intl.NumberFormat(configOther.locale, { style: 'currency', currency: configOther.code }).format(stats.totalBalance);
         
         const card = document.createElement("div");
         card.className = "profile-item-card";
@@ -4766,14 +5489,14 @@ function attemptSwitchProfile(profileId) {
 }
 
 // Cambiar de cuenta realmente (una vez validado el PIN si existía)
-function switchProfile(profileId) {
+async function switchProfile(profileId) {
     const prof = profilesState.profiles.find(p => p.id === profileId);
     if (!prof) return;
     
     profilesState.currentProfileId = profileId;
-    localStorage.setItem("finanzas_current_profile_id", profileId);
+    await dbStorage.setItem("finanzas_current_profile_id", profileId);
     
-    loadState();
+    await loadState();
     logActivity(`Sesión iniciada correctamente como "${prof.username}".`);
     renderAll();
     renderProfileWidget(); // Actualizar reactivamente el widget de la barra lateral izquierda
@@ -4794,12 +5517,12 @@ function deleteProfile(profileId) {
         message: `¿Estás completamente seguro de que deseas eliminar permanentemente el perfil de "${prof.username}"?\nSe borrarán TODOS sus bancos, transacciones, presupuestos y proyectos de forma irreversible.`,
         confirmText: "Eliminar Perfil",
         isDestructive: true
-    }).then(confirmed => {
+    }).then(async (confirmed) => {
         if (confirmed) {
-            localStorage.removeItem("finanzas_db_" + profileId);
+            await dbStorage.removeItem("finanzas_db_" + profileId);
             
             profilesState.profiles = profilesState.profiles.filter(p => p.id !== profileId);
-            localStorage.setItem("finanzas_profiles", JSON.stringify(profilesState.profiles));
+            await dbStorage.setItem("finanzas_profiles", profilesState.profiles);
             
             showToast(`Perfil de "${prof.username}" eliminado correctamente.`, 'danger');
             renderProfilesList();

@@ -50,6 +50,10 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                     <span>Rendimiento</span>
                 </button>
+                <button id="tab-investments" class="nav-btn" data-target="panel-investments" title="Inversiones y Planes de Ahorro">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span>Inversiones</span>
+                </button>
                 <button id="tab-projects" class="nav-btn" data-target="panel-projects" title="Proyectos Sandbox (Entorno Simulado)">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                     <span>Proyectos</span>
@@ -219,9 +223,10 @@
                             <h3>Añadir Nueva Cuenta</h3>
                             <div class="form-group">
                                 <label for="bank-type">Tipo de Cuenta</label>
-                                <select id="bank-type" onchange="document.getElementById('pension-hint').classList.toggle('hidden', this.value !== 'pension'); document.getElementById('pension-balance-label').textContent = this.value === 'pension' ? 'Aportación Inicial (€)' : 'Saldo Inicial (€)';">
-                                    <option value="normal">🏦 Cuenta Bancaria / Cartera</option>
+                                <select id="bank-type">
+                                    <option value="normal">🏦 Cuenta Bancaria / Cartera líquida</option>
                                     <option value="pension">📈 Plan de Pensiones</option>
+                                    <option value="investment">💼 Cartera de Inversiones / Fondos</option>
                                 </select>
                             </div>
                             <div id="pension-hint" class="pension-form-hint hidden">
@@ -234,8 +239,20 @@
                                     <input type="text" id="bank-name" placeholder="Ej. BBVA, Plan Naranja..." required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="bank-initial-balance" id="pension-balance-label">Saldo Inicial (€)</label>
+                                    <label for="bank-initial-balance" id="pension-balance-label" class="currency-label">Saldo Inicial (€)</label>
                                     <input type="number" id="bank-initial-balance" step="0.01" min="0" placeholder="0.00" required>
+                                </div>
+                            </div>
+                            <div class="form-row-grid" style="margin-top: 10px;">
+                                <div class="form-group">
+                                    <label>Propósito / Uso de la Cuenta (Categorías)</label>
+                                    <div id="bank-purpose-tags-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-row-grid" style="margin-top: 10px;">
+                                <div class="form-group">
+                                    <label for="bank-min-balance" class="currency-label">Mínimo de Seguridad (€)</label>
+                                    <input type="number" id="bank-min-balance" step="0.01" min="0" placeholder="Opcional (Ej. 500.00)">
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -268,7 +285,7 @@
                                         <input type="text" id="goal-name" placeholder="Ej. Coche, Vacaciones..." required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="goal-target-amount">Cantidad Objetivo (€)</label>
+                                        <label for="goal-target-amount" class="currency-label">Cantidad Objetivo (€)</label>
                                         <input type="number" id="goal-target-amount" step="0.01" min="0.01" placeholder="0.00" required>
                                     </div>
                                 </div>
@@ -326,7 +343,7 @@
                             <!-- Datos del Ingreso -->
                             <div class="form-row-grid-three">
                                 <div class="form-group">
-                                    <label for="income-amount">Importe a Ingresar (€)</label>
+                                    <label for="income-amount" class="currency-label">Importe a Ingresar (€)</label>
                                     <input type="number" id="income-amount" step="0.01" min="0.01" placeholder="Ej. 1800" required>
                                 </div>
                                 <div class="form-group">
@@ -384,6 +401,7 @@
                                         <div id="funnel-validator-progress-bar" class="validator-progress-fill" style="width: 0%"></div>
                                     </div>
                                     <div class="validator-actions">
+                                        <button type="button" id="btn-funnel-fill-min" class="btn-helper" style="border-color: rgba(239, 68, 68, 0.3); color: #ef4444;" title="Asignar dinero prioritariamente a las cuentas que estén por debajo de su saldo mínimo de seguridad">Cubrir Mínimos</button>
                                         <button type="button" id="btn-funnel-equal" class="btn-helper">Reparto Equitativo</button>
                                         <button type="button" id="btn-funnel-clear" class="btn-helper">Limpiar Todo</button>
                                     </div>
@@ -434,7 +452,7 @@
                                     <input type="text" id="fixed-name" placeholder="Ej. Alquiler, Netflix..." required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="fixed-amount">Importe (€)</label>
+                                    <label for="fixed-amount" class="currency-label">Importe (€)</label>
                                     <input type="number" id="fixed-amount" step="0.01" min="0.01" placeholder="0.00" required>
                                 </div>
                                 <div class="form-group">
@@ -456,6 +474,12 @@
                                         <option value="Trimestral">Trimestral</option>
                                         <option value="Semestral">Semestral</option>
                                         <option value="Anual">Anual</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fixed-dest-bank-id">Destino de Inversión (Opcional)</label>
+                                    <select id="fixed-dest-bank-id">
+                                        <!-- Inyectado dinámicamente -->
                                     </select>
                                 </div>
                                 <div class="form-group hidden" id="fixed-charge-month-group">
@@ -553,7 +577,7 @@
                                     <input type="text" id="var-description" placeholder="Ej. Compra supermercado, Gasolina..." required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="var-amount">Importe a Restar (€)</label>
+                                    <label for="var-amount" class="currency-label">Importe a Restar (€)</label>
                                     <input type="number" id="var-amount" step="0.01" min="0.01" placeholder="0.00" required>
                                 </div>
                             </div>
@@ -585,7 +609,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="adj-new-balance">Nuevo Saldo Real en la App (€)</label>
+                                    <label for="adj-new-balance" class="currency-label">Nuevo Saldo Real en la App (€)</label>
                                     <input type="number" id="adj-new-balance" step="0.01" min="0.00" placeholder="0.00" required>
                                 </div>
                             </div>
@@ -810,6 +834,46 @@
                 </div>
             </section>
 
+            <!-- 3. MÓDULO DE INVERSIONES Y PLANES -->
+            <section id="panel-investments" class="tab-panel">
+                <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-bottom: 20px;">
+                    <div class="stat-card" style="border-left: 4px solid var(--accent-light);">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Total Aportado / Invertido</span>
+                        </div>
+                        <div class="stat-value" id="investments-total-contributed" style="color:var(--text-light);">0.00 €</div>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid var(--primary-light);">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Valor Actual de la Cartera</span>
+                        </div>
+                        <div class="stat-value" id="investments-current-value" style="color:var(--primary-light);">0.00 €</div>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid var(--success-light);">
+                        <div class="stat-value-yield-wrapper">
+                            <div class="stat-card-header">
+                                <span class="stat-title">Rentabilidad Neta (ROI %)</span>
+                            </div>
+                            <div class="stat-value" id="investments-total-yield" style="color:var(--success-light);">0.00 € (0.00%)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid" style="grid-template-columns: 1fr;">
+                    <div class="dashboard-column shadow-glass">
+                        <div class="column-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <h2>Cartera de Inversiones y Planes</h2>
+                            <button type="button" class="btn-primary" onclick="document.getElementById('tab-dashboard').click(); setTimeout(() => { const btn = document.getElementById('btn-show-add-bank'); if (document.getElementById('form-add-bank').classList.contains('hidden')) { btn.click(); } document.getElementById('bank-type').value = 'investment'; document.getElementById('bank-type').dispatchEvent(new Event('change')); window.scrollTo({top: 0, behavior: 'smooth'}); }, 50);" style="font-size: 0.8rem; padding: 6px 12px; display:inline-flex; align-items:center; gap:6px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <span>Nueva Inversión / Plan</span>
+                            </button>
+                        </div>
+                        <div id="investments-list-container" class="banks-card-grid">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- 4. MÓDULO DE PROYECTOS (ENTORNO AISLADO / SANDBOX) -->
             <section id="panel-projects" class="tab-panel">
@@ -1007,6 +1071,39 @@
         </div>
     </div>
 
+    <!-- MODAL DE ACTUALIZACIÓN DE VALORACIÓN -->
+    <div id="modal-valuation" class="modal hidden">
+        <div class="modal-content shadow-glass" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 id="modal-val-title">Actualizar Valoración</h3>
+                <button id="btn-close-val-modal" class="btn-close">&times;</button>
+            </div>
+            <form id="form-valuation-global">
+                <input type="hidden" id="val-bank-id">
+                <div class="modal-fields" style="display: flex; flex-direction: column; gap: 16px; padding: 10px 0;">
+                    <div class="form-group">
+                        <label for="val-date">Fecha de Valoración</label>
+                        <input type="date" id="val-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="val-balance" class="currency-label">Total Aportado Acumulado (€)</label>
+                        <input type="number" id="val-balance" step="0.01" min="0" required placeholder="Ej. 1000.00">
+                        <small style="color:var(--text-muted); font-size:0.7rem; display:block; margin-top:2px;">El total aportado real por ti hasta esta fecha.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="val-estimated" class="currency-label">Valoración Estimada Actual (€)</label>
+                        <input type="number" id="val-estimated" step="0.01" min="0" required placeholder="Ej. 1150.00">
+                        <small style="color:var(--text-muted); font-size:0.7rem; display:block; margin-top:2px;">El valor real del fondo de inversión o plan de pensiones (con intereses) en esta fecha.</small>
+                    </div>
+                </div>
+                <div class="form-actions" style="margin-top: 20px;">
+                    <button type="button" id="btn-cancel-val" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-submit">Registrar Valoración</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL DE GESTIÓN DE PERFILES Y USUARIOS -->
     <div id="modal-profiles" class="modal hidden">
         <div class="modal-content profiles-modal shadow-glass">
@@ -1070,6 +1167,19 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="edit-profile-currency">Moneda de la Cuenta</label>
+                            <select id="edit-profile-currency" style="width: 100%; padding: 10px 14px; font-size: 0.95rem; border-radius: 8px; background: rgba(15, 23, 42, 0.8); border: 1.5px solid var(--border-glass); color: white; outline: none; box-sizing: border-box; cursor: pointer;">
+                                <option value="EUR">Euro (€)</option>
+                                <option value="USD">Dólar ($)</option>
+                                <option value="GBP">Libra (£)</option>
+                                <option value="JPY">Yen (¥)</option>
+                                <option value="MXN">Peso Mexicano ($)</option>
+                                <option value="ARS">Peso Argentino ($)</option>
+                                <option value="COP">Peso Colombiano ($)</option>
+                                <option value="CLP">Peso Chileno ($)</option>
+                            </select>
+                        </div>
                         <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 4px; grid-column: span 2;">
                             <input type="checkbox" id="edit-profile-autolock" style="width: auto; cursor: pointer;">
                             <label for="edit-profile-autolock" style="cursor: pointer; margin: 0; font-size: 0.8rem; text-transform: none; color: var(--text-secondary);">Bloqueo automático por inactividad (5 min)</label>
@@ -1095,7 +1205,6 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         <span>Crear Nuevo Usuario / Cuenta</span>
                     </button>
-                    
                     <form id="form-create-profile" class="card-form hidden" style="margin-top: 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-glass-focus);">
                         <h4 style="font-family: var(--font-header); font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Registrar Nueva Cuenta</h4>
                         <div class="form-row-grid">
@@ -1113,6 +1222,19 @@
                                     </button>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="new-profile-currency">Moneda de la Cuenta</label>
+                                <select id="new-profile-currency" style="width: 100%; padding: 10px 14px; font-size: 0.95rem; border-radius: 8px; background: rgba(15, 23, 42, 0.8); border: 1.5px solid var(--border-glass); color: white; outline: none; box-sizing: border-box; cursor: pointer;">
+                                    <option value="EUR">Euro (€)</option>
+                                    <option value="USD">Dólar ($)</option>
+                                    <option value="GBP">Libra (£)</option>
+                                    <option value="JPY">Yen (¥)</option>
+                                    <option value="MXN">Peso Mexicano ($)</option>
+                                    <option value="ARS">Peso Argentino ($)</option>
+                                    <option value="COP">Peso Colombiano ($)</option>
+                                    <option value="CLP">Peso Chileno ($)</option>
+                                </select>
+                            </div>
                             <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 4px; grid-column: span 2;">
                                 <input type="checkbox" id="new-profile-autolock" style="width: auto; cursor: pointer;" checked>
                                 <label for="new-profile-autolock" style="cursor: pointer; margin: 0; font-size: 0.8rem; text-transform: none; color: var(--text-secondary);">Bloqueo automático por inactividad (5 min)</label>
@@ -1123,6 +1245,7 @@
                             <button type="submit" class="btn-submit">Crear Cuenta</button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
