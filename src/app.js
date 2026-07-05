@@ -2306,14 +2306,23 @@ function renderBanksList() {
             `;
         }
 
-        if (bank.minBalance !== null && bank.minBalance !== undefined && bank.balance < bank.minBalance) {
-            const deficit = bank.minBalance - bank.balance;
-            alertsHTML += `
-                <div class="alert-overdraft" title="Por debajo de tu mínimo de seguridad de ${formatCurrency(bank.minBalance)}" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); margin-top: 4px;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                    <span>Mínimo: Faltan ${formatCurrency(deficit)}</span>
-                </div>
-            `;
+        if (bank.minBalance !== null && bank.minBalance !== undefined) {
+            if (bank.balance < bank.minBalance) {
+                const deficit = bank.minBalance - bank.balance;
+                alertsHTML += `
+                    <div class="alert-overdraft" title="Por debajo de tu mínimo de seguridad de ${formatCurrency(bank.minBalance)}" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); margin-top: 4px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <span>Mínimo: Faltan ${formatCurrency(deficit)}</span>
+                    </div>
+                `;
+            } else {
+                alertsHTML += `
+                    <div class="alert-overdraft" title="Por encima de tu mínimo de seguridad de ${formatCurrency(bank.minBalance)}" style="background: rgba(16, 185, 129, 0.08); color: var(--success-light); border-color: rgba(16, 185, 129, 0.2); margin-top: 4px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span>Mínimo: ${formatCurrency(bank.minBalance)} (Óptimo)</span>
+                    </div>
+                `;
+            }
         }
 
         const card = document.createElement("div");
@@ -2413,14 +2422,23 @@ function renderInvestmentsList() {
 
         // Alerta de Mínimo de Seguridad (si lo tuviera)
         let minAlertHTML = "";
-        if (bank.minBalance !== null && bank.minBalance !== undefined && bank.balance < bank.minBalance) {
-            const deficit = bank.minBalance - bank.balance;
-            minAlertHTML = `
-                <div class="alert-overdraft" title="Por debajo de tu mínimo de seguridad de ${formatCurrency(bank.minBalance)}" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); margin-top: 6px; display:inline-flex;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                    <span style="margin-left:4px;">Mínimo: Faltan ${formatCurrency(deficit)}</span>
-                </div>
-            `;
+        if (bank.minBalance !== null && bank.minBalance !== undefined) {
+            if (bank.balance < bank.minBalance) {
+                const deficit = bank.minBalance - bank.balance;
+                minAlertHTML = `
+                    <div class="alert-overdraft" title="Por debajo de tu mínimo de seguridad de ${formatCurrency(bank.minBalance)}" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); margin-top: 6px; display:inline-flex;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <span style="margin-left:4px;">Mínimo: Faltan ${formatCurrency(deficit)}</span>
+                    </div>
+                `;
+            } else {
+                minAlertHTML = `
+                    <div class="alert-overdraft" title="Por encima de tu mínimo de seguridad de ${formatCurrency(bank.minBalance)}" style="background: rgba(16, 185, 129, 0.08); color: var(--success-light); border-color: rgba(16, 185, 129, 0.2); margin-top: 6px; display:inline-flex;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span style="margin-left:4px;">Mínimo: ${formatCurrency(bank.minBalance)} (Óptimo)</span>
+                    </div>
+                `;
+            }
         }
 
         const card = document.createElement("div");
