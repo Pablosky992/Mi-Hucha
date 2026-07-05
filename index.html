@@ -212,10 +212,16 @@
                     <div class="dashboard-column shadow-glass">
                         <div class="column-header">
                             <h2>Cuentas Bancarias y Saldos</h2>
-                            <button id="btn-show-add-bank" class="btn-primary-mini">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                <span>Nuevo Banco</span>
-                            </button>
+                            <div style="display: flex; gap: 8px;">
+                                <button id="btn-show-transfer" class="btn-primary-mini" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); color: var(--success-light);">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                                    <span>Traspasar</span>
+                                </button>
+                                <button id="btn-show-add-bank" class="btn-primary-mini">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    <span>Nuevo Banco</span>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Formulario oculto/desplegable para añadir banco -->
@@ -258,6 +264,43 @@
                             <div class="form-actions">
                                 <button type="button" id="btn-cancel-add-bank" class="btn-secondary">Cancelar</button>
                                 <button type="submit" class="btn-submit">Guardar</button>
+                            </div>
+                        </form>
+
+                        <!-- Formulario oculto/desplegable para realizar traspaso -->
+                        <form id="form-transfer-money" class="card-form hidden" style="border-color: rgba(16, 185, 129, 0.25);">
+                            <h3>Realizar Traspaso entre Cuentas</h3>
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label for="transfer-from-bank">Cuenta de Origen</label>
+                                    <select id="transfer-from-bank" required>
+                                        <!-- Inyectado dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="transfer-to-bank">Cuenta de Destino</label>
+                                    <select id="transfer-to-bank" required>
+                                        <!-- Inyectado dinámicamente -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row-grid-three" style="margin-top: 10px;">
+                                <div class="form-group">
+                                    <label for="transfer-amount" class="currency-label">Importe (€)</label>
+                                    <input type="number" id="transfer-amount" step="0.01" min="0.01" required placeholder="Ej. 100.00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="transfer-date">Fecha</label>
+                                    <input type="date" id="transfer-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="transfer-desc">Concepto / Detalle</label>
+                                    <input type="text" id="transfer-desc" placeholder="Traspaso de fondos" value="Traspaso de fondos">
+                                </div>
+                            </div>
+                            <div class="form-actions" style="margin-top: 15px;">
+                                <button type="button" id="btn-cancel-transfer" class="btn-secondary">Cancelar</button>
+                                <button type="submit" class="btn-submit" style="background: var(--success-light); border-color: var(--success-light);">Realizar Traspaso</button>
                             </div>
                         </form>
 
@@ -1531,8 +1574,7 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Diapositiva 5: Sandbox de Proyectos -->
+                             <!-- Diapositiva 5: Sandbox de Proyectos -->
                 <div class="onboarding-slide hidden" data-step="5">
                     <div style="text-align: center; margin-bottom: 18px;">
                         <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">🚀</span>
@@ -1543,6 +1585,28 @@
                     </p>
                     <div style="background: rgba(255, 255, 255, 0.02); border: 1.5px solid var(--border-glass); border-radius: 12px; padding: 14px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
                         La pestaña de <strong>Proyectos</strong> funciona como un entorno de simulación (Sandbox). Puedes crear proyectos individuales y registrar en ellos sus inversiones (gastos) y retornos (ingresos) de forma totalmente aislada, calculando el ROI y rendimiento de tus iniciativas de forma independiente.
+                    </div>
+                </div>
+
+                <!-- Diapositiva 6: Inversiones y Traspasos -->
+                <div class="onboarding-slide hidden" data-step="6">
+                    <div style="text-align: center; margin-bottom: 18px;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">💼</span>
+                        <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--primary-light); margin: 0 0 6px 0;">Inversiones y Traspasos Rápidos</h4>
+                    </div>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+                        Gestiona tus activos a largo plazo y mueve dinero entre tus cuentas sin alterar tus estadísticas de ahorro mensual:
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                            <strong>Cartera de Inversiones 💼</strong>: Pestaña dedicada para fondos y planes de pensiones. Permite visualizar el total invertido y ver gráficos interactivos de evolución a doble línea (Aportado vs Valor Real).
+                        </div>
+                        <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                            <strong>Historial de Valoraciones 📈</strong>: Registra la valoración de tus activos en cualquier fecha para calcular tu beneficio neto y ROI acumulado de forma automática y visual.
+                        </div>
+                        <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                            <strong>Traspasos Rápidos ➡️</strong>: Mueve capital de forma inmediata con el botón "Traspasar". Las transferencias internas se excluyen de los flujos de gastos e ingresos externos mensuales.
+                        </div>
                     </div>
                     <p style="font-size: 0.82rem; color: var(--text-muted); text-align: center; margin-top: 15px; font-weight: 600;">
                         💡 ¡Estás listo para tomar el control total de tu economía!
@@ -1563,6 +1627,7 @@
                     <span class="onboarding-dot" data-step="3" style="width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; transition: all 0.3s ease; cursor: pointer;"></span>
                     <span class="onboarding-dot" data-step="4" style="width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; transition: all 0.3s ease; cursor: pointer;"></span>
                     <span class="onboarding-dot" data-step="5" style="width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; transition: all 0.3s ease; cursor: pointer;"></span>
+                    <span class="onboarding-dot" data-step="6" style="width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; transition: all 0.3s ease; cursor: pointer;"></span>
                 </div>
                 
                 <button type="button" id="btn-onboarding-next" class="btn-submit" style="margin: 0; min-width: 90px; padding: 10px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none; color: white; background: var(--primary); box-shadow: 0 4px 12px var(--primary-glow);">

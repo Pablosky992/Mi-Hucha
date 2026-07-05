@@ -772,6 +772,139 @@ function initBanksManager() {
     });
 }
 
+function initTransferForm() {
+    const btnShowTransfer = document.getElementById("btn-show-transfer");
+    const formTransfer = document.getElementById("form-transfer-money");
+    const btnCancel = document.getElementById("btn-cancel-transfer");
+
+    if (!btnShowTransfer || !formTransfer || !btnCancel) return;
+
+    btnShowTransfer.addEventListener("click", () => {
+        formTransfer.classList.toggle("hidden");
+        if (!formTransfer.classList.contains("hidden")) {
+            // Rellenar fecha de hoy por defecto
+            document.getElementById("transfer-date").value = new Date().toISOString().split('T')[0];
+            renderTransferDropdowns();
+        }
+    });
+
+    btnCancel.addEventListener("click", () => {
+        formTransfer.classList.add("hidden");
+        formTransfer.reset();
+    });
+
+    formTransfer.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fromBankId = document.getElementById("transfer-from-bank").value;
+        const toBankId = document.getElementById("transfer-to-bank").value;
+        const amount = parseFloat(document.getElementById("transfer-amount").value);
+        const date = document.getElementById("transfer-date").value;
+        const desc = document.getElementById("transfer-desc").value.trim() || "Traspaso de fondos";
+
+        if (!fromBankId || !toBankId || isNaN(amount) || amount <= 0 || !date) {
+            showToast("Por favor, complete todos los campos correctamente.", "danger");
+            return;
+        }
+
+        if (fromBankId === toBankId) {
+            showToast("La cuenta de origen y destino no pueden ser la misma.", "danger");
+            return;
+        }
+
+        const fromBank = state.banks.find(b => b.id === fromBankId);
+        const toBank = state.banks.find(b => b.id === toBankId);
+
+        if (!fromBank || !toBank) {
+            showToast("Una de las cuentas seleccionadas no existe.", "danger");
+            return;
+        }
+
+        if (fromBank.balance < amount) {
+            if (!confirm(`El saldo disponible en "${fromBank.name}" (${formatCurrency(fromBank.balance)}) es menor que el importe a traspasar (${formatCurrency(amount)}). ¿Desea continuar de todos modos?`)) {
+                return;
+            }
+        }
+
+        // Obtener mes a partir de la fecha seleccionada
+        const dateObj = new Date(date);
+        const yyyy = dateObj.getFullYear();
+        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const txMonth = `${yyyy}-${mm}`;
+
+        // 1. Modificar saldos de las cuentas
+        fromBank.balance -= amount;
+        toBank.balance += amount;
+
+        // Si son de tipo inversión/pensión, también actualizamos su estimatedValue si no tiene historial, o agregamos una valoración si procede
+        if (fromBank.bankType === "pension" || fromBank.bankType === "investment") {
+            fromBank.estimatedValue = (fromBank.estimatedValue ?? fromBank.balance) - amount;
+            if (fromBank.valuations) {
+                fromBank.valuations.push({ date, balance: fromBank.balance, estimatedValue: fromBank.estimatedValue });
+                fromBank.valuations.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+        }
+        if (toBank.bankType === "pension" || toBank.bankType === "investment") {
+            toBank.estimatedValue = (toBank.estimatedValue ?? toBank.balance) + amount;
+            if (toBank.valuations) {
+                toBank.valuations.push({ date, balance: toBank.balance, estimatedValue: toBank.estimatedValue });
+                toBank.valuations.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+        }
+
+        // 2. Crear las dos transacciones recíprocas tipo Traspaso
+        const txExpense = {
+            id: "tx_" + Date.now() + "_1",
+            type: "expense",
+            subtype: "Traspaso",
+            description: `${desc} (Hacia ${toBank.name})`,
+            amount: amount,
+            bankId: fromBankId,
+            date: date,
+            month: txMonth,
+            createdAt: new Date().toISOString()
+        };
+
+        const txIncome = {
+            id: "tx_" + Date.now() + "_2",
+            type: "income",
+            subtype: "Traspaso",
+            description: `${desc} (Desde ${fromBank.name})`,
+            amount: amount,
+            bankId: toBankId,
+            date: date,
+            month: txMonth,
+            createdAt: new Date().toISOString()
+        };
+
+        state.transactions.push(txExpense);
+        state.transactions.push(txIncome);
+
+        showToast(`Traspaso de ${formatCurrency(amount)} realizado con éxito.`, "success");
+        formTransfer.classList.add("hidden");
+        formTransfer.reset();
+        
+        renderAll();
+        saveState();
+    });
+}
+
+function renderTransferDropdowns() {
+    const fromSelect = document.getElementById("transfer-from-bank");
+    const toSelect = document.getElementById("transfer-to-bank");
+
+    if (!fromSelect || !toSelect) return;
+
+    fromSelect.innerHTML = `<option value="">-- Seleccione Origen --</option>`;
+    toSelect.innerHTML = `<option value="">-- Seleccione Destino --</option>`;
+
+    state.banks.forEach(bank => {
+        const typeText = bank.bankType === "pension" ? "Plan" : bank.bankType === "investment" ? "Inv." : "CC";
+        const opt = `<option value="${bank.id}">${bank.name} (${typeText}: ${formatCurrency(bank.balance)})</option>`;
+        fromSelect.insertAdjacentHTML("beforeend", opt);
+        toSelect.insertAdjacentHTML("beforeend", opt);
+    });
+}
+
 function deleteBank(bankId) {
     const bank = state.banks.find(b => b.id === bankId);
     if (!bank) return;
@@ -2077,14 +2210,14 @@ function renderGlobalStats() {
     document.getElementById("global-total-balance").textContent = formatCurrency(totalBanks);
 
     // 2. Ingresos del mes en curso
-    const monthlyIncomeTx = state.transactions.filter(tx => tx.type === "income" && tx.month === state.currentMonth);
+    const monthlyIncomeTx = state.transactions.filter(tx => tx.type === "income" && tx.subtype !== "Traspaso" && tx.month === state.currentMonth);
     let totalIncome = 0;
     monthlyIncomeTx.forEach(tx => totalIncome += tx.amount);
     document.getElementById("global-monthly-income").textContent = formatCurrency(totalIncome);
     document.getElementById("global-monthly-income-details").textContent = `Recibidos en ${formatMonthString(state.currentMonth)}`;
 
     // 3. Gastos del mes en curso
-    const monthlyExpenseTx = state.transactions.filter(tx => tx.type === "expense" && tx.month === state.currentMonth);
+    const monthlyExpenseTx = state.transactions.filter(tx => tx.type === "expense" && tx.subtype !== "Traspaso" && tx.month === state.currentMonth);
     let totalExpense = 0;
     monthlyExpenseTx.forEach(tx => totalExpense += tx.amount);
     document.getElementById("global-monthly-expense").textContent = formatCurrency(totalExpense);
@@ -2487,6 +2620,7 @@ function renderExpensesDropdowns() {
         varSelect.innerHTML += option;
         if (adjSelect) adjSelect.innerHTML += option;
     });
+    renderTransferDropdowns();
 }
 
 // MÓDULO 2: TABLA DE GASTOS FIJOS (MATRIZ)
@@ -2880,7 +3014,7 @@ function renderClosureCharts() {
         }
 
         // ── Datos para el donut (gastos por concepto) ──
-        const expenseTxs = bankTxs.filter(tx => tx.type === "expense");
+        const expenseTxs = bankTxs.filter(tx => tx.type === "expense" && tx.subtype !== "Traspaso");
         const expenseMap = {};
         expenseTxs.forEach(tx => {
             const key = tx.description || "Sin categoría";
@@ -2904,13 +3038,13 @@ function renderClosureCharts() {
         const totalExpenses = donutData.reduce((a, b) => a + b, 0);
         const totalIncome = (() => {
             let inc = 0;
-            // Ingresos directos a este banco (Ej: Ajustes, Extras)
+            // Ingresos directos a este banco (Ej: Ajustes, Extras) Excluyendo traspasos
             bankTxs.forEach(tx => {
-                if (tx.type === "income") inc += tx.amount;
+                if (tx.type === "income" && tx.subtype !== "Traspaso") inc += tx.amount;
             });
             // Ingresos distribuidos (Embudos)
             monthTransactions.forEach(tx => {
-                if (tx.type === "income" && tx.distributions) {
+                if (tx.type === "income" && tx.subtype !== "Traspaso" && tx.distributions) {
                     const dist = tx.distributions.find(d => d.bankId === bank.id);
                     if (dist) inc += dist.amount;
                 }
@@ -3877,6 +4011,7 @@ function renderPerformanceModule() {
         let exp = 0;
 
         txs.forEach(tx => {
+            if (tx.subtype === "Traspaso") return;
             if (tx.type === "income") {
                 if (bankId === "all") {
                     inc += tx.amount;
@@ -3929,6 +4064,7 @@ function renderPerformanceModule() {
     let currentExpenses = 0;
 
     currentMonthTxs.forEach(tx => {
+        if (tx.subtype === "Traspaso") return;
         if (tx.type === "income") {
             if (bankId === "all") {
                 currentIncomes += tx.amount;
@@ -4530,6 +4666,19 @@ function initDailyAdvice() {
             closeModal();
         }
     });
+
+    // Auto-abrir el consejo del día una vez al día si ya se mostró la guía de inicio
+    dbStorage.getItem("finanzas_onboarding_shown").then(onboardingShown => {
+        if (onboardingShown) {
+            const todayStr = new Date().toDateString();
+            dbStorage.getItem("last_daily_advice_shown_date").then(lastShownDate => {
+                if (lastShownDate !== todayStr) {
+                    setTimeout(openModal, 1200);
+                    dbStorage.setItem("last_daily_advice_shown_date", todayStr);
+                }
+            });
+        }
+    });
 }
 
 // ----------------------------------------------------
@@ -4779,6 +4928,7 @@ async function startApp() {
             initNavigation();
             initMonthSelector();
             initBanksManager();
+            initTransferForm();
             initIncomeFunnel();
             initFixedExpenses();
             initVariableExpenses();
