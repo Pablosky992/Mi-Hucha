@@ -2463,7 +2463,7 @@ function renderInvestmentsList() {
                         <span class="pension-stat-value" style="font-weight:600; font-size:0.9rem; color:var(--primary-light);">${formatCurrency(estimatedValue)}</span>
                     </div>
                     <div class="pension-stat">
-                        <span class="pension-stat-label" style="display:block; font-size:0.7rem; color:var(--text-muted);">ROI Histórico</span>
+                        <span class="pension-stat-label" style="display:block; font-size:0.7rem; color:var(--text-muted);">% Actual</span>
                         <span class="pension-stat-value ${gainsClass}" style="font-weight:600; font-size:0.9rem;">${gainsSign}${bankRoi.toFixed(1)}%</span>
                     </div>
                 </div>
