@@ -4833,11 +4833,11 @@ function initContactModal() {
                     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4;">
                         ¿Has encontrado un fallo en la web? ¿Tienes alguna duda o sugerencia para mejorar la aplicación? Escríbenos directamente y te responderemos lo antes posible.
                     </p>
-                    <form id="contact-modal-form" action="https://formsubmit.co/expondudas@yahoo.com" method="POST" target="_blank" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-                        <!-- Configuración adicional de FormSubmit -->
-                        <input type="hidden" name="_subject" value="📬 Nuevo mensaje de Soporte - Mi Hucha">
-                        <input type="hidden" name="_honey" style="display:none">
-                        <input type="hidden" name="_template" value="table">
+                    <form id="contact-modal-form" action="https://api.web3forms.com/submit" method="POST" target="_blank" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                        <!-- Configuración adicional de Web3Forms -->
+                        <input type="hidden" name="access_key" value="28c43d5e-e420-40e7-8a90-29e6de315007">
+                        <input type="hidden" name="subject" value="📬 Nuevo mensaje de Soporte - Mi Hucha">
+                        <input type="hidden" name="botcheck" style="display:none">
                         
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
                             <label for="contact-modal-name" class="form-label" style="color: var(--text-secondary); font-size: 0.82rem; font-weight: 600;">Nombre</label>
@@ -4863,7 +4863,7 @@ function initContactModal() {
                             <textarea id="contact-modal-message" name="Mensaje" class="form-textarea" style="width: 100%; padding: 10px 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-glass); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; resize: vertical; min-height: 100px;" placeholder="Escribe aquí tu sugerencia, fallo o consulta..." required></textarea>
                         </div>
                         <div id="contact-modal-success" style="display: none; grid-column: span 2; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success, #10b981); color: var(--success-light, #34d399); padding: 12px; border-radius: 8px; text-align: center; font-size: 0.85rem; margin-top: 5px; animation: fadeIn 0.3s ease;">
-                            ¡Gracias! Se está abriendo tu cliente de correo para enviar el mensaje a <strong>expondudas@yahoo.com</strong>.
+                            ¡Gracias! Se está procesando el envío a través de Web3Forms hacia <strong>Consultasydudasvarias@hotmail.com</strong>.
                         </div>
                         <div class="submit-container" style="grid-column: span 2; display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
                             <button type="button" id="btn-cancel-contact" class="btn-secondary" style="padding: 10px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">Cancelar</button>
@@ -4923,7 +4923,7 @@ function initContactModal() {
             successDiv.style.background = 'rgba(16, 185, 129, 0.1)';
             successDiv.style.borderColor = 'var(--success, #10b981)';
             successDiv.style.color = 'var(--success-light, #34d399)';
-            successDiv.innerHTML = '<strong>¡Procesando envío!</strong> Se ha abierto una nueva pestaña. Confirma que no eres un robot en ella y revisa tu correo <strong>expondudas@yahoo.com</strong> para activar el servicio de FormSubmit (solo la primera vez).';
+            successDiv.innerHTML = '<strong>¡Procesando envío!</strong> Se ha abierto una nueva pestaña. Confirma que no eres un robot en ella para completar el envío.';
             
             // Limpiar y cerrar el modal tras unos segundos
             setTimeout(() => {
