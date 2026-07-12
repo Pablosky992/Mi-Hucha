@@ -1921,8 +1921,10 @@ function initProjectsSandbox() {
 
         const desc = document.getElementById("proj-inv-desc").value.trim();
         const amount = parseFloat(document.getElementById("proj-inv-amount").value);
+        const dateInput = document.getElementById("proj-inv-date");
+        const date = dateInput ? dateInput.value : getTodayString();
 
-        if (!desc || isNaN(amount) || amount <= 0) return;
+        if (!desc || isNaN(amount) || amount <= 0 || !date) return;
 
         const proj = state.projects.find(p => p.id === currentActiveProjectId);
         if (proj) {
@@ -1930,9 +1932,10 @@ function initProjectsSandbox() {
                 id: "inv_" + Date.now(),
                 description: desc,
                 amount: amount,
-                date: getTodayString()
+                date: date
             });
             formInv.reset();
+            if (dateInput) dateInput.value = getTodayString();
             showToast("Inversión registrada en el sandbox del proyecto.", "success");
             saveState();
             renderProjectDetailView(currentActiveProjectId);
@@ -1947,8 +1950,10 @@ function initProjectsSandbox() {
 
         const desc = document.getElementById("proj-ear-desc").value.trim();
         const amount = parseFloat(document.getElementById("proj-ear-amount").value);
+        const dateInput = document.getElementById("proj-ear-date");
+        const date = dateInput ? dateInput.value : getTodayString();
 
-        if (!desc || isNaN(amount) || amount <= 0) return;
+        if (!desc || isNaN(amount) || amount <= 0 || !date) return;
 
         const proj = state.projects.find(p => p.id === currentActiveProjectId);
         if (proj) {
@@ -1956,9 +1961,10 @@ function initProjectsSandbox() {
                 id: "ear_" + Date.now(),
                 description: desc,
                 amount: amount,
-                date: getTodayString()
+                date: date
             });
             formEar.reset();
+            if (dateInput) dateInput.value = getTodayString();
             showToast("Ganancia registrada en el sandbox del proyecto.", "success");
             saveState();
             renderProjectDetailView(currentActiveProjectId);
@@ -2027,6 +2033,10 @@ function openProjectSandbox(projectId) {
     currentActiveProjectId = projectId;
     document.getElementById("project-list-view").classList.add("hidden");
     document.getElementById("project-details-view").classList.remove("hidden");
+    const dateInvInput = document.getElementById("proj-inv-date");
+    const dateEarInput = document.getElementById("proj-ear-date");
+    if (dateInvInput) dateInvInput.value = getTodayString();
+    if (dateEarInput) dateEarInput.value = getTodayString();
     renderProjectDetailView(projectId);
 }
 
@@ -3589,9 +3599,11 @@ function initEditModal() {
                 if (inv) {
                     const newDesc = document.getElementById("edit-pinv-desc").value.trim();
                     const newAmount = parseFloat(document.getElementById("edit-pinv-amount").value);
-                    if (newDesc && !isNaN(newAmount) && newAmount > 0) {
+                    const newDate = document.getElementById("edit-pinv-date").value;
+                    if (newDesc && !isNaN(newAmount) && newAmount > 0 && newDate) {
                         inv.description = newDesc;
                         inv.amount = newAmount;
+                        inv.date = newDate;
                         updatedName = newDesc;
                         success = true;
                     }
@@ -3604,9 +3616,11 @@ function initEditModal() {
                 if (ear) {
                     const newDesc = document.getElementById("edit-pear-desc").value.trim();
                     const newAmount = parseFloat(document.getElementById("edit-pear-amount").value);
-                    if (newDesc && !isNaN(newAmount) && newAmount > 0) {
+                    const newDate = document.getElementById("edit-pear-date").value;
+                    if (newDesc && !isNaN(newAmount) && newAmount > 0 && newDate) {
                         ear.description = newDesc;
                         ear.amount = newAmount;
+                        ear.date = newDate;
                         updatedName = newDesc;
                         success = true;
                     }
@@ -3851,6 +3865,10 @@ function openEditModal(type, id, extraId = null) {
                 <label for="edit-pinv-amount" class="currency-label">Importe (€)</label>
                 <input type="number" id="edit-pinv-amount" step="0.01" min="0.01" value="${inv.amount}" required>
             </div>
+            <div class="form-group">
+                <label for="edit-pinv-date">Fecha de Inversión</label>
+                <input type="date" id="edit-pinv-date" value="${inv.date || getTodayString()}" required>
+            </div>
         `;
     } else if (type === "projectEarning") {
         const proj = state.projects.find(p => p.id === extraId);
@@ -3866,6 +3884,10 @@ function openEditModal(type, id, extraId = null) {
             <div class="form-group">
                 <label for="edit-pear-amount" class="currency-label">Importe (€)</label>
                 <input type="number" id="edit-pear-amount" step="0.01" min="0.01" value="${ear.amount}" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-pear-date">Fecha de Ganancia</label>
+                <input type="date" id="edit-pear-date" value="${ear.date || getTodayString()}" required>
             </div>
         `;
     }

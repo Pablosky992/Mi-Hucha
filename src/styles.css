@@ -2453,7 +2453,7 @@ body {
 
 .compact-proj-form .form-row-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr auto;
+    grid-template-columns: 1.8fr 1fr 1.2fr auto;
     gap: 8px;
     align-items: center;
 }
