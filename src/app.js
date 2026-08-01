@@ -676,6 +676,24 @@ function changeMonth(newMonth) {
 // 6. MÓDULO 1: TABLERO - GESTIÓN DE BANCOS
 // ----------------------------------------------------
 
+function renderDepositDestBanksOptions(selectElementId, currentSelectedId = null, excludeBankId = null) {
+    const select = document.getElementById(selectElementId);
+    if (!select) return;
+    select.innerHTML = "";
+    const eligibleBanks = state.banks.filter(b => b.id !== excludeBankId && b.bankType !== "deposit" && b.bankType !== "pension" && b.bankType !== "investment");
+    if (eligibleBanks.length === 0) {
+        select.innerHTML = `<option value="">-- Sin cuentas disponibles --</option>`;
+        return;
+    }
+    eligibleBanks.forEach(b => {
+        const opt = document.createElement("option");
+        opt.value = b.id;
+        opt.textContent = b.name;
+        if (b.id === currentSelectedId) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
 function initBanksManager() {
     const btnShowAdd = document.getElementById("btn-show-add-bank");
     const formAdd = document.getElementById("form-add-bank");
@@ -683,18 +701,44 @@ function initBanksManager() {
 
     btnShowAdd.addEventListener("click", () => {
         formAdd.classList.toggle("hidden");
+        if (!formAdd.classList.contains("hidden")) {
+            renderDepositDestBanksOptions("bank-deposit-dest-bank");
+            const startDateEl = document.getElementById("bank-deposit-start-date");
+            if (startDateEl && !startDateEl.value) {
+                startDateEl.value = getTodayString();
+            }
+        }
     });
 
     const bankTypeEl = document.getElementById("bank-type");
     if (bankTypeEl) {
         bankTypeEl.addEventListener("change", () => {
             const isPension = bankTypeEl.value === 'pension' || bankTypeEl.value === 'investment';
+            const isDeposit = bankTypeEl.value === 'deposit';
+            
             document.getElementById('pension-hint').classList.toggle('hidden', !isPension);
+            const depHint = document.getElementById('deposit-hint');
+            if (depHint) depHint.classList.toggle('hidden', !isDeposit);
+
+            const depFields = document.getElementById('deposit-fields-container');
+            if (depFields) depFields.classList.toggle('hidden', !isDeposit);
+
+            const minBalGroup = document.getElementById('bank-min-balance-group');
+            if (minBalGroup) minBalGroup.classList.toggle('hidden', isDeposit);
+
+            if (isDeposit) {
+                renderDepositDestBanksOptions("bank-deposit-dest-bank");
+                const startDateEl = document.getElementById("bank-deposit-start-date");
+                if (startDateEl && !startDateEl.value) {
+                    startDateEl.value = getTodayString();
+                }
+            }
+
             const labelEl = document.getElementById('pension-balance-label');
             if (labelEl) {
                 const config = CURRENCY_CONFIGS[state.currency || 'EUR'] || CURRENCY_CONFIGS.EUR;
-                labelEl.textContent = isPension ? `Aportación Inicial (${config.symbol})` : `Saldo Inicial (${config.symbol})`;
-                labelEl.dataset.baseText = isPension ? 'Aportación Inicial' : 'Saldo Inicial';
+                labelEl.textContent = isPension ? `Aportación Inicial (${config.symbol})` : (isDeposit ? `Capital a Depositar (${config.symbol})` : `Saldo Inicial (${config.symbol})`);
+                labelEl.dataset.baseText = isPension ? 'Aportación Inicial' : (isDeposit ? 'Capital a Depositar' : 'Saldo Inicial');
             }
         });
     }
@@ -707,6 +751,13 @@ function initBanksManager() {
         formAdd.reset();
         if (bankTypeEl) bankTypeEl.value = "normal";
         document.getElementById("pension-hint").classList.add("hidden");
+        const depHint = document.getElementById("deposit-hint");
+        if (depHint) depHint.classList.add("hidden");
+        const depFields = document.getElementById("deposit-fields-container");
+        if (depFields) depFields.classList.add("hidden");
+        const minBalGroup = document.getElementById('bank-min-balance-group');
+        if (minBalGroup) minBalGroup.classList.remove('hidden');
+
         // Forzar actualización de etiquetas de divisa en el formulario resetado
         const config = CURRENCY_CONFIGS[state.currency || 'EUR'] || CURRENCY_CONFIGS.EUR;
         const labelEl = document.getElementById('pension-balance-label');
@@ -732,6 +783,29 @@ function initBanksManager() {
             return;
         }
 
+        let depositData = null;
+        if (bankType === "deposit") {
+            const tae = parseFloat(document.getElementById("bank-deposit-tae").value);
+            const durationMonths = parseInt(document.getElementById("bank-deposit-duration").value);
+            const startDate = document.getElementById("bank-deposit-start-date").value || getTodayString();
+            const taxRateVal = document.getElementById("bank-deposit-tax-rate").value;
+            const taxRate = taxRateVal !== "" ? parseFloat(taxRateVal) : 19;
+            const destinationBankId = document.getElementById("bank-deposit-dest-bank").value;
+
+            if (isNaN(tae) || isNaN(durationMonths) || durationMonths <= 0 || !destinationBankId) {
+                showToast("Por favor complete los datos del depósito (TAE, plazo y cuenta destino).", "danger");
+                return;
+            }
+
+            depositData = {
+                tae: tae,
+                durationMonths: durationMonths,
+                startDate: startDate,
+                taxRate: isNaN(taxRate) ? 19 : taxRate,
+                destinationBankId: destinationBankId
+            };
+        }
+
         const newBank = {
             id: "b_" + Date.now(),
             name: name,
@@ -742,6 +816,12 @@ function initBanksManager() {
             targetBalance: null,
             estimatedValue: (bankType === "pension" || bankType === "investment") ? initialBalance : null,
             valuations: (bankType === "pension" || bankType === "investment") ? [{ date: new Date().toISOString().split('T')[0], balance: initialBalance, estimatedValue: initialBalance }] : null,
+            tae: depositData ? depositData.tae : null,
+            durationMonths: depositData ? depositData.durationMonths : null,
+            startDate: depositData ? depositData.startDate : null,
+            taxRate: depositData ? depositData.taxRate : null,
+            destinationBankId: depositData ? depositData.destinationBankId : null,
+            maturedTransferDone: false,
             createdAt: new Date().toISOString()
         };
 
@@ -759,14 +839,22 @@ function initBanksManager() {
         formAdd.classList.add("hidden");
         formAdd.reset();
         // Restaurar tipo a normal tras el reset
-        const bankTypeEl = document.getElementById("bank-type");
         if (bankTypeEl) bankTypeEl.value = "normal";
         document.getElementById("pension-hint").classList.add("hidden");
-        
+        const depHint = document.getElementById("deposit-hint");
+        if (depHint) depHint.classList.add("hidden");
+        const depFields = document.getElementById("deposit-fields-container");
+        if (depFields) depFields.classList.add("hidden");
+        const minBalGroup = document.getElementById('bank-min-balance-group');
+        if (minBalGroup) minBalGroup.classList.remove('hidden');
+
         // Resetear el selector de etiquetas
         initTagSelector("bank-purpose-tags-container");
-        
-        const typeLabel = (bankType === "pension" || bankType === "investment") ? "Plan/Inversión" : "Banco";
+
+        let typeLabel = "Banco";
+        if (bankType === "pension" || bankType === "investment") typeLabel = "Plan/Inversión";
+        else if (bankType === "deposit") typeLabel = "Depósito a Plazo Fijo";
+
         showToast(`${typeLabel} "${name}" creado con éxito.`, "success");
         saveState();
     });
@@ -2060,6 +2148,81 @@ function deleteProjectEarning(projId, earId) {
     showToast("Ganancia eliminada del Sandbox.", "danger");
 }
 
+function checkMaturedDeposits() {
+    if (!state.currentMonth || !state.banks) return;
+    const [currYear, currMonth] = state.currentMonth.split("-").map(Number);
+    const viewMonthDate = new Date(currYear, currMonth - 1, 1);
+    
+    let stateChanged = false;
+    
+    state.banks.forEach(bank => {
+        if (bank.bankType === "deposit" && !bank.maturedTransferDone && bank.balance > 0) {
+            if (!bank.startDate || !bank.durationMonths) return;
+            
+            const startParts = bank.startDate.split("-").map(Number);
+            if (startParts.length !== 3) return;
+            
+            const endDate = new Date(startParts[0], startParts[1] - 1 + parseInt(bank.durationMonths), startParts[2]);
+            const endYear = endDate.getFullYear();
+            const endMonth = endDate.getMonth(); // 0-indexed
+            
+            const maturityMonthDate = new Date(endYear, endMonth, 1);
+            
+            if (viewMonthDate >= maturityMonthDate) {
+                const destBank = state.banks.find(b => b.id === bank.destinationBankId);
+                if (destBank) {
+                    const principal = bank.balance;
+                    const tae = parseFloat(bank.tae) || 0;
+                    const durationMonths = parseInt(bank.durationMonths) || 12;
+                    const years = durationMonths / 12;
+                    
+                    const grossInterest = principal * (tae / 100) * years;
+                    const taxRate = bank.taxRate !== undefined && bank.taxRate !== null ? parseFloat(bank.taxRate) / 100 : 0.19;
+                    const taxes = grossInterest * taxRate;
+                    const netInterest = grossInterest - taxes;
+                    const totalPayout = parseFloat((principal + netInterest).toFixed(2));
+                    
+                    destBank.balance = parseFloat((destBank.balance + totalPayout).toFixed(2));
+                    bank.balance = 0;
+                    bank.maturedTransferDone = true;
+                    
+                    const endDateStr = `${endYear}-${String(endMonth + 1).padStart(2, '0')}-${String(endDate.getDate()).padStart(2, '0')}`;
+                    const endMonthStr = `${endYear}-${String(endMonth + 1).padStart(2, '0')}`;
+                    
+                    state.transactions.push({
+                        id: "tx_dep_out_" + Date.now() + "_" + Math.floor(Math.random()*1000),
+                        type: "expense",
+                        subtype: "Traspaso",
+                        description: `Vencimiento Depósito "${bank.name}" -> Transferido a "${destBank.name}"`,
+                        amount: principal,
+                        bankId: bank.id,
+                        date: endDateStr,
+                        month: endMonthStr
+                    });
+                    
+                    state.transactions.push({
+                        id: "tx_dest_in_" + Date.now() + "_" + Math.floor(Math.random()*1000),
+                        type: "income",
+                        subtype: "Traspaso",
+                        description: `Vencimiento Depósito "${bank.name}" (Principal ${formatCurrency(principal)} + Int. Netos ${formatCurrency(netInterest)})`,
+                        amount: totalPayout,
+                        bankId: destBank.id,
+                        date: endDateStr,
+                        month: endMonthStr
+                    });
+                    
+                    showToast(`¡El depósito "${bank.name}" ha vencido! Se han transferido ${formatCurrency(totalPayout)} a "${destBank.name}".`, "success");
+                    stateChanged = true;
+                }
+            }
+        }
+    });
+    
+    if (stateChanged) {
+        saveState();
+    }
+}
+
 // ----------------------------------------------------
 // 12. SISTEMA DE RENDERIZACIÓN REACTIVA (DOM UPDATES)
 // ----------------------------------------------------
@@ -2068,6 +2231,9 @@ function renderAll() {
     const isDashboard = !!document.getElementById("panel-dashboard");
     if (!isDashboard) return;
     
+    // Comprobar vencimiento automático de depósitos
+    checkMaturedDeposits();
+
     // Actualizar el selector de mes global en la cabecera
     const monthDisplay = document.getElementById("current-month-display");
     if (monthDisplay) {
@@ -2251,10 +2417,10 @@ function renderBanksList() {
     const container = document.getElementById("banks-list-container");
     container.innerHTML = "";
 
-    const activeNormalBanks = state.banks.filter(b => b.bankType === "normal" || !b.bankType);
+    const activeNormalBanks = state.banks.filter(b => b.bankType === "normal" || b.bankType === "deposit" || !b.bankType);
 
     if (activeNormalBanks.length === 0) {
-        container.innerHTML = `<div class="alert-info">No hay cuentas bancarias corrientes. Use el botón superior para añadir una.</div>`;
+        container.innerHTML = `<div class="alert-info">No hay cuentas bancarias corrientes o depósitos. Use el botón superior para añadir una.</div>`;
         return;
     }
 
@@ -2265,6 +2431,74 @@ function renderBanksList() {
                 ${tags.map(t => `<span class="badge-tag" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-color); color:var(--text-secondary); padding:2px 8px; border-radius:4px; font-size:0.68rem; font-weight:500;">🏷️ ${t}</span>`).join("")}
                </div>`
             : "";
+
+        // ── Card de Depósito a Plazo Fijo ──
+        if (bank.bankType === "deposit") {
+            const principal = bank.balance;
+            const tae = parseFloat(bank.tae) || 0;
+            const durationMonths = parseInt(bank.durationMonths) || 12;
+            const years = durationMonths / 12;
+            const gross = principal * (tae / 100) * years;
+            const taxRate = bank.taxRate !== undefined && bank.taxRate !== null ? parseFloat(bank.taxRate) / 100 : 0.19;
+            const taxes = gross * taxRate;
+            const netInterest = gross - taxes;
+            const totalPayout = principal + netInterest;
+
+            const destBank = state.banks.find(b => b.id === bank.destinationBankId);
+            const destName = destBank ? destBank.name : "Cuenta Destino";
+
+            let maturityText = "";
+            if (bank.startDate) {
+                const parts = bank.startDate.split("-").map(Number);
+                if (parts.length === 3) {
+                    const endDate = new Date(parts[0], parts[1] - 1 + durationMonths, parts[2]);
+                    maturityText = `Vence el ${formatDate(endDate.toISOString().split('T')[0])}`;
+                }
+            }
+
+            const card = document.createElement("div");
+            card.className = "bank-item-card bank-deposit-card";
+
+            let statusHTML = "";
+            if (bank.maturedTransferDone) {
+                statusHTML = `
+                    <div style="margin-top: 6px;">
+                        <span class="deposit-status-matured">✓ Vencido & Transferido a ${destName}</span>
+                    </div>
+                `;
+            } else {
+                statusHTML = `
+                    <div style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 6px; display: flex; flex-direction: column; gap: 2px;">
+                        <div>Rendimiento Neto Est.: <strong style="color: var(--success-light);">+${formatCurrency(netInterest)}</strong> <span style="font-size: 0.68rem; color: var(--text-muted);">(Impuestos ${taxRate*100}%: ${formatCurrency(taxes)})</span></div>
+                        <div>Al vencimiento: <strong>${formatCurrency(totalPayout)}</strong> → <em>${destName}</em></div>
+                        <div style="color: var(--primary-light); font-weight: 600; margin-top: 2px;">📅 ${maturityText}</div>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="bank-card-info" style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <h3>${bank.name}</h3>
+                        <span class="deposit-badge-tae">🔒 ${tae}% TAE</span>
+                    </div>
+                    ${purposeHTML}
+                    <div class="bank-meta" style="margin-top: 2px;">Contratado el ${formatDate(bank.startDate || bank.createdAt)} (${durationMonths} Meses)</div>
+                    ${statusHTML}
+                </div>
+                <div class="bank-card-balance-section" style="gap: 8px; flex-direction: row; align-items: center; align-self: flex-start;">
+                    <span class="bank-card-balance" style="margin-right: 8px;">${formatCurrency(bank.balance)}</span>
+                    <button onclick="openEditModal('bank', '${bank.id}')" class="btn-edit-icon" title="Editar Depósito">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button onclick="deleteBank('${bank.id}')" class="btn-delete-icon" title="Eliminar Depósito">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+            return;
+        }
 
         // ── Card normal ──
         let pendingFixedSum = 0;
@@ -3538,13 +3772,29 @@ function initEditModal() {
                     bank.name = newName;
                     bank.balance = newBalance;
                     
-                    const purposeVal = document.getElementById("edit-bank-purpose-tags-container-value")?.value.trim() || "";
-                    const minVal = document.getElementById("edit-bank-min")?.value;
-                    const minBalance = (minVal !== undefined && minVal !== "") ? parseFloat(minVal) : null;
-                    
-                    bank.purpose = purposeVal;
-                    bank.minBalance = isNaN(minBalance) ? null : minBalance;
-                    bank.targetBalance = null;
+                    if (bank.bankType === "deposit") {
+                        const newTae = parseFloat(document.getElementById("edit-bank-deposit-tae").value);
+                        const newDuration = parseInt(document.getElementById("edit-bank-deposit-duration").value);
+                        const newStart = document.getElementById("edit-bank-deposit-start-date").value;
+                        const newTax = parseFloat(document.getElementById("edit-bank-deposit-tax-rate").value);
+                        const newDest = document.getElementById("edit-bank-deposit-dest-bank").value;
+
+                        if (!isNaN(newTae) && !isNaN(newDuration) && newDuration > 0 && newStart && newDest) {
+                            bank.tae = newTae;
+                            bank.durationMonths = newDuration;
+                            bank.startDate = newStart;
+                            bank.taxRate = isNaN(newTax) ? 19 : newTax;
+                            bank.destinationBankId = newDest;
+                        }
+                    } else {
+                        const purposeVal = document.getElementById("edit-bank-purpose-tags-container-value")?.value.trim() || "";
+                        const minVal = document.getElementById("edit-bank-min")?.value;
+                        const minBalance = (minVal !== undefined && minVal !== "") ? parseFloat(minVal) : null;
+                        
+                        bank.purpose = purposeVal;
+                        bank.minBalance = isNaN(minBalance) ? null : minBalance;
+                        bank.targetBalance = null;
+                    }
 
                     // Actualizar valor estimado si es plan de pensiones o inversión
                     if (bank.bankType === "pension" || bank.bankType === "investment") {
@@ -3742,16 +3992,39 @@ function openEditModal(type, id, extraId = null) {
         const bank = state.banks.find(b => b.id === id);
         if (!bank) return;
         const isPension = bank.bankType === "pension" || bank.bankType === "investment";
-        titleEl.textContent = isPension ? "Editar Plan / Cartera de Inversiones" : "Editar Cuenta Bancaria";
+        const isDeposit = bank.bankType === "deposit";
+        titleEl.textContent = isPension ? "Editar Plan / Cartera de Inversiones" : (isDeposit ? "Editar Depósito a Plazo Fijo" : "Editar Cuenta Bancaria");
         fieldsContainer.innerHTML = `
             <div class="form-group">
-                <label for="edit-bank-name">Nombre ${isPension ? "del Plan" : "del Banco"}</label>
+                <label for="edit-bank-name">Nombre ${isPension ? "del Plan" : (isDeposit ? "del Depósito" : "del Banco")}</label>
                 <input type="text" id="edit-bank-name" value="${bank.name}" required>
             </div>
             <div class="form-group">
-                <label for="edit-bank-balance" class="currency-label">${isPension ? "Total Aportado (€)" : "Saldo Real (€)"}</label>
+                <label for="edit-bank-balance" class="currency-label">${isPension ? "Total Aportado (€)" : (isDeposit ? "Capital Depositado (€)" : "Saldo Real (€)")}</label>
                 <input type="number" id="edit-bank-balance" step="0.01" value="${bank.balance}" required>
             </div>
+            ${isDeposit ? `
+            <div class="form-group">
+                <label for="edit-bank-deposit-tae">Interés TAE (%)</label>
+                <input type="number" id="edit-bank-deposit-tae" step="0.01" min="0" value="${bank.tae || 0}" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-bank-deposit-duration">Plazo (Meses)</label>
+                <input type="number" id="edit-bank-deposit-duration" min="1" step="1" value="${bank.durationMonths || 12}" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-bank-deposit-start-date">Fecha de Contratación</label>
+                <input type="date" id="edit-bank-deposit-start-date" value="${bank.startDate || getTodayString()}" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-bank-deposit-tax-rate">Retención Fiscal (%)</label>
+                <input type="number" id="edit-bank-deposit-tax-rate" step="0.1" min="0" max="100" value="${bank.taxRate !== undefined && bank.taxRate !== null ? bank.taxRate : 19}" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-bank-deposit-dest-bank">Cuenta Destino al Vencimiento</label>
+                <select id="edit-bank-deposit-dest-bank" required></select>
+            </div>
+            ` : `
             <div class="form-group">
                 <label>Propósito / Uso de la Cuenta (Categorías)</label>
                 <div id="edit-bank-purpose-tags-container"></div>
@@ -3760,6 +4033,7 @@ function openEditModal(type, id, extraId = null) {
                 <label for="edit-bank-min" class="currency-label">Mínimo de Seguridad (€)</label>
                 <input type="number" id="edit-bank-min" step="0.01" min="0" value="${bank.minBalance !== null && bank.minBalance !== undefined ? bank.minBalance : ''}" placeholder="Opcional (Ej. 500.00)">
             </div>
+            `}
             ${isPension ? `
             <div class="form-group">
                 <label for="edit-bank-estimated" class="currency-label">Valor Estimado con Interés (€)</label>
@@ -3767,7 +4041,11 @@ function openEditModal(type, id, extraId = null) {
                 <small style="color:var(--text-muted); font-size:0.72rem; margin-top:4px; display:block;">Introduce el valor actual del plan según tu entidad (incluye rentabilidad). No afecta al saldo aportado.</small>
             </div>` : ""}
         `;
-        initTagSelector("edit-bank-purpose-tags-container", bank.purpose ? bank.purpose.split(",") : []);
+        if (isDeposit) {
+            renderDepositDestBanksOptions("edit-bank-deposit-dest-bank", bank.destinationBankId, bank.id);
+        } else {
+            initTagSelector("edit-bank-purpose-tags-container", bank.purpose ? bank.purpose.split(",") : []);
+        }
     } else if (type === "fixedExpense") {
         const fe = state.fixedExpenses.find(f => f.id === id);
         if (!fe) return;

@@ -1153,6 +1153,45 @@ body {
     transform: translateX(4px);
 }
 
+/* Card de depósito: variante del bank-item-card para plazo fijo */
+.bank-deposit-card {
+    border-left: 4px solid var(--primary-light) !important;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 229, 255, 0.04) 0%,
+        rgba(15, 23, 42, 0.5) 60%
+    );
+}
+
+.bank-deposit-card::before {
+    background: linear-gradient(180deg, var(--primary-light), var(--primary-color)) !important;
+}
+
+.bank-deposit-card:hover {
+    border-color: rgba(0, 229, 255, 0.35);
+    box-shadow: 0 4px 20px rgba(0, 229, 255, 0.15);
+}
+
+.deposit-badge-tae {
+    background: rgba(0, 229, 255, 0.1);
+    color: var(--primary-light);
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.deposit-status-matured {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-light);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
 /* Fila de 3 métricas dentro de la card de pensión */
 .pension-stats {
     display: flex;
