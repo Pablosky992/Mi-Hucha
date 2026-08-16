@@ -4519,8 +4519,8 @@ function openEditModal(type, id, extraId = null) {
                 <input type="text" id="edit-pfolder-name" value="${folder.name}" required>
             </div>
             <div class="form-group">
-                <label for="edit-pfolder-desc">Descripción / Objetivo General</label>
-                <input type="text" id="edit-pfolder-desc" value="${folder.description}" required>
+                <label for="edit-pfolder-desc">Descripción / Notas del Grupo</label>
+                <textarea id="edit-pfolder-desc" rows="5" placeholder="Escribe aquí la descripción, notas o detalles del grupo de proyectos..." required>${folder.description}</textarea>
             </div>
         `;
     } else if (type === "project") {
