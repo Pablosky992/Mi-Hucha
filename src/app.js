@@ -205,6 +205,7 @@ let state = {
     transactions: [],
     budgets: {},
     projects: [],
+    projectFolders: [],
     activityLog: [],
     currentMonth: "", // Formato "YYYY-MM"
     maskMode: false,
@@ -406,6 +407,9 @@ async function loadState() {
         }
         if (!state.currency) {
             state.currency = "EUR";
+        }
+        if (!state.projectFolders) {
+            state.projectFolders = [];
         }
         // Asegurar que exista el mes actual
         if (!state.currentMonth) {
@@ -1986,15 +1990,175 @@ function renderBudgetEstimationsForm() {
 // ----------------------------------------------------
 
 let currentActiveProjectId = null;
+let currentActiveFolderId = null;
+
+function renderProjectFolderSelectOptions(selectElementId, selectedFolderId = null) {
+    const select = document.getElementById(selectElementId);
+    if (!select) return;
+    select.innerHTML = `<option value="">-- Sin Carpeta (Proyecto Independiente) --</option>`;
+    if (state.projectFolders && state.projectFolders.length > 0) {
+        state.projectFolders.forEach(folder => {
+            const opt = document.createElement("option");
+            opt.value = folder.id;
+            opt.textContent = `📁 ${folder.name}`;
+            if (folder.id === selectedFolderId) opt.selected = true;
+            select.appendChild(opt);
+        });
+    }
+}
 
 function initProjectsSandbox() {
     const btnShowAdd = document.getElementById("btn-show-add-project");
     const formAdd = document.getElementById("form-add-project");
     const btnCancel = document.getElementById("btn-cancel-add-project");
+
+    const btnShowAddFolder = document.getElementById("btn-show-add-project-folder");
+    const formAddFolder = document.getElementById("form-add-project-folder");
+    const btnCancelAddFolder = document.getElementById("btn-cancel-add-project-folder");
+
     const btnBack = document.getElementById("btn-back-to-projects");
     const btnDelete = document.getElementById("btn-delete-project");
     const btnEdit = document.getElementById("btn-edit-project");
 
+    const btnBackFromFolder = document.getElementById("btn-back-from-folder");
+    const btnShowAddSubproject = document.getElementById("btn-show-add-subproject");
+    const formAddSubproject = document.getElementById("form-add-subproject");
+    const btnCancelAddSubproject = document.getElementById("btn-cancel-add-subproject");
+    const btnEditFolder = document.getElementById("btn-edit-folder");
+    const btnDeleteFolder = document.getElementById("btn-delete-folder");
+
+    // --- CARPETAS DE PROYECTOS ---
+    if (btnShowAddFolder && formAddFolder) {
+        btnShowAddFolder.addEventListener("click", () => {
+            formAddFolder.classList.toggle("hidden");
+            if (formAdd) formAdd.classList.add("hidden");
+        });
+    }
+
+    if (btnCancelAddFolder && formAddFolder) {
+        btnCancelAddFolder.addEventListener("click", () => {
+            formAddFolder.classList.add("hidden");
+            formAddFolder.reset();
+        });
+    }
+
+    if (formAddFolder) {
+        formAddFolder.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const name = document.getElementById("project-folder-name").value.trim();
+            const desc = document.getElementById("project-folder-description").value.trim();
+
+            if (!name || !desc) {
+                showToast("Complete los datos de la carpeta.", "danger");
+                return;
+            }
+
+            if (!state.projectFolders) state.projectFolders = [];
+            const newFolder = {
+                id: "f_" + Date.now(),
+                name: name,
+                description: desc,
+                createdAt: getTodayString()
+            };
+
+            state.projectFolders.push(newFolder);
+            formAddFolder.classList.add("hidden");
+            formAddFolder.reset();
+
+            showToast(`Carpeta "${name}" creada con éxito.`, "success");
+            saveState();
+            renderProjectsList();
+        });
+    }
+
+    if (btnBackFromFolder) {
+        btnBackFromFolder.addEventListener("click", () => {
+            document.getElementById("project-list-view").classList.remove("hidden");
+            document.getElementById("project-folder-view").classList.add("hidden");
+            document.getElementById("project-details-view").classList.add("hidden");
+            currentActiveFolderId = null;
+            renderProjectsList();
+        });
+    }
+
+    if (btnShowAddSubproject && formAddSubproject) {
+        btnShowAddSubproject.addEventListener("click", () => {
+            formAddSubproject.classList.toggle("hidden");
+        });
+    }
+
+    if (btnCancelAddSubproject && formAddSubproject) {
+        btnCancelAddSubproject.addEventListener("click", () => {
+            formAddSubproject.classList.add("hidden");
+            formAddSubproject.reset();
+        });
+    }
+
+    if (formAddSubproject) {
+        formAddSubproject.addEventListener("submit", (e) => {
+            e.preventDefault();
+            if (!currentActiveFolderId) return;
+
+            const name = document.getElementById("subproject-name").value.trim();
+            const desc = document.getElementById("subproject-description").value.trim();
+
+            if (!name || !desc) {
+                showToast("Complete los datos del subproyecto.", "danger");
+                return;
+            }
+
+            const newProj = {
+                id: "p_" + Date.now(),
+                name: name,
+                description: desc,
+                folderId: currentActiveFolderId,
+                createdAt: getTodayString(),
+                investments: [],
+                earnings: []
+            };
+
+            state.projects.push(newProj);
+            formAddSubproject.classList.add("hidden");
+            formAddSubproject.reset();
+
+            showToast(`Subproyecto "${name}" añadido a la carpeta.`, "success");
+            saveState();
+            renderProjectFolderView(currentActiveFolderId);
+        });
+    }
+
+    if (btnEditFolder) {
+        btnEditFolder.addEventListener("click", () => {
+            if (currentActiveFolderId) {
+                openEditModal('projectFolder', currentActiveFolderId);
+            }
+        });
+    }
+
+    if (btnDeleteFolder) {
+        btnDeleteFolder.addEventListener("click", () => {
+            if (!currentActiveFolderId) return;
+            const folder = (state.projectFolders || []).find(f => f.id === currentActiveFolderId);
+            if (!folder) return;
+            const subCount = state.projects.filter(p => p.folderId === currentActiveFolderId).length;
+            const msg = subCount > 0 
+                ? `¿Desea eliminar la carpeta "${folder.name}" y todos sus ${subCount} subproyectos?` 
+                : `¿Desea eliminar la carpeta "${folder.name}"?`;
+            if (confirm(msg)) {
+                state.projects = state.projects.filter(p => p.folderId !== currentActiveFolderId);
+                state.projectFolders = (state.projectFolders || []).filter(f => f.id !== currentActiveFolderId);
+                document.getElementById("project-list-view").classList.remove("hidden");
+                document.getElementById("project-folder-view").classList.add("hidden");
+                document.getElementById("project-details-view").classList.add("hidden");
+                currentActiveFolderId = null;
+                showToast("Carpeta eliminada.", "danger");
+                saveState();
+                renderProjectsList();
+            }
+        });
+    }
+
+    // --- PROYECTOS SANDBOX INDIVIDUALES ---
     btnEdit.addEventListener("click", () => {
         if (currentActiveProjectId) {
             openEditModal('project', currentActiveProjectId);
@@ -2061,6 +2225,10 @@ function initProjectsSandbox() {
 
     btnShowAdd.addEventListener("click", () => {
         formAdd.classList.toggle("hidden");
+        if (formAddFolder) formAddFolder.classList.add("hidden");
+        if (!formAdd.classList.contains("hidden")) {
+            renderProjectFolderSelectOptions("project-folder-id");
+        }
     });
 
     btnCancel.addEventListener("click", () => {
@@ -2069,9 +2237,23 @@ function initProjectsSandbox() {
     });
 
     btnBack.addEventListener("click", () => {
-        document.getElementById("project-list-view").classList.remove("hidden");
-        document.getElementById("project-details-view").classList.add("hidden");
+        const proj = state.projects.find(p => p.id === currentActiveProjectId);
+        const parentFolderId = proj?.folderId;
         currentActiveProjectId = null;
+
+        document.getElementById("project-details-view").classList.add("hidden");
+
+        if (parentFolderId && (state.projectFolders || []).some(f => f.id === parentFolderId)) {
+            currentActiveFolderId = parentFolderId;
+            document.getElementById("project-folder-view").classList.remove("hidden");
+            document.getElementById("project-list-view").classList.add("hidden");
+            renderProjectFolderView(parentFolderId);
+        } else {
+            currentActiveFolderId = null;
+            document.getElementById("project-list-view").classList.remove("hidden");
+            document.getElementById("project-folder-view").classList.add("hidden");
+            renderProjectsList();
+        }
     });
 
     btnDelete.addEventListener("click", () => {
@@ -2079,12 +2261,23 @@ function initProjectsSandbox() {
         const proj = state.projects.find(p => p.id === currentActiveProjectId);
         if (proj) {
             if (confirm(`¿Desea eliminar definitivamente el proyecto "${proj.name}" y todos sus movimientos aislados?`)) {
+                const parentFolderId = proj.folderId;
                 state.projects = state.projects.filter(p => p.id !== currentActiveProjectId);
-                document.getElementById("project-list-view").classList.remove("hidden");
                 document.getElementById("project-details-view").classList.add("hidden");
                 currentActiveProjectId = null;
+
+                if (parentFolderId && (state.projectFolders || []).some(f => f.id === parentFolderId)) {
+                    currentActiveFolderId = parentFolderId;
+                    document.getElementById("project-folder-view").classList.remove("hidden");
+                    renderProjectFolderView(parentFolderId);
+                } else {
+                    currentActiveFolderId = null;
+                    document.getElementById("project-list-view").classList.remove("hidden");
+                }
+
                 showToast("Proyecto eliminado.", "danger");
                 saveState();
+                renderProjectsList();
             }
         }
     });
@@ -2093,6 +2286,7 @@ function initProjectsSandbox() {
         e.preventDefault();
         const name = document.getElementById("project-name").value.trim();
         const desc = document.getElementById("project-description").value.trim();
+        const folderId = document.getElementById("project-folder-id")?.value || null;
 
         if (!name || !desc) {
             showToast("Complete los datos del proyecto.", "danger");
@@ -2103,6 +2297,7 @@ function initProjectsSandbox() {
             id: "p_" + Date.now(),
             name: name,
             description: desc,
+            folderId: folderId,
             createdAt: getTodayString(),
             investments: [],
             earnings: []
@@ -2114,12 +2309,108 @@ function initProjectsSandbox() {
 
         showToast(`Proyecto "${name}" inicializado correctamente en entorno Sandbox.`, "success");
         saveState();
+        renderProjectsList();
+    });
+}
+
+function openProjectFolder(folderId) {
+    currentActiveFolderId = folderId;
+    currentActiveProjectId = null;
+    document.getElementById("project-list-view").classList.add("hidden");
+    document.getElementById("project-details-view").classList.add("hidden");
+    document.getElementById("project-folder-view").classList.remove("hidden");
+    renderProjectFolderView(folderId);
+}
+
+function renderProjectFolderView(folderId) {
+    const folder = (state.projectFolders || []).find(f => f.id === folderId);
+    if (!folder) return;
+
+    document.getElementById("folder-detail-title").textContent = folder.name;
+    document.getElementById("folder-detail-desc").textContent = folder.description;
+
+    const subprojects = state.projects.filter(p => p.folderId === folderId);
+
+    let totalInvested = 0;
+    let totalEarned = 0;
+
+    subprojects.forEach(p => {
+        (p.investments || []).forEach(i => totalInvested += i.amount);
+        (p.earnings || []).forEach(e => totalEarned += e.amount);
+    });
+
+    const netProfit = totalEarned - totalInvested;
+    const roi = totalInvested > 0 ? ((netProfit / totalInvested) * 100) : 0;
+
+    document.getElementById("folder-total-invested").textContent = formatCurrency(totalInvested);
+    document.getElementById("folder-total-earned").textContent = formatCurrency(totalEarned);
+
+    const netEl = document.getElementById("folder-net-profit");
+    const netCard = document.getElementById("folder-card-net-profit");
+    netEl.textContent = (netProfit >= 0 ? '+' : '') + formatCurrency(netProfit);
+    netCard.className = "proj-stat-card card-net-profit " + (netProfit >= 0 ? "plus" : "minus");
+
+    const roiEl = document.getElementById("folder-roi");
+    const roiCard = document.getElementById("folder-card-roi");
+    if (totalInvested === 0) {
+        roiEl.textContent = "Sin Inversión";
+        roiCard.className = "proj-stat-card card-roi zero";
+    } else {
+        roiEl.textContent = (roi >= 0 ? '+' : '') + roi.toFixed(1) + "%";
+        roiCard.className = "proj-stat-card card-roi " + (roi >= 0 ? "plus" : "minus");
+    }
+
+    const grid = document.getElementById("folder-subprojects-grid");
+    grid.innerHTML = "";
+
+    if (subprojects.length === 0) {
+        grid.innerHTML = `<div class="alert-info" style="grid-column: 1 / -1;">No hay subproyectos en esta carpeta todavía. Usa el botón "+ Añadir Subproyecto" para crear uno.</div>`;
+        return;
+    }
+
+    subprojects.forEach(proj => {
+        let subInv = 0;
+        let subEar = 0;
+        (proj.investments || []).forEach(i => subInv += i.amount);
+        (proj.earnings || []).forEach(e => subEar += e.amount);
+        const subNet = subEar - subInv;
+        const subRoi = subInv > 0 ? ((subNet / subInv) * 100) : 0;
+
+        const card = document.createElement("div");
+        card.className = "project-item-card";
+        card.setAttribute("onclick", `openProjectSandbox('${proj.id}')`);
+        card.innerHTML = `
+            <div class="project-card-header">
+                <h3>${proj.name}</h3>
+                <p>${proj.description}</p>
+            </div>
+            <div class="project-card-footer">
+                <div>
+                    <span style="font-size: 0.7rem; color: var(--text-muted); display: block; text-transform: uppercase;">Beneficio Neto</span>
+                    <span class="project-badge-profit ${subNet >= 0 ? 'plus' : 'minus'}">${subNet >= 0 ? '+' : ''}${formatCurrency(subNet)}</span>
+                </div>
+                <div>
+                    <span style="font-size: 0.7rem; color: var(--text-muted); display: block; text-transform: uppercase; text-align: right;">ROI</span>
+                    <span class="project-badge-roi ${subInv === 0 ? 'zero' : (subRoi >= 0 ? 'plus' : 'minus')}">${subInv === 0 ? 'Sin Inversión' : subRoi.toFixed(1) + '%'}</span>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
     });
 }
 
 function openProjectSandbox(projectId) {
     currentActiveProjectId = projectId;
+    const proj = state.projects.find(p => p.id === projectId);
+    const parentFolder = proj?.folderId ? (state.projectFolders || []).find(f => f.id === proj.folderId) : null;
+
+    const backTextEl = document.getElementById("btn-back-to-projects-text");
+    if (backTextEl) {
+        backTextEl.textContent = parentFolder ? `Volver a Carpeta (${parentFolder.name})` : "Volver a Proyectos";
+    }
+
     document.getElementById("project-list-view").classList.add("hidden");
+    document.getElementById("project-folder-view").classList.add("hidden");
     document.getElementById("project-details-view").classList.remove("hidden");
     const dateInvInput = document.getElementById("proj-inv-date");
     const dateEarInput = document.getElementById("proj-ear-date");
@@ -2135,6 +2426,9 @@ function deleteProjectInvestment(projId, invId) {
     proj.investments = proj.investments.filter(i => i.id !== invId);
     saveState();
     renderProjectDetailView(projId);
+    if (proj.folderId && currentActiveFolderId === proj.folderId) {
+        renderProjectFolderView(proj.folderId);
+    }
     showToast("Inversión eliminada del Sandbox.", "danger");
 }
 
@@ -2145,6 +2439,9 @@ function deleteProjectEarning(projId, earId) {
     proj.earnings = proj.earnings.filter(e => e.id !== earId);
     saveState();
     renderProjectDetailView(projId);
+    if (proj.folderId && currentActiveFolderId === proj.folderId) {
+        renderProjectFolderView(proj.folderId);
+    }
     showToast("Ganancia eliminada del Sandbox.", "danger");
 }
 
@@ -3523,21 +3820,91 @@ function renderClosureCharts() {
 
 // MÓDULO 4: RENDERIZACIÓN DE PROYECTOS (LISTA GENERAL)
 function renderProjectsList() {
-    const container = document.getElementById("projects-grid-container");
-    container.innerHTML = "";
+    renderProjectFolderSelectOptions("project-folder-id");
 
-    if (state.projects.length === 0) {
-        container.innerHTML = `<div class="alert-info" style="grid-column: 1 / -1;">No has creado ningún proyecto de simulación aún. Diseña uno con el botón superior.</div>`;
+    const foldersSection = document.getElementById("projects-folders-section");
+    const foldersContainer = document.getElementById("project-folders-grid-container");
+    const standaloneContainer = document.getElementById("projects-grid-container");
+    const standaloneTitle = document.getElementById("projects-standalone-title");
+
+    if (foldersContainer) foldersContainer.innerHTML = "";
+    if (standaloneContainer) standaloneContainer.innerHTML = "";
+
+    const folders = state.projectFolders || [];
+    const allProjects = state.projects || [];
+    const validFolderIds = new Set(folders.map(f => f.id));
+
+    // Renderizar Sección de Carpetas
+    if (folders.length > 0) {
+        if (foldersSection) foldersSection.classList.remove("hidden");
+        folders.forEach(folder => {
+            const subprojects = allProjects.filter(p => p.folderId === folder.id);
+
+            let totalInvested = 0;
+            let totalEarned = 0;
+            subprojects.forEach(p => {
+                (p.investments || []).forEach(i => totalInvested += i.amount);
+                (p.earnings || []).forEach(e => totalEarned += e.amount);
+            });
+
+            const netProfit = totalEarned - totalInvested;
+            const roi = totalInvested > 0 ? ((netProfit / totalInvested) * 100) : 0;
+
+            const folderCard = document.createElement("div");
+            folderCard.className = "project-folder-card";
+            folderCard.setAttribute("onclick", `openProjectFolder('${folder.id}')`);
+            folderCard.innerHTML = `
+                <div class="project-folder-header">
+                    <div class="project-folder-title-row">
+                        <h3><span>📁</span> ${folder.name}</h3>
+                        <span class="folder-badge-count">${subprojects.length} ${subprojects.length === 1 ? 'subproyecto' : 'subproyectos'}</span>
+                    </div>
+                    <p>${folder.description}</p>
+                </div>
+                <div class="project-card-footer">
+                    <div>
+                        <span style="font-size: 0.7rem; color: var(--text-muted); display: block; text-transform: uppercase;">Beneficio Consolidado</span>
+                        <span class="project-badge-profit ${netProfit >= 0 ? 'plus' : 'minus'}">${netProfit >= 0 ? '+' : ''}${formatCurrency(netProfit)}</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.7rem; color: var(--text-muted); display: block; text-transform: uppercase; text-align: right;">ROI Grupo</span>
+                        <span class="project-badge-roi ${totalInvested === 0 ? 'zero' : (roi >= 0 ? 'plus' : 'minus')}">${totalInvested === 0 ? 'Sin Inversión' : roi.toFixed(1) + '%'}</span>
+                    </div>
+                </div>
+            `;
+            if (foldersContainer) foldersContainer.appendChild(folderCard);
+        });
+    } else {
+        if (foldersSection) foldersSection.classList.add("hidden");
+    }
+
+    // Filtrar proyectos independientes (sin folderId o con folderId inexistente)
+    const standaloneProjects = allProjects.filter(p => !p.folderId || !validFolderIds.has(p.folderId));
+
+    if (standaloneTitle) {
+        standaloneTitle.textContent = folders.length > 0 ? "🚀 Proyectos Independientes (Sin Carpeta)" : "🚀 Mis Proyectos";
+    }
+
+    if (allProjects.length === 0 && folders.length === 0) {
+        if (standaloneContainer) {
+            standaloneContainer.innerHTML = `<div class="alert-info" style="grid-column: 1 / -1;">No has creado ningún proyecto ni carpeta de simulación aún. Diseña uno con los botones superiores.</div>`;
+        }
         return;
     }
 
-    state.projects.forEach(proj => {
-        // Calcular sumarios
+    if (standaloneProjects.length === 0 && folders.length > 0) {
+        if (standaloneContainer) {
+            standaloneContainer.innerHTML = `<div class="alert-info" style="grid-column: 1 / -1; font-size: 0.8rem; padding: 12px 16px;">Todos tus proyectos están organizados dentro de carpetas.</div>`;
+        }
+        return;
+    }
+
+    standaloneProjects.forEach(proj => {
         let totalInvested = 0;
-        proj.investments.forEach(i => totalInvested += i.amount);
+        (proj.investments || []).forEach(i => totalInvested += i.amount);
 
         let totalEarned = 0;
-        proj.earnings.forEach(e => totalEarned += e.amount);
+        (proj.earnings || []).forEach(e => totalEarned += e.amount);
 
         const netProfit = totalEarned - totalInvested;
         const roi = totalInvested > 0 ? ((netProfit / totalInvested) * 100) : 0;
@@ -3568,7 +3935,7 @@ function renderProjectsList() {
                 </div>
             </div>
         `;
-        container.appendChild(card);
+        if (standaloneContainer) standaloneContainer.appendChild(card);
     });
 }
 
@@ -3830,16 +4197,44 @@ function initEditModal() {
                     success = true;
                 }
             }
+        } else if (type === "projectFolder") {
+            const folder = (state.projectFolders || []).find(f => f.id === id);
+            if (folder) {
+                const newName = document.getElementById("edit-pfolder-name").value.trim();
+                const newDesc = document.getElementById("edit-pfolder-desc").value.trim();
+                if (newName && newDesc) {
+                    folder.name = newName;
+                    folder.description = newDesc;
+                    updatedName = newName;
+                    success = true;
+                    if (currentActiveFolderId === id) {
+                        renderProjectFolderView(id);
+                    }
+                }
+            }
         } else if (type === "project") {
             const proj = state.projects.find(p => p.id === id);
             if (proj) {
                 const newName = document.getElementById("edit-proj-name").value.trim();
                 const newDesc = document.getElementById("edit-proj-desc").value.trim();
+                const newFolderId = document.getElementById("edit-proj-folder")?.value || null;
                 if (newName && newDesc) {
                     proj.name = newName;
                     proj.description = newDesc;
+                    proj.folderId = newFolderId;
                     updatedName = newName;
                     success = true;
+                    if (currentActiveProjectId === id) {
+                        renderProjectDetailView(id);
+                        const parentFolder = newFolderId ? (state.projectFolders || []).find(f => f.id === newFolderId) : null;
+                        const backTextEl = document.getElementById("btn-back-to-projects-text");
+                        if (backTextEl) {
+                            backTextEl.textContent = parentFolder ? `Volver a Carpeta (${parentFolder.name})` : "Volver a Proyectos";
+                        }
+                    }
+                    if (currentActiveFolderId) {
+                        renderProjectFolderView(currentActiveFolderId);
+                    }
                 }
             }
         } else if (type === "projectInvestment") {
@@ -4114,6 +4509,20 @@ function openEditModal(type, id, extraId = null) {
                 }
             });
         }
+    } else if (type === "projectFolder") {
+        const folder = (state.projectFolders || []).find(f => f.id === id);
+        if (!folder) return;
+        titleEl.textContent = "Editar Carpeta / Grupo de Proyectos";
+        fieldsContainer.innerHTML = `
+            <div class="form-group">
+                <label for="edit-pfolder-name">Nombre de la Carpeta</label>
+                <input type="text" id="edit-pfolder-name" value="${folder.name}" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-pfolder-desc">Descripción / Objetivo General</label>
+                <input type="text" id="edit-pfolder-desc" value="${folder.description}" required>
+            </div>
+        `;
     } else if (type === "project") {
         const proj = state.projects.find(p => p.id === id);
         if (!proj) return;
@@ -4127,7 +4536,12 @@ function openEditModal(type, id, extraId = null) {
                 <label for="edit-proj-desc">Descripción / Objetivo</label>
                 <input type="text" id="edit-proj-desc" value="${proj.description}" required>
             </div>
+            <div class="form-group">
+                <label for="edit-proj-folder">Carpeta / Grupo</label>
+                <select id="edit-proj-folder"></select>
+            </div>
         `;
+        renderProjectFolderSelectOptions("edit-proj-folder", proj.folderId);
     } else if (type === "projectInvestment") {
         const proj = state.projects.find(p => p.id === extraId);
         if (!proj) return;
