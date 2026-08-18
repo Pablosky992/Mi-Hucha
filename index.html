@@ -7,8 +7,90 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Mi Hucha - Peseta a Peseta</title>
+    
+    <!-- SEO Meta Tags Primarios -->
+    <title>Mi Hucha - Finanzas Personales, Ahorro y Calculadora de IRPF España</title>
+    <meta name="description" content="Controla tus gastos, ahorros e inversiones con Mi Hucha. Utiliza nuestras herramientas gratuitas: Calculadora de IRPF y Sueldo Neto España 2026, retención recomendada en nómina y simuladores financieros.">
+    <meta name="keywords" content="calculadora irpf, calcular sueldo neto, irpf nomina españa 2026, retencion irpf recomendada, tramos irpf aeat, calculadora financiera, finanzas personales, simulador de sueldo, ahorrar dinero">
+    <link rel="canonical" href="https://mihucha.es/">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mihucha.es/">
+    <meta property="og:title" content="Mi Hucha - Calculadora de IRPF, Sueldo Neto y Gestión Financiera">
+    <meta property="og:description" content="Simula tu sueldo neto exacto, calcula la retención de IRPF recomendada en tu nómina y gestiona tus finanzas personales paso a paso.">
+    <meta property="og:image" content="https://mihucha.es/logo.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mihucha.es/">
+    <meta name="twitter:title" content="Mi Hucha - Calculadora de IRPF & Finanzas Personales">
+    <meta name="twitter:description" content="Calcula tu sueldo neto y retención de IRPF en España según tu salario bruto y situación familiar.">
+    <meta name="twitter:image" content="https://mihucha.es/logo.png">
+
     <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Schema.org JSON-LD Structured Data para SEO y Rich Snippets de Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://mihucha.es/#app",
+          "name": "Mi Hucha - Calculadoras Financieras y Gestión de Ahorro",
+          "url": "https://mihucha.es/",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "All",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR"
+          },
+          "description": "Aplicación web de finanzas personales, control de gastos, cálculo de IRPF y sueldo neto en España, proyectos de ahorro e inversiones.",
+          "featureList": [
+            "Calculadora de IRPF y Sueldo Neto en España",
+            "Cálculo de Retención de IRPF Recomendada en Nómina",
+            "Calculadora Financiera Digital con Historial",
+            "Control de Gastos e Ingresos por Categorías",
+            "Gestión de Proyectos y Metas de Ahorro"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://mihucha.es/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Cómo se calcula el sueldo neto a partir del salario bruto en España?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "El sueldo neto se calcula restando del salario bruto anual la cotización a la Seguridad Social a cargo del trabajador (6,35% sobre la base de cotización) y la retención del IRPF que corresponda según la escala de tramos impositivos y la situación familiar del contribuyente."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cuál es la retención de IRPF recomendada en nómina?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "La retención recomendada es aquella que cubre con exactitud el tipo medio efectivo que te corresponde tributar en la Declaración de la Renta anual según los tramos de la AEAT. Mantener la retención adecuada evita tener que ingresar dinero a Hacienda en la campaña anual de la Renta."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Qué ocurre con el IRPF si tengo dos o más pagadores?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cuando tienes dos pagadores, cada empresa suele aplicar un tipo de retención inferior al que correspondería por la suma de ambos salarios. Por ello, se recomienda solicitar voluntariamente a la empresa principal un 1% a 2,5% adicional de retención para no tener que pagar en la Renta."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,6 +149,11 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                     <span>Artículos y Guías</span>
                 </a>
+
+                <button id="tab-utilities" class="nav-btn" data-target="panel-utilities" title="Herramientas y Utilidades Financieras">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                    <span>Utilidades</span>
+                </button>
                 
                 <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -1254,6 +1341,420 @@
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <!-- 5. MÓDULO DE UTILIDADES Y CALCULADORAS -->
+            <section id="panel-utilities" class="tab-panel">
+                
+                <!-- VISTA 5A: CATÁLOGO DE UTILIDADES -->
+                <div id="utilities-catalog-view">
+                    <div class="column-header" style="margin-bottom: 20px;">
+                        <div>
+                            <h2>Herramientas y Utilidades Financieras</h2>
+                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;">Selecciona cualquiera de las herramientas disponibles para abrir su simulador interactivo.</p>
+                        </div>
+                    </div>
+
+                    <div class="utilities-catalog-grid">
+                        
+                        <!-- Tarjeta Utilidad 1: Calculadora de IRPF y Sueldo Neto -->
+                        <div class="utility-card shadow-glass" onclick="openUtilityView('irpf')">
+                            <div class="utility-card-banner">
+                                <img src="img/calculadora-irpf.jpg" alt="Calculadora de IRPF y Sueldo Neto España 2026" class="utility-card-img">
+                                <span class="utility-badge">Nóminas & IRPF</span>
+                            </div>
+                            <div class="utility-card-body">
+                                <div>
+                                    <h3>Calculadora de IRPF & Sueldo Neto</h3>
+                                    <p>Calcula tu salario neto mensual y anual a partir de tu sueldo bruto, estimando la retención óptima de IRPF, tramo marginal y cotizaciones a la Seguridad Social (España).</p>
+                                </div>
+                                <div class="utility-card-footer">
+                                    <span class="utility-action-link">
+                                        <span>Abrir Calculadora</span>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Utilidad 2: Calculadora Financiera y Matemática -->
+                        <div class="utility-card shadow-glass" onclick="openUtilityView('calc')">
+                            <div class="utility-card-banner">
+                                <img src="img/calculadora-financiera.jpg" alt="Calculadora Financiera Digital con Historial" class="utility-card-img">
+                                <span class="utility-badge">Operaciones Rápidas</span>
+                            </div>
+                            <div class="utility-card-body">
+                                <div>
+                                    <h3>Calculadora Financiera Digital</h3>
+                                    <p>Calculadora con historial persistente, soporte físico de teclado, cálculo de porcentajes (+21% IVA, -21% IVA, márgenes) y operaciones rápidas.</p>
+                                </div>
+                                <div class="utility-card-footer">
+                                    <span class="utility-action-link">
+                                        <span>Abrir Calculadora</span>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SECCIÓN SEO: Guía y Preguntas Frecuentes sobre Calculadoras Financieras -->
+                    <div class="utilities-seo-section shadow-glass" style="margin-top: 32px; padding: 24px; border-radius: 14px; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-glass);">
+                        <div style="margin-bottom: 20px;">
+                            <span style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--primary-light); letter-spacing: 0.05em;">Guía Fiscal & Ahorro</span>
+                            <h3 style="font-size: 1.2rem; color: var(--text-primary); margin: 4px 0 8px 0;">Todo lo que necesitas saber sobre el cálculo de tu nómina e IRPF</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.84rem; line-height: 1.5; margin: 0;">
+                                Conocer con exactitud cómo se compone tu salario bruto y qué retenciones legales se aplican es la clave para planificar tus finanzas personales, evitar pagar en la Declaración de la Renta y optimizar tu capacidad de ahorro.
+                            </p>
+                        </div>
+
+                        <!-- Acordeón FAQ para SEO y experiencia de usuario -->
+                        <div class="faq-accordion-list" style="display: flex; flex-direction: column; gap: 10px;">
+                            
+                            <details class="seo-faq-item">
+                                <summary class="seo-faq-summary">
+                                    <span>¿Cómo calcular el sueldo neto exacto desde el salario bruto?</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </summary>
+                                <div class="seo-faq-content">
+                                    <p>Para calcular tu sueldo neto mensual o anual en España se deben descontar dos conceptos fundamentales de tu salario bruto:</p>
+                                    <ul>
+                                        <li><strong>Cotización a la Seguridad Social (6,35%):</strong> Corresponde a contingencias comunes (4,70%), desempleo (1,55% o 1,60%) y formación profesional (0,10%), con base máxima fijada legalmente.</li>
+                                        <li><strong>Retención de IRPF:</strong> Es el pago a cuenta del Impuesto sobre la Renta que la empresa deduce de tu nómina en base a tus ingresos anuales, tramos estatales/autonómicos y situación familiar (hijos o dependientes).</li>
+                                    </ul>
+                                </div>
+                            </details>
+
+                            <details class="seo-faq-item">
+                                <summary class="seo-faq-summary">
+                                    <span>¿Por qué es crucial aplicar el IRPF recomendado en tu nómina?</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </summary>
+                                <div class="seo-faq-content">
+                                    <p>Si tu empresa te aplica una retención inferior a la que te corresponde por ley, recibirás un sueldo neto mensual superior durante el año, pero al hacer la <strong>Declaración de la Renta anual (IRPF)</strong> ante la Agencia Tributaria (AEAT) el resultado será <strong>a ingresar (a pagar)</strong>.</p>
+                                    <p>Nuestra calculadora te indica el tipo de retención óptimo exacto para que el resultado de tu Renta sea equilibrado o a devolver.</p>
+                                </div>
+                            </details>
+
+                            <details class="seo-faq-item">
+                                <summary class="seo-faq-summary">
+                                    <span>¿Qué ocurre si tengo 2 o más pagadores en el año?</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </summary>
+                                <div class="seo-faq-content">
+                                    <p>Cuando trabajas para dos empresas en el mismo año fiscal (o recibes la prestación por desempleo y luego empiezas a trabajar), cada pagador calcula tu retención como si fuera el único. Esto provoca que retengan mucho menos de lo debido.</p>
+                                    <p>Para evitar una sorpresa fiscal, es muy recomendable solicitar por escrito (mediante el modelo 145) que tu empresa principal te aplique un <strong>1,5% a 2,5% adicional</strong> de retención.</p>
+                                </div>
+                            </details>
+
+                            <details class="seo-faq-item">
+                                <summary class="seo-faq-summary">
+                                    <span>¿Cómo funcionan los tramos progresivos de IRPF?</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </summary>
+                                <div class="seo-faq-content">
+                                    <p>El IRPF es un impuesto progresivo en escalones. Esto significa que si pasas al siguiente tramo (por ejemplo del 24% al 30%), no pagas el 30% de todo tu sueldo, sino <strong>únicamente sobre la porción de euros que supera dicho escalón</strong>.</p>
+                                </div>
+                            </details>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VISTA 5B: HERRAMIENTA ESPECÍFICA - CALCULADORA DE IRPF (Oculta por defecto) -->
+                <div id="utility-view-irpf" class="hidden">
+                    <div class="project-details-header" style="margin-bottom: 20px;">
+                        <button class="btn-back" onclick="closeUtilityView()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            <span>Volver a Utilidades</span>
+                        </button>
+                        <div class="project-details-title-area" style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="stat-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: var(--success-light); width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                                </div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Calculadora de IRPF & Sueldo Neto</h2>
+                            </div>
+                            <p style="margin-top: 4px; color: var(--text-secondary); font-size: 0.8rem;">Estimación salarial interactiva, retenciones recomendadas y tramos fiscales (España)</p>
+                        </div>
+                    </div>
+
+                    <div class="irpf-hub-grid" style="max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: minmax(320px, 390px) 1fr; gap: 20px;">
+                        
+                        <!-- Columna Izquierda: Parámetros y Controles -->
+                        <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="column-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; margin-bottom: 4px;">
+                                <h3 style="font-size: 0.95rem; margin: 0; font-weight: 700; color: var(--text-primary);">Configuración de tu Sueldo</h3>
+                            </div>
+
+                            <!-- Salario Bruto Anual con Slider sincronizado -->
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <label for="calc-gross-salary" style="margin: 0;">Salario Bruto Anual</label>
+                                    <span id="gross-salary-display-tag" style="font-size: 0.82rem; font-weight: 700; color: var(--primary-light);">24.000 €</span>
+                                </div>
+                                <input type="number" id="calc-gross-salary" step="500" min="0" max="250000" value="24000" placeholder="Ej. 24000" required>
+                                
+                                <!-- Slider interactivo -->
+                                <div style="margin-top: 10px;">
+                                    <input type="range" id="calc-gross-slider" min="12000" max="90000" step="500" value="24000" class="premium-range-slider" style="width: 100%;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted); margin-top: 4px;">
+                                        <span>12k €</span>
+                                        <span>35k €</span>
+                                        <span>60k €</span>
+                                        <span>90k €</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chips de acceso rápido -->
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                <span style="font-size: 0.72rem; color: var(--text-muted); align-self: center;">Preajustes:</span>
+                                <button type="button" class="btn-preset-salary" onclick="setSalaryPreset(15876)">15.8k (SMI)</button>
+                                <button type="button" class="btn-preset-salary" onclick="setSalaryPreset(20000)">20k €</button>
+                                <button type="button" class="btn-preset-salary" onclick="setSalaryPreset(25000)">25k €</button>
+                                <button type="button" class="btn-preset-salary" onclick="setSalaryPreset(35000)">35k €</button>
+                                <button type="button" class="btn-preset-salary" onclick="setSalaryPreset(50000)">50k €</button>
+                            </div>
+
+                            <div class="form-row-grid" style="grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label for="calc-payments-num">Pagas al Año</label>
+                                    <select id="calc-payments-num">
+                                        <option value="12" selected>12 Pagas</option>
+                                        <option value="14">14 Pagas</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="calc-family-situation">Situación Familiar</label>
+                                    <select id="calc-family-situation">
+                                        <option value="single" selected>Soltero / Sin hijos</option>
+                                        <option value="kids1">1 hijo a cargo</option>
+                                        <option value="kids2">2 o más hijos</option>
+                                        <option value="dependent">Con dependientes</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Mini tarjeta de Tramo Marginal Actual -->
+                            <div class="marginal-bracket-badge" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-glass); border-radius: 10px; padding: 12px 14px; margin-top: auto;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Tramo Marginal IRPF:</span>
+                                    <span id="res-marginal-bracket" style="font-size: 0.85rem; font-weight: 800; color: #f59e0b;">30% (20.200€ a 35.200€)</span>
+                                </div>
+                                <p style="font-size: 0.72rem; color: var(--text-secondary); margin: 6px 0 0 0; line-height: 1.35;">
+                                    El IRPF es progresivo: solo tributas al tipo marginal por el dinero que supere dicho escalón, no por la totalidad de tu sueldo.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha: Resultados y Recomendación IRPF -->
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            
+                            <!-- 1. Tarjeta Destacada: IRPF Recomendado en Nómina -->
+                            <div class="irpf-recommendation-card shadow-glass">
+                                <div class="rec-card-header">
+                                    <div class="rec-card-icon">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <span class="rec-card-tag">Recomendación Fiscal</span>
+                                        <h4 class="rec-card-title">Retención de IRPF Recomendada en Nómina</h4>
+                                    </div>
+                                    <div class="rec-card-rate-pill">
+                                        <span id="rec-irpf-rate-display">13.6%</span>
+                                    </div>
+                                </div>
+                                <div class="rec-card-body">
+                                    <p id="rec-irpf-advice-text">
+                                        Para evitar sorpresas o tener que pagar en la Declaración de la Renta, tu empresa debería aplicarte una retención aproximada del <strong>13.6%</strong>.
+                                    </p>
+                                    <div class="rec-sub-indicators">
+                                        <div class="rec-sub-item">
+                                            <span>Retención Mínima Legal:</span>
+                                            <strong id="rec-min-legal">13.6%</strong>
+                                        </div>
+                                        <div class="rec-sub-item">
+                                            <span>Con 2 o más Pagadores:</span>
+                                            <strong id="rec-twopayers-rate" style="color: var(--primary-light);">15.0% (+1.4%)</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Tarjeta de Sueldo Neto y Desglose Visual -->
+                            <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column; gap: 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
+                                    <div>
+                                        <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; display: block; letter-spacing: 0.04em;">Sueldo Neto Mensual (<span id="res-payments-label">12 pagas</span>)</span>
+                                        <span id="res-monthly-net" style="font-family: var(--font-header); font-size: 2.1rem; font-weight: 800; color: var(--success-light); letter-spacing: -0.02em;">1.604,00 €</span>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; display: block; letter-spacing: 0.04em;">Neto Anual Líquido</span>
+                                        <span id="res-annual-net" style="font-family: var(--font-header); font-size: 1.35rem; font-weight: 700; color: #f1f5f9;">19.248,00 €</span>
+                                    </div>
+                                </div>
+
+                                <!-- Barra Visual de Desglose Salarial -->
+                                <div style="margin: 4px 0;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 700; margin-bottom: 6px;">
+                                        <span style="color: var(--success-light);">Neto: <span id="bar-net-label">80.2%</span></span>
+                                        <span style="color: #f59e0b;">IRPF: <span id="bar-irpf-label">13.6%</span></span>
+                                        <span style="color: var(--primary-light);">Seg. Social: <span id="bar-ss-label">6.35%</span></span>
+                                    </div>
+                                    <div class="salary-breakdown-bar" style="height: 12px; border-radius: 6px; display: flex; overflow: hidden; background: rgba(255,255,255,0.06); box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);">
+                                        <div id="bar-net" style="width: 80.2%; background: linear-gradient(90deg, #10b981, #34d399); transition: width 0.3s ease;" title="Sueldo Neto"></div>
+                                        <div id="bar-irpf" style="width: 13.6%; background: linear-gradient(90deg, #f59e0b, #fbbf24); transition: width 0.3s ease;" title="Retención IRPF"></div>
+                                        <div id="bar-ss" style="width: 6.35%; background: linear-gradient(90deg, #00e5ff, #38bdf8); transition: width 0.3s ease;" title="Seguridad Social"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Cuadrícula de Desglose Anual y Mensual -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.8rem;">
+                                    <div style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); padding: 10px 12px; border-radius: 10px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #f59e0b; font-weight: 700; font-size: 0.75rem;">Retención IRPF</span>
+                                            <span id="res-irpf-pct-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;">13.6%</span>
+                                        </div>
+                                        <div id="res-irpf-amount" style="font-weight: 800; color: #f59e0b; font-size: 1.05rem; margin-top: 4px;">-3.264,00 €</div>
+                                        <span id="res-irpf-monthly" style="color: var(--text-muted); font-size: 0.7rem; display: block; margin-top: 2px;">-272,00 € / mes</span>
+                                    </div>
+
+                                    <div style="background: rgba(0, 229, 255, 0.06); border: 1px solid rgba(0, 229, 255, 0.2); padding: 10px 12px; border-radius: 10px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: var(--primary-light); font-weight: 700; font-size: 0.75rem;">Seguridad Social</span>
+                                            <span style="background: rgba(0, 229, 255, 0.2); color: #38bdf8; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;">6.35%</span>
+                                        </div>
+                                        <div id="res-ss-amount" style="font-weight: 800; color: var(--primary-light); font-size: 1.05rem; margin-top: 4px;">-1.524,00 €</div>
+                                        <span id="res-ss-monthly" style="color: var(--text-muted); font-size: 0.7rem; display: block; margin-top: 2px;">-127,00 € / mes</span>
+                                    </div>
+                                </div>
+
+                                <!-- Pie con enlace al simulador oficial -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 6px; border-top: 1px solid var(--border-glass);">
+                                    <span style="font-size: 0.72rem; color: var(--text-muted);">Basado en tablas IRPF estándar de la AEAT</span>
+                                    <a href="https://sede.agenciatributaria.gob.es/Sede/procedimientoini/ZZ09.shtml" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size: 0.75rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;">
+                                        <span>Simulador Oficial AEAT</span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- VISTA 5C: HERRAMIENTA ESPECÍFICA - CALCULADORA FINANCIERA (Oculta por defecto) -->
+                <div id="utility-view-calc" class="hidden">
+                    <div class="project-details-header" style="margin-bottom: 20px;">
+                        <button class="btn-back" onclick="closeUtilityView()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            <span>Volver a Utilidades</span>
+                        </button>
+                        <div class="project-details-title-area" style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="stat-icon-wrap" style="background: rgba(0, 229, 255, 0.15); color: var(--primary-light); width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                                </div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Calculadora Financiera Digital</h2>
+                            </div>
+                            <p style="margin-top: 4px; color: var(--text-secondary); font-size: 0.8rem;">Cálculos rápidos, porcentajes, atajos de teclado e historial interactivo</p>
+                        </div>
+                    </div>
+
+                    <div class="calc-hub-grid" style="max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: minmax(320px, 380px) 1fr; gap: 20px;">
+                        
+                        <!-- Columna Izquierda: Calculadora -->
+                        <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column; gap: 14px;">
+                            
+                            <!-- Widget Calculadora Digital -->
+                            <div class="calc-widget-container">
+                                <!-- Pantalla de la Calculadora -->
+                                <div class="calc-display-wrap">
+                                    <div id="calc-history" class="calc-history"></div>
+                                    <div id="calc-current" class="calc-current">0</div>
+                                </div>
+
+                                <!-- Barra de Atajos Rápidos Financieros -->
+                                <div class="calc-quick-bar">
+                                    <button type="button" class="calc-quick-btn" onclick="calcQuickTax(21)" title="Añadir +21% IVA">+21% IVA</button>
+                                    <button type="button" class="calc-quick-btn" onclick="calcQuickTax(-21)" title="Descontar -21% IVA">-21% IVA</button>
+                                    <button type="button" class="calc-quick-btn" onclick="calcQuickTax(10)" title="Añadir +10% IVA">+10%</button>
+                                    <button type="button" class="calc-quick-btn" onclick="calcAction('sqrt')" title="Raíz Cuadrada">√</button>
+                                </div>
+
+                                <!-- Botonera con data-keys para teclado -->
+                                <div class="calc-keypad">
+                                    <button type="button" class="calc-btn calc-btn-op" data-calc-key="Escape" onclick="calcAction('clear')">C</button>
+                                    <button type="button" class="calc-btn calc-btn-op" data-calc-key="Backspace" onclick="calcAction('backspace')">⌫</button>
+                                    <button type="button" class="calc-btn calc-btn-op" data-calc-key="%" onclick="calcAction('percent')">%</button>
+                                    <button type="button" class="calc-btn calc-btn-action" data-calc-key="/" onclick="calcAction('operator', '/')">÷</button>
+
+                                    <button type="button" class="calc-btn" data-calc-key="7" onclick="calcAction('num', '7')">7</button>
+                                    <button type="button" class="calc-btn" data-calc-key="8" onclick="calcAction('num', '8')">8</button>
+                                    <button type="button" class="calc-btn" data-calc-key="9" onclick="calcAction('num', '9')">9</button>
+                                    <button type="button" class="calc-btn calc-btn-action" data-calc-key="*" onclick="calcAction('operator', '*')">×</button>
+
+                                    <button type="button" class="calc-btn" data-calc-key="4" onclick="calcAction('num', '4')">4</button>
+                                    <button type="button" class="calc-btn" data-calc-key="5" onclick="calcAction('num', '5')">5</button>
+                                    <button type="button" class="calc-btn" data-calc-key="6" onclick="calcAction('num', '6')">6</button>
+                                    <button type="button" class="calc-btn calc-btn-action" data-calc-key="-" onclick="calcAction('operator', '-')">−</button>
+
+                                    <button type="button" class="calc-btn" data-calc-key="1" onclick="calcAction('num', '1')">1</button>
+                                    <button type="button" class="calc-btn" data-calc-key="2" onclick="calcAction('num', '2')">2</button>
+                                    <button type="button" class="calc-btn" data-calc-key="3" onclick="calcAction('num', '3')">3</button>
+                                    <button type="button" class="calc-btn calc-btn-action" data-calc-key="+" onclick="calcAction('operator', '+')">+</button>
+
+                                    <button type="button" class="calc-btn" data-calc-key="sign" onclick="calcAction('sign')">±</button>
+                                    <button type="button" class="calc-btn" data-calc-key="0" onclick="calcAction('num', '0')">0</button>
+                                    <button type="button" class="calc-btn" data-calc-key="." onclick="calcAction('dot')">.</button>
+                                    <button type="button" class="calc-btn calc-btn-equal" data-calc-key="Enter" onclick="calcAction('equals')">=</button>
+                                </div>
+                            </div>
+
+                            <!-- Barra de Acciones Inferior -->
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <button type="button" class="btn-secondary" onclick="copyCalcResult()" style="font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <span>Copiar Resultado</span>
+                                </button>
+                                <a href="https://www.google.com/search?q=calculadora" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size: 0.78rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                                    <span>Calculadora Online</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha: Historial de Operaciones -->
+                        <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column;">
+                            <div class="column-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-light);"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    <h3 style="font-size: 0.95rem; margin: 0; font-weight: 700;">Historial de Cálculos</h3>
+                                </div>
+                                <button type="button" class="btn-clear-history" onclick="clearCalcHistory()" title="Limpiar historial">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    <span>Limpiar</span>
+                                </button>
+                            </div>
+
+                            <!-- Lista de Historial -->
+                            <div id="calc-history-list" class="calc-history-feed custom-scrollbar" style="flex: 1; max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Inyectado dinámicamente -->
+                            </div>
+
+                            <!-- Tip de teclado al pie -->
+                            <div class="calc-keyboard-tip">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M6 12h.001M10 12h.001M14 12h.001M18 12h.001M8 16h8"></path></svg>
+                                <span><strong>Teclado activado:</strong> Puedes escribir directamente números, operadores (+, -, *, /), Enter, Backspace y Escape.</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </section>
 
         </main>

@@ -524,6 +524,7 @@ function initNavigation() {
                 else if (targetId === "panel-performance") viewDesc = "Gráficos de rendimiento e historial consolidado";
                 else if (targetId === "panel-projects") viewDesc = "Simulador financiero y sandbox de proyectos independientes";
                 else if (targetId === "panel-investments") viewDesc = "Cartera de inversión, rentabilidades y planes de futuro";
+                else if (targetId === "panel-utilities") viewDesc = "Herramientas de cálculo, simulador de IRPF y recursos financieros";
                 
                 subtitleEl.textContent = viewDesc;
             }
@@ -533,6 +534,11 @@ function initNavigation() {
                 document.getElementById("project-list-view").classList.remove("hidden");
                 document.getElementById("project-details-view").classList.add("hidden");
                 currentActiveProjectId = null;
+            }
+
+            // Si volvemos al panel de utilidades, mostrar el catálogo principal
+            if (targetId === "panel-utilities") {
+                closeUtilityView();
             }
 
             // Lanzar actualización de gráficos al cambiar a la pestaña de rendimiento
@@ -553,7 +559,9 @@ function initNavigation() {
             else if (hash === "#expenses" || hash === "#tab-expenses") targetTab = document.getElementById("tab-expenses");
             else if (hash === "#closure" || hash === "#tab-closure") targetTab = document.getElementById("tab-closure");
             else if (hash === "#performance" || hash === "#tab-performance") targetTab = document.getElementById("tab-performance");
+            else if (hash === "#investments" || hash === "#tab-investments") targetTab = document.getElementById("tab-investments");
             else if (hash === "#projects" || hash === "#tab-projects") targetTab = document.getElementById("tab-projects");
+            else if (hash === "#utilities" || hash === "#tab-utilities") targetTab = document.getElementById("tab-utilities");
             
             if (targetTab) {
                 targetTab.click();
@@ -6819,6 +6827,7 @@ function initPremiumFeatures() {
     initSavingGoals();
     initCloseMonthManager();
     initShortcutsHelpModal();
+    initUtilities();
 }
 
 function initMaskMode() {
@@ -7256,4 +7265,550 @@ function initShortcutsHelpModal() {
         }
     });
 }
+
+// ====================================================
+// MÓDULO DE UTILIDADES Y CALCULADORAS
+// ====================================================
+
+let calcCurrentVal = "0";
+let calcPrevVal = null;
+let calcOp = null;
+let calcResetOnNext = false;
+let calcHistory = [];
+
+try {
+    const savedHistory = localStorage.getItem("mihucha_calc_history");
+    if (savedHistory) calcHistory = JSON.parse(savedHistory);
+} catch (e) {
+    calcHistory = [];
+}
+
+function initUtilities() {
+    initIRPFCalculator();
+    initStandardCalculator();
+}
+
+function initIRPFCalculator() {
+    const grossInput = document.getElementById("calc-gross-salary");
+    const grossSlider = document.getElementById("calc-gross-slider");
+    const paySelect = document.getElementById("calc-payments-num");
+    const famSelect = document.getElementById("calc-family-situation");
+
+    if (grossInput) {
+        grossInput.addEventListener("input", () => {
+            if (grossSlider) grossSlider.value = grossInput.value;
+            calculateSalaryIRPF();
+        });
+    }
+    if (grossSlider) {
+        grossSlider.addEventListener("input", () => {
+            if (grossInput) grossInput.value = grossSlider.value;
+            calculateSalaryIRPF();
+        });
+    }
+    if (paySelect) {
+        paySelect.addEventListener("change", calculateSalaryIRPF);
+    }
+    if (famSelect) {
+        famSelect.addEventListener("change", calculateSalaryIRPF);
+    }
+
+    calculateSalaryIRPF();
+}
+
+function setSalaryPreset(amount) {
+    const grossInput = document.getElementById("calc-gross-salary");
+    const grossSlider = document.getElementById("calc-gross-slider");
+    if (grossInput) grossInput.value = amount;
+    if (grossSlider) grossSlider.value = amount;
+    calculateSalaryIRPF();
+}
+
+function calculateSalaryIRPF() {
+    const grossInput = document.getElementById("calc-gross-salary");
+    const paySelect = document.getElementById("calc-payments-num");
+    const famSelect = document.getElementById("calc-family-situation");
+
+    if (!grossInput) return;
+
+    const gross = Math.max(0, parseFloat(grossInput.value) || 0);
+    const payments = parseInt(paySelect?.value || "12");
+    const fam = famSelect?.value || "single";
+
+    // 1. Cotización a la Seguridad Social (Régimen General trabajador: 6.35% con tope de base máxima 56.600€)
+    const ssMaxBase = 56600;
+    const ssTaxableBase = Math.min(gross, ssMaxBase);
+    const ssRate = 0.0635;
+    const ssAmount = ssTaxableBase * ssRate;
+
+    // 2. Mínimo personal y familiar (España)
+    let personalMin = 5550; // Base general
+    if (fam === "kids1") personalMin += 2400;
+    else if (fam === "kids2") personalMin += 2400 + 2700;
+    else if (fam === "dependent") personalMin += 1150;
+
+    // Gastos deducibles generales
+    const generalDeduction = 2000;
+
+    // Reducción por rendimientos del trabajo para rentas bajas (SMI y tramos de protección)
+    let lowIncomeReduction = 0;
+    if (gross <= 14049) {
+        lowIncomeReduction = 6498;
+    } else if (gross < 19747.5) {
+        lowIncomeReduction = Math.max(0, 6498 - 1.14 * (gross - 14049));
+    }
+
+    // Base liquidable
+    const taxableBase = Math.max(0, gross - ssAmount - generalDeduction - lowIncomeReduction);
+
+    // 3. Tramos de IRPF (Escala combinada Estatal + Autonómica media)
+    function calcTaxOnAmount(amount) {
+        let tax = 0;
+        const brackets = [
+            { limit: 12450, rate: 0.19 },
+            { limit: 20200, rate: 0.24 },
+            { limit: 35200, rate: 0.30 },
+            { limit: 60000, rate: 0.37 },
+            { limit: 300000, rate: 0.45 },
+            { limit: Infinity, rate: 0.47 }
+        ];
+
+        let prevLimit = 0;
+        for (const b of brackets) {
+            if (amount > prevLimit) {
+                const chunk = Math.min(amount, b.limit) - prevLimit;
+                tax += chunk * b.rate;
+                prevLimit = b.limit;
+            } else {
+                break;
+            }
+        }
+        return tax;
+    }
+
+    const taxOnBase = calcTaxOnAmount(taxableBase);
+    const taxOnMin = calcTaxOnAmount(personalMin);
+    let irpfAmount = Math.max(0, taxOnBase - taxOnMin);
+
+    // Si no llega al límite exento de IRPF (15.876€ para soltero sin hijos)
+    if (gross <= 15876 && fam === "single") {
+        irpfAmount = 0;
+    }
+
+    const netAnnual = Math.max(0, gross - ssAmount - irpfAmount);
+    const netMonthly = netAnnual / payments;
+    const irpfPct = gross > 0 ? (irpfAmount / gross) * 100 : 0;
+
+    // Tramo marginal
+    let marginalBracketText = "0% (Exento)";
+    if (gross > 300000) marginalBracketText = "47% (> 300.000€)";
+    else if (gross > 60000) marginalBracketText = "45% (60.000€ a 300.000€)";
+    else if (gross > 35200) marginalBracketText = "37% (35.200€ a 60.000€)";
+    else if (gross > 20200) marginalBracketText = "30% (20.200€ a 35.200€)";
+    else if (gross > 12450) marginalBracketText = "24% (12.450€ a 20.200€)";
+    else if (gross > 0) marginalBracketText = "19% (Hasta 12.450€)";
+
+    // Tipo IRPF recomendado y consejo
+    const recommendedRate = irpfPct;
+    let twoPayersRate = recommendedRate + (recommendedRate > 0 ? Math.min(2.5, Math.max(1.2, recommendedRate * 0.12)) : 0);
+    if (twoPayersRate > 47) twoPayersRate = 47;
+
+    let adviceText = "";
+    if (recommendedRate === 0) {
+        adviceText = `Tu salario de <strong>${formatCurrency(gross)}</strong> está por debajo o en el umbral mínimo exento. Tu retención recomendada es del <strong>0.0%</strong>.`;
+    } else if (recommendedRate < 10) {
+        adviceText = `Para tu salario de <strong>${formatCurrency(gross)}</strong>, el tipo recomendado es del <strong>${recommendedRate.toFixed(1)}%</strong>. Al ser una retención moderada, si tienes dos pagadores te aconsejamos subirla al <strong>${twoPayersRate.toFixed(1)}%</strong>.`;
+    } else {
+        adviceText = `Para evitar tener que pagar en tu Declaración de la Renta anual, asegúrate de que tu nómina aplique al menos el <strong>${recommendedRate.toFixed(1)}%</strong> de retención.`;
+    }
+
+    updateIRPFUI(gross, netAnnual, netMonthly, irpfAmount, irpfPct, ssAmount, payments, marginalBracketText, recommendedRate, twoPayersRate, adviceText);
+}
+
+function updateIRPFUI(gross, netAnnual, netMonthly, irpfAmount, irpfPct, ssAmount, payments, marginalBracketText, recommendedRate, twoPayersRate, adviceText) {
+    const grossDisplayTag = document.getElementById("gross-salary-display-tag");
+    const resMonthly = document.getElementById("res-monthly-net");
+    const resAnnual = document.getElementById("res-annual-net");
+    const resPaymentsLabel = document.getElementById("res-payments-label");
+    const resIrpfPctBadge = document.getElementById("res-irpf-pct-badge");
+    const resIrpfAmount = document.getElementById("res-irpf-amount");
+    const resIrpfMonthly = document.getElementById("res-irpf-monthly");
+    const resSsAmount = document.getElementById("res-ss-amount");
+    const resSsMonthly = document.getElementById("res-ss-monthly");
+    const resMarginal = document.getElementById("res-marginal-bracket");
+
+    // Recomendación
+    const recRateDisplay = document.getElementById("rec-irpf-rate-display");
+    const recAdviceText = document.getElementById("rec-irpf-advice-text");
+    const recMinLegal = document.getElementById("rec-min-legal");
+    const recTwoPayers = document.getElementById("rec-twopayers-rate");
+
+    // Barra
+    const barNet = document.getElementById("bar-net");
+    const barIrpf = document.getElementById("bar-irpf");
+    const barSs = document.getElementById("bar-ss");
+    const barNetLabel = document.getElementById("bar-net-label");
+    const barIrpfLabel = document.getElementById("bar-irpf-label");
+    const barSsLabel = document.getElementById("bar-ss-label");
+
+    if (grossDisplayTag) grossDisplayTag.textContent = formatCurrency(gross);
+    if (resMonthly) resMonthly.textContent = formatCurrency(netMonthly);
+    if (resAnnual) resAnnual.textContent = formatCurrency(netAnnual);
+    if (resPaymentsLabel) resPaymentsLabel.textContent = `${payments} pagas`;
+
+    if (resIrpfPctBadge) resIrpfPctBadge.textContent = (irpfPct || 0).toFixed(1) + "%";
+    if (resIrpfAmount) resIrpfAmount.textContent = "-" + formatCurrency(irpfAmount || 0);
+    if (resIrpfMonthly) resIrpfMonthly.textContent = `-${formatCurrency((irpfAmount || 0) / payments)} / mes`;
+
+    if (resSsAmount) resSsAmount.textContent = "-" + formatCurrency(ssAmount || 0);
+    if (resSsMonthly) resSsMonthly.textContent = `-${formatCurrency((ssAmount || 0) / payments)} / mes`;
+
+    if (resMarginal && marginalBracketText) resMarginal.textContent = marginalBracketText;
+
+    if (recRateDisplay && recommendedRate !== undefined) recRateDisplay.textContent = recommendedRate.toFixed(1) + "%";
+    if (recAdviceText && adviceText) recAdviceText.innerHTML = adviceText;
+    if (recMinLegal && recommendedRate !== undefined) recMinLegal.textContent = recommendedRate.toFixed(1) + "%";
+    if (recTwoPayers && twoPayersRate !== undefined) recTwoPayers.textContent = `${twoPayersRate.toFixed(1)}% (+${(twoPayersRate - recommendedRate).toFixed(1)}%)`;
+
+    if (barNet && barIrpf && barSs) {
+        if (gross > 0) {
+            const netPct = (netAnnual / gross) * 100;
+            const taxPct = (irpfAmount / gross) * 100;
+            const ssPct = (ssAmount / gross) * 100;
+
+            barNet.style.width = netPct.toFixed(1) + "%";
+            barIrpf.style.width = taxPct.toFixed(1) + "%";
+            barSs.style.width = ssPct.toFixed(1) + "%";
+
+            if (barNetLabel) barNetLabel.textContent = netPct.toFixed(1) + "%";
+            if (barIrpfLabel) barIrpfLabel.textContent = taxPct.toFixed(1) + "%";
+            if (barSsLabel) barSsLabel.textContent = ssPct.toFixed(1) + "%";
+        } else {
+            barNet.style.width = "0%";
+            barIrpf.style.width = "0%";
+            barSs.style.width = "0%";
+        }
+    }
+}
+
+function initStandardCalculator() {
+    updateCalcDisplay();
+    renderCalcHistory();
+    initCalcKeyboard();
+}
+
+function updateCalcDisplay() {
+    const curEl = document.getElementById("calc-current");
+    const histEl = document.getElementById("calc-history");
+    if (curEl) curEl.textContent = calcCurrentVal;
+    if (histEl) {
+        if (calcPrevVal !== null && calcOp) {
+            histEl.textContent = `${calcPrevVal} ${calcOp}`;
+        } else {
+            histEl.textContent = "";
+        }
+    }
+}
+
+function calcAction(action, val) {
+    if (action === "num") {
+        if (calcCurrentVal === "0" || calcResetOnNext) {
+            calcCurrentVal = val;
+            calcResetOnNext = false;
+        } else {
+            if (calcCurrentVal.length < 14) {
+                calcCurrentVal += val;
+            }
+        }
+    } else if (action === "dot") {
+        if (calcResetOnNext) {
+            calcCurrentVal = "0.";
+            calcResetOnNext = false;
+        } else if (!calcCurrentVal.includes(".")) {
+            calcCurrentVal += ".";
+        }
+    } else if (action === "sign") {
+        if (calcCurrentVal !== "0") {
+            if (calcCurrentVal.startsWith("-")) {
+                calcCurrentVal = calcCurrentVal.substring(1);
+            } else {
+                calcCurrentVal = "-" + calcCurrentVal;
+            }
+        }
+    } else if (action === "percent") {
+        const num = parseFloat(calcCurrentVal);
+        if (!isNaN(num)) {
+            const res = num / 100;
+            addCalcHistoryItem(`${num}%`, res);
+            calcCurrentVal = String(res);
+            calcResetOnNext = true;
+        }
+    } else if (action === "sqrt") {
+        const num = parseFloat(calcCurrentVal);
+        if (!isNaN(num)) {
+            if (num < 0) {
+                calcCurrentVal = "Error";
+                calcResetOnNext = true;
+            } else {
+                const res = Math.round(Math.sqrt(num) * 100000000) / 100000000;
+                addCalcHistoryItem(`√(${num})`, res);
+                calcCurrentVal = String(res);
+                calcResetOnNext = true;
+            }
+        }
+    } else if (action === "clear") {
+        calcCurrentVal = "0";
+        calcPrevVal = null;
+        calcOp = null;
+        calcResetOnNext = false;
+    } else if (action === "backspace") {
+        if (calcCurrentVal.length > 1 && calcCurrentVal !== "Error") {
+            calcCurrentVal = calcCurrentVal.slice(0, -1);
+        } else {
+            calcCurrentVal = "0";
+        }
+    } else if (action === "operator") {
+        if (calcPrevVal !== null && calcOp && !calcResetOnNext) {
+            calcCompute();
+        }
+        calcPrevVal = calcCurrentVal;
+        calcOp = val;
+        calcResetOnNext = true;
+    } else if (action === "equals") {
+        if (calcPrevVal !== null && calcOp) {
+            const prev = calcPrevVal;
+            const op = calcOp;
+            const curr = calcCurrentVal;
+            calcCompute();
+            addCalcHistoryItem(`${prev} ${op === '*' ? '×' : op === '/' ? '÷' : op} ${curr}`, calcCurrentVal);
+            calcPrevVal = null;
+            calcOp = null;
+            calcResetOnNext = true;
+        }
+    }
+    updateCalcDisplay();
+}
+
+function calcCompute() {
+    const prev = parseFloat(calcPrevVal);
+    const curr = parseFloat(calcCurrentVal);
+    if (isNaN(prev) || isNaN(curr)) return;
+
+    let res = 0;
+    if (calcOp === "+") res = prev + curr;
+    else if (calcOp === "-") res = prev - curr;
+    else if (calcOp === "*") res = prev * curr;
+    else if (calcOp === "/") {
+        if (curr === 0) {
+            calcCurrentVal = "Error";
+            calcResetOnNext = true;
+            return;
+        }
+        res = prev / curr;
+    }
+
+    // Redondear para evitar errores flotantes
+    res = Math.round(res * 100000000) / 100000000;
+    calcCurrentVal = String(res);
+}
+
+function calcQuickTax(pct) {
+    const num = parseFloat(calcCurrentVal);
+    if (isNaN(num)) return;
+
+    let res = 0;
+    let label = "";
+    if (pct === 21) {
+        res = Math.round((num * 1.21) * 100) / 100;
+        label = `${num} + 21% IVA`;
+    } else if (pct === -21) {
+        res = Math.round((num / 1.21) * 100) / 100;
+        label = `${num} sin 21% IVA`;
+    } else if (pct === 10) {
+        res = Math.round((num * 1.10) * 100) / 100;
+        label = `${num} + 10%`;
+    }
+
+    addCalcHistoryItem(label, res);
+    calcCurrentVal = String(res);
+    calcResetOnNext = true;
+    updateCalcDisplay();
+}
+
+function addCalcHistoryItem(expr, result) {
+    if (!expr || result === undefined || result === "Error") return;
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    calcHistory.unshift({
+        expr: expr,
+        result: String(result),
+        time: timeStr
+    });
+    if (calcHistory.length > 30) {
+        calcHistory = calcHistory.slice(0, 30);
+    }
+    saveCalcHistory();
+    renderCalcHistory();
+}
+
+function saveCalcHistory() {
+    try {
+        localStorage.setItem("mihucha_calc_history", JSON.stringify(calcHistory));
+    } catch (e) {}
+}
+
+function renderCalcHistory() {
+    const listEl = document.getElementById("calc-history-list");
+    if (!listEl) return;
+
+    if (!calcHistory || calcHistory.length === 0) {
+        listEl.innerHTML = `
+            <div class="calc-history-empty">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>No hay operaciones recientes</span>
+                <span style="font-size: 0.72rem; opacity: 0.7;">Realiza cálculos con los botones o con tu teclado físico</span>
+            </div>
+        `;
+        return;
+    }
+
+    listEl.innerHTML = calcHistory.map((item) => `
+        <div class="calc-history-item" onclick="restoreHistoryResult('${item.result}')" title="Haz clic para cargar este resultado">
+            <div style="flex: 1; overflow: hidden; text-overflow: ellipsis;">
+                <div class="calc-history-expr">${item.expr} =</div>
+                <div class="calc-history-result">${item.result}</div>
+            </div>
+            <div class="calc-history-meta">
+                <span>${item.time}</span>
+                <span style="color: var(--primary-light); font-size: 0.65rem; margin-top: 2px;">Usar ↗</span>
+            </div>
+        </div>
+    `).join("");
+}
+
+function clearCalcHistory() {
+    calcHistory = [];
+    saveCalcHistory();
+    renderCalcHistory();
+    showToast("Historial de la calculadora borrado", "info");
+}
+
+function restoreHistoryResult(res) {
+    calcCurrentVal = String(res);
+    calcResetOnNext = true;
+    updateCalcDisplay();
+    showToast(`Cargado: ${res}`, "info");
+}
+
+let calcKeyboardInitialized = false;
+function initCalcKeyboard() {
+    if (calcKeyboardInitialized) return;
+    calcKeyboardInitialized = true;
+
+    document.addEventListener("keydown", (e) => {
+        const calcView = document.getElementById("utility-view-calc");
+        if (!calcView || calcView.classList.contains("hidden")) return;
+
+        const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
+        if (activeTag === "input" || activeTag === "textarea" || activeTag === "select") return;
+
+        let keyToHighlight = null;
+
+        if (e.key >= "0" && e.key <= "9") {
+            calcAction("num", e.key);
+            keyToHighlight = e.key;
+        } else if (e.key === "." || e.key === ",") {
+            calcAction("dot");
+            keyToHighlight = ".";
+        } else if (e.key === "+") {
+            calcAction("operator", "+");
+            keyToHighlight = "+";
+        } else if (e.key === "-") {
+            calcAction("operator", "-");
+            keyToHighlight = "-";
+        } else if (e.key === "*" || e.key === "x" || e.key === "X") {
+            calcAction("operator", "*");
+            keyToHighlight = "*";
+        } else if (e.key === "/") {
+            e.preventDefault();
+            calcAction("operator", "/");
+            keyToHighlight = "/";
+        } else if (e.key === "%") {
+            calcAction("percent");
+            keyToHighlight = "%";
+        } else if (e.key === "Enter" || e.key === "=") {
+            e.preventDefault();
+            calcAction("equals");
+            keyToHighlight = "Enter";
+        } else if (e.key === "Backspace") {
+            e.preventDefault();
+            calcAction("backspace");
+            keyToHighlight = "Backspace";
+        } else if (e.key === "Escape" || e.key === "Delete" || e.key.toLowerCase() === "c") {
+            calcAction("clear");
+            keyToHighlight = "Escape";
+        }
+
+        if (keyToHighlight) {
+            const btn = document.querySelector(`button[data-calc-key="${keyToHighlight}"]`);
+            if (btn) {
+                btn.classList.add("btn-key-pressed");
+                setTimeout(() => btn.classList.remove("btn-key-pressed"), 120);
+            }
+        }
+    });
+}
+
+function copyCalcResult() {
+    if (navigator.clipboard && calcCurrentVal) {
+        navigator.clipboard.writeText(calcCurrentVal).then(() => {
+            showToast(`Resultado copiado: ${calcCurrentVal}`, "success");
+        }).catch(() => {
+            showToast("No se pudo copiar el resultado.", "danger");
+        });
+    }
+}
+
+function openUtilityView(utilityType) {
+    const catalogView = document.getElementById("utilities-catalog-view");
+    const irpfView = document.getElementById("utility-view-irpf");
+    const calcView = document.getElementById("utility-view-calc");
+
+    if (catalogView) catalogView.classList.add("hidden");
+    if (irpfView) irpfView.classList.add("hidden");
+    if (calcView) calcView.classList.add("hidden");
+
+    if (utilityType === "irpf" && irpfView) {
+        irpfView.classList.remove("hidden");
+        calculateSalaryIRPF();
+    } else if (utilityType === "calc" && calcView) {
+        calcView.classList.remove("hidden");
+        updateCalcDisplay();
+        renderCalcHistory();
+    }
+
+    const panel = document.getElementById("panel-utilities");
+    if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function closeUtilityView() {
+    const catalogView = document.getElementById("utilities-catalog-view");
+    const irpfView = document.getElementById("utility-view-irpf");
+    const calcView = document.getElementById("utility-view-calc");
+
+    if (irpfView) irpfView.classList.add("hidden");
+    if (calcView) calcView.classList.add("hidden");
+    if (catalogView) catalogView.classList.remove("hidden");
+}
+
+// Exponer a window para handlers inline
+window.setSalaryPreset = setSalaryPreset;
+window.calculateSalaryIRPF = calculateSalaryIRPF;
+window.calcAction = calcAction;
+window.calcQuickTax = calcQuickTax;
+window.copyCalcResult = copyCalcResult;
+window.clearCalcHistory = clearCalcHistory;
+window.restoreHistoryResult = restoreHistoryResult;
+window.openUtilityView = openUtilityView;
+window.closeUtilityView = closeUtilityView;
 
