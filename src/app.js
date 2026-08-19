@@ -529,11 +529,25 @@ function initNavigation() {
                 subtitleEl.textContent = viewDesc;
             }
             
-            // Si volvemos al listado de proyectos, resetear la vista detallada
+            // Si volvemos al listado de proyectos, resetear la vista detallada y de carpetas
             if (targetId === "panel-projects") {
-                document.getElementById("project-list-view").classList.remove("hidden");
-                document.getElementById("project-details-view").classList.add("hidden");
+                const listView = document.getElementById("project-list-view");
+                const folderView = document.getElementById("project-folder-view");
+                const detailsView = document.getElementById("project-details-view");
+                const formAddProj = document.getElementById("form-add-project");
+                const formAddFolder = document.getElementById("form-add-folder");
+                const formAddSubproj = document.getElementById("form-add-subproject");
+
+                if (listView) listView.classList.remove("hidden");
+                if (folderView) folderView.classList.add("hidden");
+                if (detailsView) detailsView.classList.add("hidden");
+                if (formAddProj) formAddProj.classList.add("hidden");
+                if (formAddFolder) formAddFolder.classList.add("hidden");
+                if (formAddSubproj) formAddSubproj.classList.add("hidden");
+
                 currentActiveProjectId = null;
+                currentActiveFolderId = null;
+                renderProjectsList();
             }
 
             // Si volvemos al panel de utilidades, mostrar el catálogo principal
@@ -2561,9 +2575,11 @@ function renderAll() {
     // Validar el estado del embudo por si cambiaron los bancos
     validateFunnel();
     
-    // Si hay un proyecto en detalle activo, actualizarlo
+    // Si hay un proyecto o carpeta en detalle activo, actualizarlo
     if (currentActiveProjectId) {
         renderProjectDetailView(currentActiveProjectId);
+    } else if (currentActiveFolderId) {
+        renderProjectFolderView(currentActiveFolderId);
     }
 
     // Actualizar módulo de rendimiento si está visible
