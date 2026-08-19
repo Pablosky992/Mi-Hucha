@@ -53,6 +53,8 @@
             "Calculadora de IRPF y Sueldo Neto en España",
             "Cálculo de Retención de IRPF Recomendada en Nómina",
             "Calculadora Financiera Digital con Historial",
+            "Conversor de Divisas en Tiempo Real (Forex & BCE)",
+            "Calculadora de Margen de Beneficio y Precio de Venta (PVP con IVA)",
             "Control de Gastos e Ingresos por Categorías",
             "Gestión de Proyectos y Metas de Ahorro"
           ]
@@ -1357,7 +1359,27 @@
 
                     <div class="utilities-catalog-grid">
                         
-                        <!-- Tarjeta Utilidad 1: Calculadora de IRPF y Sueldo Neto -->
+                        <!-- Tarjeta Utilidad 1: Calculadora Financiera Digital -->
+                        <div class="utility-card shadow-glass" onclick="openUtilityView('calc')">
+                            <div class="utility-card-banner">
+                                <img src="img/calculadora-financiera.jpg" alt="Calculadora Financiera Digital con Historial" class="utility-card-img">
+                                <span class="utility-badge">Operaciones Rápidas</span>
+                            </div>
+                            <div class="utility-card-body">
+                                <div>
+                                    <h3>Calculadora Financiera Digital</h3>
+                                    <p>Calculadora con historial persistente, soporte físico de teclado, cálculo de porcentajes (+21% IVA, -21% IVA, márgenes) y operaciones rápidas.</p>
+                                </div>
+                                <div class="utility-card-footer">
+                                    <span class="utility-action-link">
+                                        <span>Abrir Calculadora</span>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Utilidad 2: Calculadora de IRPF y Sueldo Neto -->
                         <div class="utility-card shadow-glass" onclick="openUtilityView('irpf')">
                             <div class="utility-card-banner">
                                 <img src="img/calculadora-irpf.jpg" alt="Calculadora de IRPF y Sueldo Neto España 2026" class="utility-card-img">
@@ -1377,20 +1399,40 @@
                             </div>
                         </div>
 
-                        <!-- Tarjeta Utilidad 2: Calculadora Financiera y Matemática -->
-                        <div class="utility-card shadow-glass" onclick="openUtilityView('calc')">
+                        <!-- Tarjeta Utilidad 3: Conversor de Divisas en Tiempo Real -->
+                        <div class="utility-card shadow-glass" onclick="openUtilityView('currency')">
                             <div class="utility-card-banner">
-                                <img src="img/calculadora-financiera.jpg" alt="Calculadora Financiera Digital con Historial" class="utility-card-img">
-                                <span class="utility-badge">Operaciones Rápidas</span>
+                                <img src="img/conversor-divisas.jpg" alt="Conversor de Divisas en Tiempo Real" class="utility-card-img">
+                                <span class="utility-badge" style="background: rgba(139, 92, 246, 0.85); border-color: rgba(139, 92, 246, 0.4); color: #ede9fe;">Forex & Mercados</span>
                             </div>
                             <div class="utility-card-body">
                                 <div>
-                                    <h3>Calculadora Financiera Digital</h3>
-                                    <p>Calculadora con historial persistente, soporte físico de teclado, cálculo de porcentajes (+21% IVA, -21% IVA, márgenes) y operaciones rápidas.</p>
+                                    <h3>Conversor de Divisas en Tiempo Real</h3>
+                                    <p>Convierte entre más de 30 monedas internacionales (EUR, USD, GBP, JPY, CHF, MXN, etc.) con tipos de cambio oficiales y actualizados al instante.</p>
                                 </div>
                                 <div class="utility-card-footer">
-                                    <span class="utility-action-link">
-                                        <span>Abrir Calculadora</span>
+                                    <span class="utility-action-link" style="color: #c4b5fd;">
+                                        <span>Abrir Conversor</span>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Utilidad 4: Calculadora de Margen de Beneficio & Precio de Venta -->
+                        <div class="utility-card shadow-glass" onclick="openUtilityView('margin')">
+                            <div class="utility-card-banner">
+                                <img src="img/calculadora-margen-beneficio.jpg" alt="Calculadora de Margen de Beneficio y Precio de Venta" class="utility-card-img">
+                                <span class="utility-badge" style="background: rgba(16, 185, 129, 0.85); border-color: rgba(16, 185, 129, 0.4); color: #d1fae5;">Precios & Margen</span>
+                            </div>
+                            <div class="utility-card-body">
+                                <div>
+                                    <h3>Calculadora de Margen & Precio de Venta</h3>
+                                    <p>Calcula el precio de venta recomendado de tus productos o servicios según tu coste base y el margen deseado (% sobre venta vs markup con IVA).</p>
+                                </div>
+                                <div class="utility-card-footer">
+                                    <span class="utility-action-link" style="color: #6ee7b7;">
+                                        <span>Calcular Margen</span>
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                                     </span>
                                 </div>
@@ -1750,6 +1792,389 @@
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M6 12h.001M10 12h.001M14 12h.001M18 12h.001M8 16h8"></path></svg>
                                 <span><strong>Teclado activado:</strong> Puedes escribir directamente números, operadores (+, -, *, /), Enter, Backspace y Escape.</span>
                             </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- VISTA 5D: HERRAMIENTA ESPECÍFICA - CONVERSOR DE DIVISAS (Oculta por defecto) -->
+                <div id="utility-view-currency" class="hidden">
+                    <div class="project-details-header" style="margin-bottom: 20px;">
+                        <button class="btn-back" onclick="closeUtilityView()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            <span>Volver a Utilidades</span>
+                        </button>
+                        <div class="project-details-title-area" style="flex: 1;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div class="stat-icon-wrap" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                                    </div>
+                                    <h2 style="margin: 0; font-size: 1.25rem;">Conversor de Divisas en Tiempo Real</h2>
+                                </div>
+                                <div>
+                                    <button type="button" id="btn-refresh-forex" class="btn-secondary" onclick="refreshCurrencyRates(true)" style="font-size: 0.75rem; padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px;">
+                                        <svg id="svg-refresh-forex" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                                        <span>Actualizar tipos</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <p style="margin-top: 4px; color: var(--text-secondary); font-size: 0.8rem;">Cotizaciones en vivo del Banco Central Europeo y mercados internacionales</p>
+                        </div>
+                    </div>
+
+                    <div class="currency-hub-grid" style="max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: minmax(340px, 460px) 1fr; gap: 20px;">
+                        
+                        <!-- Columna Izquierda: Panel de Conversión -->
+                        <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="column-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; margin-bottom: 4px;">
+                                <h3 style="font-size: 0.95rem; margin: 0; font-weight: 700; color: var(--text-primary);">Convertir Divisas</h3>
+                            </div>
+
+                            <!-- Input de Importe -->
+                            <div class="form-group">
+                                <label for="currency-amount">Importe a Convertir</label>
+                                <input type="number" id="currency-amount" step="any" min="0" value="100" placeholder="Ej. 100" style="font-size: 1.2rem; font-weight: 700; font-family: var(--font-header);" required>
+                            </div>
+
+                            <!-- Chips de acceso rápido de importe -->
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: -6px;">
+                                <span style="font-size: 0.72rem; color: var(--text-muted); align-self: center;">Rápidos:</span>
+                                <button type="button" class="btn-preset-salary" onclick="setCurrencyAmount(10)">10</button>
+                                <button type="button" class="btn-preset-salary" onclick="setCurrencyAmount(50)">50</button>
+                                <button type="button" class="btn-preset-salary" onclick="setCurrencyAmount(100)">100</button>
+                                <button type="button" class="btn-preset-salary" onclick="setCurrencyAmount(500)">500</button>
+                                <button type="button" class="btn-preset-salary" onclick="setCurrencyAmount(1000)">1.000</button>
+                                <button type="button" class="btn-preset-salary" onclick="setCurrencyAmount(5000)">5.000</button>
+                            </div>
+
+                            <!-- Selectores de Divisas con Botón Swap -->
+                            <div class="currency-selectors-row" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: flex-end;">
+                                <div class="form-group" style="margin: 0;">
+                                    <label for="currency-from">De (Origen)</label>
+                                    <select id="currency-from" class="currency-select">
+                                        <!-- Inyectado dinámicamente -->
+                                    </select>
+                                </div>
+
+                                <button type="button" id="btn-swap-currency" class="btn-swap-currency" onclick="swapCurrencies()" title="Invertir monedas">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                                </button>
+
+                                <div class="form-group" style="margin: 0;">
+                                    <label for="currency-to">A (Destino)</label>
+                                    <select id="currency-to" class="currency-select">
+                                        <!-- Inyectado dinámicamente -->
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta de Resultado de Conversión -->
+                            <div class="currency-result-card shadow-glass">
+                                <div class="currency-from-label" id="currency-from-summary">100,00 EUR =</div>
+                                <div class="currency-result-hero">
+                                    <span id="currency-result-amount">108,45</span>
+                                    <span id="currency-result-code" class="currency-badge-code">USD</span>
+                                </div>
+
+                                <!-- Tipos de Cambio Unitarios -->
+                                <div class="currency-rates-info">
+                                    <div class="rate-unit-line" id="currency-rate-direct">1 EUR = 1,0845 USD</div>
+                                    <div class="rate-unit-line" id="currency-rate-inverse" style="opacity: 0.75;">1 USD = 0,9221 EUR</div>
+                                </div>
+
+                                <!-- Acciones del resultado -->
+                                <div class="currency-result-footer">
+                                    <div class="currency-update-time" id="currency-update-time">
+                                        <span class="live-pulse-dot"></span>
+                                        <span>Actualizado: Hoy, 12:00</span>
+                                    </div>
+                                    <button type="button" class="btn-copy-calc" onclick="copyCurrencyResult()" title="Copiar importe convertido">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <span>Copiar</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Columna Derecha: Pares Populares y Tabla Multidivisa -->
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            
+                            <!-- Termómetro y Análisis de Rango de Cotización (Rango 52 Semanas) -->
+                            <div class="dashboard-column shadow-glass" style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color: #a78bfa;"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+                                        <h4 id="forex-range-pair-title" style="font-size: 0.85rem; font-weight: 700; margin: 0; color: var(--text-primary);">Rango Anual 52 Semanas (EUR / USD)</h4>
+                                    </div>
+                                    <span id="forex-range-badge" class="forex-range-status-badge status-balanced">Rango Medio</span>
+                                </div>
+
+                                <!-- Barra de Termómetro de Rango -->
+                                <div class="forex-gauge-wrapper">
+                                    <div class="forex-gauge-track">
+                                        <div id="forex-gauge-pin" class="forex-gauge-indicator" style="left: 50%;">
+                                            <div class="gauge-pin-glow"></div>
+                                            <div class="gauge-pin-label" id="forex-gauge-pin-val">1.0875</div>
+                                        </div>
+                                    </div>
+                                    <div class="forex-gauge-labels">
+                                        <span id="forex-range-min">Mín 52s: 1.0450</span>
+                                        <span style="opacity: 0.55; font-size: 0.68rem; color: var(--text-muted);">• Ciclo Anual •</span>
+                                        <span id="forex-range-max">Máx 52s: 1.1200</span>
+                                    </div>
+                                </div>
+
+                                <!-- Contexto / Consejo del momento -->
+                                <div class="forex-context-box">
+                                    <p id="forex-advice-text" style="margin: 0; font-size: 0.74rem; color: #cbd5e1; line-height: 1.45;">
+                                        El tipo de cambio actual se sitúa en una zona intermedia de su ciclo anual de 52 semanas.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Tabla de Conversión Simultánea Multidivisa -->
+                            <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column; flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <div>
+                                        <h4 style="font-size: 0.9rem; font-weight: 700; margin: 0; color: var(--text-primary);">Equivalencias Mundiales</h4>
+                                        <span style="font-size: 0.72rem; color: var(--text-muted);">Conversión en vivo de tu importe</span>
+                                    </div>
+                                    <span id="multicurrency-base-tag" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;">Base: 100 EUR</span>
+                                </div>
+
+                                <div id="multicurrency-grid" class="multicurrency-feed custom-scrollbar" style="display: flex; flex-direction: column; gap: 8px; max-height: 290px; overflow-y: auto;">
+                                    <!-- Inyectado dinámicamente -->
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- VISTA 5E: HERRAMIENTA ESPECÍFICA - CALCULADORA DE BENEFICIO & PRECIO DE VENTA (Oculta por defecto) -->
+                <div id="utility-view-margin" class="hidden">
+                    <div class="project-details-header" style="margin-bottom: 20px;">
+                        <button class="btn-back" onclick="closeUtilityView()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            <span>Volver a Utilidades</span>
+                        </button>
+                        <div class="project-details-title-area" style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="stat-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                                </div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Calculadora de Margen de Beneficio & Precio de Venta</h2>
+                            </div>
+                            <p style="margin-top: 4px; color: var(--text-secondary); font-size: 0.8rem;">Calcula el precio de venta recomendado, tu beneficio neto por unidad y el IVA correspondiente</p>
+                        </div>
+                    </div>
+
+                    <div class="margin-hub-grid" style="max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: minmax(340px, 460px) 1fr; gap: 20px;">
+                        
+                        <!-- Columna Izquierda: Parámetros del Producto / Coste -->
+                        <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="column-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; margin-bottom: 4px;">
+                                <h3 style="font-size: 0.95rem; margin: 0; font-weight: 700; color: var(--text-primary);">Costes y Margen Deseado</h3>
+                            </div>
+
+                            <!-- Coste Base del Producto y Margen del Producto -->
+                            <div class="form-group">
+                                <label for="margin-cost-input">Coste Base del Producto (€)</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <input type="number" id="margin-cost-input" step="any" min="0" value="50" placeholder="Ej. 50" style="font-size: 1.2rem; font-weight: 700; font-family: var(--font-header); padding-right: 32px;" required>
+                                    <span style="position: absolute; right: 12px; font-weight: 700; color: var(--text-muted);">€</span>
+                                </div>
+                            </div>
+
+                            <!-- Chips de coste rápido -->
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: -6px;">
+                                <span style="font-size: 0.72rem; color: var(--text-muted); align-self: center;">Costes:</span>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginCost(10)">10 €</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginCost(25)">25 €</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginCost(50)">50 €</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginCost(100)">100 €</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginCost(250)">250 €</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginCost(500)">500 €</button>
+                            </div>
+
+                            <!-- Porcentaje de Beneficio sobre el Producto -->
+                            <div class="form-group" style="margin-top: 2px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <label for="margin-percent-input" style="margin: 0; font-weight: 700; color: #6ee7b7;">Beneficio sobre el Producto (%)</label>
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <input type="number" id="margin-percent-input" min="0" max="1000" value="30" style="width: 80px; text-align: right; padding: 4px 6px; font-weight: 700; font-size: 0.95rem;">
+                                        <span style="font-weight: 700; color: #10b981; font-size: 0.9rem;">%</span>
+                                    </div>
+                                </div>
+                                <input type="range" id="margin-percent-slider" min="0" max="1000" value="30" step="1" class="salary-range-slider" style="width: 100%; accent-color: #10b981;">
+                            </div>
+
+                            <!-- Chips de margen rápido para producto -->
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: -6px;">
+                                <span style="font-size: 0.72rem; color: var(--text-muted); align-self: center;">Ganancia Prod:</span>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginPercent(25)">+25%</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginPercent(50)">+50%</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginPercent(100)">+100% (x2)</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginPercent(200)">+200% (x3)</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginPercent(500)">+500% (x6)</button>
+                                <button type="button" class="btn-preset-salary" onclick="setMarginPercent(1000)">+1000%</button>
+                            </div>
+
+                            <!-- Costes Adyacentes con Beneficio Individual -->
+                            <div class="margin-extra-costs-panel">
+                                <div class="margin-extra-costs-header">
+                                    <span class="margin-extra-costs-title">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color: #38bdf8;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                        Costes Adyacentes con Beneficio Individual
+                                    </span>
+                                    <span id="margin-total-cost-badge" class="margin-total-cost-badge">Coste Total: 50,00 €</span>
+                                </div>
+
+                                <!-- Fila 1: Envío / Portes Proveedor -->
+                                <div class="margin-extra-cost-item">
+                                    <div class="margin-cost-item-header">
+                                        <span class="margin-cost-item-label">
+                                            <span>🚚</span> Envío Proveedor / Portes
+                                        </span>
+                                        <span id="lbl-gain-shipping" class="margin-cost-item-gain">+0,00 € ganancia (0%)</span>
+                                    </div>
+                                    <div class="margin-cost-inputs-grid">
+                                        <div class="margin-cost-input-wrapper">
+                                            <input type="number" id="margin-shipping-input" step="any" min="0" value="0" placeholder="0.00" class="margin-cost-input">
+                                            <span class="margin-cost-suffix">€ coste</span>
+                                        </div>
+                                        <div class="margin-cost-input-wrapper">
+                                            <input type="number" id="margin-shipping-percent-input" step="any" min="0" max="1000" value="0" placeholder="0" class="margin-cost-input">
+                                            <span class="margin-cost-suffix pct">% benef.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Fila 2: Embalaje / Packaging -->
+                                <div class="margin-extra-cost-item">
+                                    <div class="margin-cost-item-header">
+                                        <span class="margin-cost-item-label">
+                                            <span>📦</span> Embalaje / Packaging
+                                        </span>
+                                        <span id="lbl-gain-packaging" class="margin-cost-item-gain">+0,00 € ganancia (0%)</span>
+                                    </div>
+                                    <div class="margin-cost-inputs-grid">
+                                        <div class="margin-cost-input-wrapper">
+                                            <input type="number" id="margin-packaging-input" step="any" min="0" value="0" placeholder="0.00" class="margin-cost-input">
+                                            <span class="margin-cost-suffix">€ coste</span>
+                                        </div>
+                                        <div class="margin-cost-input-wrapper">
+                                            <input type="number" id="margin-packaging-percent-input" step="any" min="0" max="1000" value="0" placeholder="0" class="margin-cost-input">
+                                            <span class="margin-cost-suffix pct">% benef.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Fila 3: Otros Gastos / Manipulación -->
+                                <div class="margin-extra-cost-item">
+                                    <div class="margin-cost-item-header">
+                                        <span class="margin-cost-item-label">
+                                            <span>⚙️</span> Otros Gastos / Manipulación
+                                        </span>
+                                        <span id="lbl-gain-other" class="margin-cost-item-gain">+0,00 € ganancia (0%)</span>
+                                    </div>
+                                    <div class="margin-cost-inputs-grid">
+                                        <div class="margin-cost-input-wrapper">
+                                            <input type="number" id="margin-other-costs-input" step="any" min="0" value="0" placeholder="0.00" class="margin-cost-input">
+                                            <span class="margin-cost-suffix">€ coste</span>
+                                        </div>
+                                        <div class="margin-cost-input-wrapper">
+                                            <input type="number" id="margin-other-percent-input" step="any" min="0" max="1000" value="0" placeholder="0" class="margin-cost-input">
+                                            <span class="margin-cost-suffix pct">% benef.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- IVA Aplicable -->
+                            <div class="form-group">
+                                <label for="margin-vat-select">Impuesto / IVA Aplicable</label>
+                                <select id="margin-vat-select" class="currency-select">
+                                    <option value="21">21% - IVA General (Estándar)</option>
+                                    <option value="10">10% - IVA Reducido (Hostelería, alimentación)</option>
+                                    <option value="4">4% - IVA Superreducido (Básicos)</option>
+                                    <option value="0">0% - Sin IVA / Exento / B2B Intracomunitario</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <!-- Columna Derecha: Precios Calculados, Rentabilidad y Desglose -->
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            
+                            <!-- Tarjeta Hero de Precios y Beneficio -->
+                            <div class="margin-result-card shadow-glass">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <div>
+                                        <span class="margin-result-tag">Precio de Venta Final (PVP)</span>
+                                        <div class="margin-pvp-hero">
+                                            <span id="margin-pvp-amount">78,65</span> <span style="font-size: 1.3rem; color: #6ee7b7;">€</span>
+                                        </div>
+                                        <div class="margin-base-price-sub" id="margin-base-sub">Base sin IVA: 65,00 €</div>
+                                    </div>
+                                    <div class="margin-profit-pill">
+                                        <span style="font-size: 0.7rem; color: #a7f3d0; font-weight: 700; text-transform: uppercase;">Beneficio Limpio</span>
+                                        <div id="margin-profit-amount" style="font-size: 1.35rem; font-weight: 800; color: #34d399; font-family: var(--font-header);">+15,00 €</div>
+                                        <div id="margin-roi-text" style="font-size: 0.72rem; color: #93c5fd; font-weight: 600;">+30,0% ganancia</div>
+                                    </div>
+                                </div>
+
+                                <!-- Barra Visual de Desglose Proporcional -->
+                                <div style="margin-top: 6px;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px;">
+                                        <span>Desglose por cada unidad vendida:</span>
+                                    </div>
+                                    <div class="salary-visual-bar" style="height: 12px; border-radius: 6px; overflow: hidden; display: flex; background: rgba(15, 23, 42, 0.6);">
+                                        <div id="bar-margin-cost" style="background: #475569; width: 50%; height: 100%; transition: width 0.3s ease;" title="Coste Base Producto"></div>
+                                        <div id="bar-margin-extra" style="background: #0284c7; width: 13%; height: 100%; transition: width 0.3s ease;" title="Envío / Extras"></div>
+                                        <div id="bar-margin-profit" style="background: #10b981; width: 19%; height: 100%; transition: width 0.3s ease;" title="Beneficio Limpio"></div>
+                                        <div id="bar-margin-vat" style="background: #f59e0b; width: 18%; height: 100%; transition: width 0.3s ease;" title="IVA Repercutido"></div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.68rem; margin-top: 6px; flex-wrap: wrap; gap: 4px;">
+                                        <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #475569; display: inline-block;"></span> Producto: <strong id="lbl-cost-val" style="color: #cbd5e1;">50,00 €</strong></span>
+                                        <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #0284c7; display: inline-block;"></span> Extras: <strong id="lbl-extra-val" style="color: #38bdf8;">0,00 €</strong></span>
+                                        <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #10b981; display: inline-block;"></span> Ganancia: <strong id="lbl-profit-val" style="color: #6ee7b7;">15,00 €</strong></span>
+                                        <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #f59e0b; display: inline-block;"></span> IVA: <strong id="lbl-vat-val" style="color: #fcd34d;">13,65 €</strong></span>
+                                    </div>
+                                </div>
+
+                                <!-- Acciones del resultado -->
+                                <div class="currency-result-footer" style="margin-top: 4px;">
+                                    <span style="font-size: 0.72rem; color: var(--text-muted);">Cálculo directo sobre coste</span>
+                                    <button type="button" class="btn-copy-calc" onclick="copyMarginResult()" title="Copiar desglose y precio">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <span>Copiar Precio</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tabla Simuladora de Escenarios de Margen -->
+                            <div class="dashboard-column shadow-glass" style="padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h4 style="font-size: 0.85rem; font-weight: 700; margin: 0; color: var(--text-primary);">Escenarios de Beneficio sobre Coste</h4>
+                                    <span style="font-size: 0.7rem; color: var(--text-muted);">Haz clic para seleccionar</span>
+                                </div>
+                                <div id="margin-scenarios-grid" class="custom-scrollbar" style="display: flex; flex-direction: column; gap: 6px; max-height: 190px; overflow-y: auto;">
+                                    <!-- Inyectado dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Consejo de Fijación de Precios (Pricing Tip) -->
+                            <div class="forex-context-box">
+                                <p id="margin-tip-text" style="margin: 0; font-size: 0.74rem; color: #cbd5e1; line-height: 1.45;">
+                                    💡 <strong>Fórmula directa:</strong> <em>Precio Base = Coste + (Coste × % Beneficio)</em>. Tu ganancia neta es exactamente el porcentaje que añades a tu coste, y sobre ese total se calcula el IVA para obtener el PVP final.
+                                </p>
+                            </div>
+
                         </div>
 
                     </div>

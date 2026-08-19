@@ -4998,6 +4998,683 @@ body {
     margin-bottom: 6px;
 }
 
+/* ====================================================
+   ESTILOS: CONVERSOR DE DIVISAS EN TIEMPO REAL
+   ==================================================== */
+@media (max-width: 768px) {
+    .currency-hub-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.currency-select {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    color: var(--text-primary);
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.currency-select:focus {
+    outline: none;
+    border-color: #a78bfa;
+    box-shadow: 0 0 10px rgba(167, 139, 250, 0.3);
+}
+
+.btn-swap-currency {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    color: #c4b5fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-bottom: 2px;
+}
+
+.btn-swap-currency:hover {
+    background: rgba(139, 92, 246, 0.3);
+    border-color: #a78bfa;
+    color: #ffffff;
+    transform: rotate(180deg) scale(1.08);
+}
+
+.currency-result-card {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(15, 23, 42, 0.8) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.currency-result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #8b5cf6, #00e5ff);
+}
+
+.currency-from-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.currency-result-hero {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#currency-result-amount {
+    font-family: var(--font-header);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.currency-badge-code {
+    background: rgba(139, 92, 246, 0.25);
+    border: 1px solid rgba(139, 92, 246, 0.45);
+    color: #c4b5fd;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.currency-rates-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rate-unit-line {
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    font-family: var(--font-header);
+    font-weight: 500;
+}
+
+.currency-result-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 2px;
+}
+
+.btn-copy-calc {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-glass);
+    color: var(--text-secondary);
+    font-family: var(--font-header);
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    outline: none;
+    line-height: 1.2;
+}
+
+.btn-copy-calc svg {
+    color: var(--text-muted);
+    transition: var(--transition-fast);
+}
+
+.btn-copy-calc:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.btn-copy-calc:hover svg {
+    color: var(--text-primary);
+}
+
+.btn-copy-calc:active {
+    transform: scale(0.96);
+}
+
+.margin-result-card .btn-copy-calc {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #6ee7b7;
+}
+
+.margin-result-card .btn-copy-calc svg {
+    color: #34d399;
+}
+
+.margin-result-card .btn-copy-calc:hover {
+    background: rgba(16, 185, 129, 0.25);
+    border-color: rgba(16, 185, 129, 0.6);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.margin-result-card .btn-copy-calc:hover svg {
+    color: #ffffff;
+}
+
+.currency-result-card .btn-copy-calc {
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    color: #c4b5fd;
+}
+
+.currency-result-card .btn-copy-calc svg {
+    color: #a78bfa;
+}
+
+.currency-result-card .btn-copy-calc:hover {
+    background: rgba(139, 92, 246, 0.25);
+    border-color: rgba(139, 92, 246, 0.6);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+}
+
+.currency-result-card .btn-copy-calc:hover svg {
+    color: #ffffff;
+}
+
+.currency-update-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.live-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.6; }
+}
+
+/* Termómetro y Rango de Cotización Forex */
+.forex-range-status-badge {
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.forex-range-status-badge.status-low {
+    background: rgba(59, 130, 246, 0.2);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: #93c5fd;
+}
+
+.forex-range-status-badge.status-balanced {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #6ee7b7;
+}
+
+.forex-range-status-badge.status-high {
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #fcd34d;
+}
+
+.forex-gauge-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 0 4px 0;
+}
+
+.forex-gauge-track {
+    height: 10px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #3b82f6 0%, #10b981 50%, #f59e0b 100%);
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.forex-gauge-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gauge-pin-glow {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #0b0f19;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+}
+
+.gauge-pin-label {
+    position: absolute;
+    bottom: 22px;
+    background: #0b0f19;
+    border: 1px solid var(--border-glass);
+    color: #f1f5f9;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.forex-gauge-labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: var(--font-header);
+    font-weight: 600;
+}
+
+.forex-context-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.multicurrency-item {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition-fast);
+    cursor: pointer;
+}
+
+.multicurrency-item:hover {
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.25);
+    transform: translateX(2px);
+}
+
+.multicurrency-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.multicurrency-flag {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.multicurrency-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.multicurrency-code {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+}
+
+.multicurrency-amount {
+    font-family: var(--font-header);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    text-align: right;
+}
+
+.multicurrency-rate {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    text-align: right;
+}
+
+/* ====================================================
+   ESTILOS: CALCULADORA DE MARGEN DE BENEFICIO Y PVP
+   ==================================================== */
+@media (max-width: 768px) {
+    .margin-hub-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.margin-mode-segmented {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.btn-margin-mode {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 8px 10px;
+    border-radius: 7px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-align: center;
+}
+
+.btn-margin-mode:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-margin-mode.active {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.12) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    color: #6ee7b7;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.margin-result-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.85) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.margin-result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981, #00e5ff);
+}
+
+.margin-result-tag {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #a7f3d0;
+    letter-spacing: 0.04em;
+}
+
+.margin-pvp-hero {
+    font-family: var(--font-header);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 2px 0;
+}
+
+.margin-base-price-sub {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.margin-profit-pill {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 10px;
+    padding: 8px 14px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+}
+
+.margin-scenario-row {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.margin-scenario-row:hover {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.3);
+    transform: translateX(2px);
+}
+
+.margin-scenario-row.active {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.5);
+}
+
+.margin-scenario-pct {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.margin-scenario-pvp {
+    font-family: var(--font-header);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #6ee7b7;
+}
+
+.margin-scenario-gain {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* Panel de Costes Adyacentes con Margen Individual */
+.margin-extra-costs-panel {
+    background: rgba(10, 25, 55, 0.45);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.margin-extra-costs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 10px;
+}
+
+.margin-extra-costs-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-header);
+}
+
+.margin-total-cost-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    font-family: var(--font-header);
+    color: var(--primary-light);
+    background: rgba(0, 210, 255, 0.12);
+    border: 1px solid rgba(0, 210, 255, 0.25);
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 8px rgba(0, 210, 255, 0.1);
+}
+
+.margin-extra-cost-item {
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: var(--transition-fast);
+}
+
+.margin-extra-cost-item:hover {
+    background: rgba(15, 23, 42, 0.75);
+    border-color: rgba(0, 210, 255, 0.2);
+}
+
+.margin-cost-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.76rem;
+}
+
+.margin-cost-item-label {
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+}
+
+.margin-cost-item-gain {
+    color: var(--primary-light);
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: rgba(0, 210, 255, 0.08);
+    border: 1px solid rgba(0, 210, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.margin-cost-inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.margin-cost-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.margin-cost-input-wrapper input,
+.margin-extra-costs-panel input {
+    width: 100%;
+    background: rgba(10, 25, 55, 0.65);
+    border: 1px solid var(--border-glass);
+    color: var(--text-primary);
+    font-family: var(--font-header);
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 8px 52px 8px 12px;
+    border-radius: 8px;
+    outline: none;
+    transition: var(--transition-fast);
+    box-sizing: border-box;
+    -moz-appearance: textfield;
+}
+
+.margin-cost-input-wrapper input::-webkit-inner-spin-button,
+.margin-cost-input-wrapper input::-webkit-outer-spin-button,
+.margin-extra-costs-panel input::-webkit-inner-spin-button,
+.margin-extra-costs-panel input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.margin-cost-input-wrapper input:hover,
+.margin-extra-costs-panel input:hover {
+    border-color: rgba(0, 210, 255, 0.25);
+}
+
+.margin-cost-input-wrapper input:focus,
+.margin-extra-costs-panel input:focus {
+    background: rgba(15, 23, 42, 0.95);
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.15);
+    color: #ffffff;
+}
+
+.margin-cost-suffix {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    pointer-events: none;
+    user-select: none;
+}
+
+.margin-cost-suffix.pct {
+    color: #38bdf8;
+}
+
+
+
 
 
 

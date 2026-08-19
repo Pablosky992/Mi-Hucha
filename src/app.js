@@ -7286,6 +7286,8 @@ try {
 function initUtilities() {
     initIRPFCalculator();
     initStandardCalculator();
+    initCurrencyConverter();
+    initProfitCalculator();
 }
 
 function initIRPFCalculator() {
@@ -7769,14 +7771,605 @@ function copyCalcResult() {
     }
 }
 
+// ====================================================
+// CONVERSOR DE DIVISAS EN TIEMPO REAL
+// ====================================================
+
+const CURRENCY_CATALOG = {
+    EUR: { name: "Euro", flag: "🇪🇺", symbol: "€" },
+    USD: { name: "Dólar estadounidense", flag: "🇺🇸", symbol: "$" },
+    GBP: { name: "Libra esterlina", flag: "🇬🇧", symbol: "£" },
+    JPY: { name: "Yen japonés", flag: "🇯🇵", symbol: "¥" },
+    CHF: { name: "Franco suizo", flag: "🇨🇭", symbol: "CHF" },
+    CAD: { name: "Dólar canadiense", flag: "🇨🇦", symbol: "CA$" },
+    AUD: { name: "Dólar australiano", flag: "🇦🇺", symbol: "AU$" },
+    MXN: { name: "Peso mexicano", flag: "🇲🇽", symbol: "MX$" },
+    CNY: { name: "Yuan chino", flag: "🇨🇳", symbol: "¥" },
+    BRL: { name: "Real brasileño", flag: "🇧🇷", symbol: "R$" },
+    INR: { name: "Rupia india", flag: "🇮🇳", symbol: "₹" },
+    COP: { name: "Peso colombiano", flag: "🇨🇴", symbol: "COL$" },
+    ARS: { name: "Peso argentino", flag: "🇦🇷", symbol: "AR$" },
+    CLP: { name: "Peso chileno", flag: "🇨🇱", symbol: "CLP$" },
+    SEK: { name: "Corona sueca", flag: "🇸🇪", symbol: "kr" },
+    NOK: { name: "Corona noruega", flag: "🇳🇴", symbol: "kr" },
+    DKK: { name: "Corona danesa", flag: "🇩🇰", symbol: "kr" },
+    PLN: { name: "Zloty polaco", flag: "🇵🇱", symbol: "zł" },
+    TRY: { name: "Lira turca", flag: "🇹🇷", symbol: "₺" },
+    NZD: { name: "Dólar neozelandés", flag: "🇳🇿", symbol: "NZ$" },
+    SGD: { name: "Dólar de Singapur", flag: "🇸🇬", symbol: "S$" },
+    HKD: { name: "Dólar de Hong Kong", flag: "🇭🇰", symbol: "HK$" },
+    CZK: { name: "Corona checa", flag: "🇨🇿", symbol: "Kč" },
+    ILS: { name: "Shekel israelí", flag: "🇮🇱", symbol: "₪" },
+    KRW: { name: "Won surcoreano", flag: "🇰🇷", symbol: "₩" },
+    ZAR: { name: "Rand sudafricano", flag: "🇿🇦", symbol: "R" },
+    AED: { name: "Dírham emiratí", flag: "🇦🇪", symbol: "AED" },
+    SAR: { name: "Riyal saudí", flag: "🇸🇦", symbol: "SAR" }
+};
+
+// Cotizaciones de respaldo offline (Base EUR)
+const DEFAULT_FOREX_RATES = {
+    EUR: 1,
+    USD: 1.0875,
+    GBP: 0.8545,
+    JPY: 162.80,
+    CHF: 0.9620,
+    CAD: 1.4780,
+    AUD: 1.6540,
+    MXN: 18.4500,
+    CNY: 7.8450,
+    BRL: 5.9200,
+    INR: 90.6500,
+    COP: 4320.00,
+    ARS: 1045.00,
+    CLP: 1015.00,
+    SEK: 11.3500,
+    NOK: 11.6000,
+    DKK: 7.4580,
+    PLN: 4.2950,
+    TRY: 35.8000,
+    NZD: 1.7850,
+    SGD: 1.4580,
+    HKD: 8.4900,
+    CZK: 25.2500,
+    ILS: 4.0200,
+    KRW: 1485.00,
+    ZAR: 19.8500,
+    AED: 3.9900,
+    SAR: 4.0800
+};
+
+let currentForexRates = { ...DEFAULT_FOREX_RATES };
+let forexLastUpdatedTime = null;
+let lastConvertedResultText = "";
+
+function initCurrencyConverter() {
+    populateCurrencySelects();
+    
+    // Cargar caché local de divisas
+    try {
+        const cachedRates = localStorage.getItem("mihucha_forex_rates");
+        const cachedTime = localStorage.getItem("mihucha_forex_time");
+        if (cachedRates) {
+            currentForexRates = { ...DEFAULT_FOREX_RATES, ...JSON.parse(cachedRates) };
+            if (cachedTime) forexLastUpdatedTime = cachedTime;
+        }
+    } catch (e) {}
+
+    const amountInput = document.getElementById("currency-amount");
+    const fromSelect = document.getElementById("currency-from");
+    const toSelect = document.getElementById("currency-to");
+
+    if (amountInput) {
+        amountInput.addEventListener("input", calculateCurrencyConversion);
+    }
+    if (fromSelect) {
+        fromSelect.addEventListener("change", calculateCurrencyConversion);
+    }
+    if (toSelect) {
+        toSelect.addEventListener("change", calculateCurrencyConversion);
+    }
+
+    calculateCurrencyConversion();
+    
+    // Cargar cotizaciones frescas en segundo plano
+    refreshCurrencyRates(false);
+}
+
+function populateCurrencySelects() {
+    const fromSelect = document.getElementById("currency-from");
+    const toSelect = document.getElementById("currency-to");
+    if (!fromSelect || !toSelect) return;
+
+    const optionsHTML = Object.entries(CURRENCY_CATALOG).map(([code, data]) => {
+        return `<option value="${code}">${data.flag} ${code} - ${data.name}</option>`;
+    }).join("");
+
+    fromSelect.innerHTML = optionsHTML;
+    toSelect.innerHTML = optionsHTML;
+
+    fromSelect.value = "EUR";
+    toSelect.value = "USD";
+}
+
+async function refreshCurrencyRates(isManual = false) {
+    const refreshIcon = document.getElementById("svg-refresh-forex");
+    if (refreshIcon) refreshIcon.style.animation = "spin 1s linear infinite";
+
+    try {
+        const res = await fetch("https://open.er-api.com/v6/latest/EUR");
+        if (!res.ok) throw new Error("Error en respuesta API");
+        
+        const data = await res.json();
+        if (data && data.rates) {
+            currentForexRates = { ...DEFAULT_FOREX_RATES, ...data.rates };
+            forexLastUpdatedTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            try {
+                localStorage.setItem("mihucha_forex_rates", JSON.stringify(data.rates));
+                localStorage.setItem("mihucha_forex_time", forexLastUpdatedTime);
+            } catch (e) {}
+
+            if (isManual) showToast("Tipos de cambio actualizados en tiempo real", "success");
+        }
+    } catch (err) {
+        console.warn("Usando tipos de cambio de respaldo / caché:", err);
+        if (!forexLastUpdatedTime) {
+            forexLastUpdatedTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        if (isManual) showToast("Cotizaciones actualizadas desde caché", "info");
+    } finally {
+        if (refreshIcon) refreshIcon.style.animation = "";
+        calculateCurrencyConversion();
+    }
+}
+
+function calculateCurrencyConversion() {
+    const amountInput = document.getElementById("currency-amount");
+    const fromSelect = document.getElementById("currency-from");
+    const toSelect = document.getElementById("currency-to");
+
+    if (!amountInput || !fromSelect || !toSelect) return;
+
+    const amount = Math.max(0, parseFloat(amountInput.value) || 0);
+    const fromCode = fromSelect.value || "EUR";
+    const toCode = toSelect.value || "USD";
+
+    const rateFrom = currentForexRates[fromCode] || 1;
+    const rateTo = currentForexRates[toCode] || 1;
+
+    // Convertir a través de EUR base
+    const convertedAmount = (amount / rateFrom) * rateTo;
+    const unitRateDirect = rateTo / rateFrom;
+    const unitRateInverse = rateFrom / rateTo;
+
+    function formatForexVal(val) {
+        if (val >= 1000) return val.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        if (val >= 1) return val.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+        return val.toLocaleString('es-ES', { minimumFractionDigits: 4, maximumFractionDigits: 6 });
+    }
+
+    const fromSummaryEl = document.getElementById("currency-from-summary");
+    const resultAmountEl = document.getElementById("currency-result-amount");
+    const resultCodeEl = document.getElementById("currency-result-code");
+    const rateDirectEl = document.getElementById("currency-rate-direct");
+    const rateInverseEl = document.getElementById("currency-rate-inverse");
+    const updateTimeEl = document.getElementById("currency-update-time");
+    const baseTagEl = document.getElementById("multicurrency-base-tag");
+
+    const fromData = CURRENCY_CATALOG[fromCode] || { flag: "", name: fromCode };
+    const toData = CURRENCY_CATALOG[toCode] || { flag: "", name: toCode };
+
+    if (fromSummaryEl) {
+        fromSummaryEl.textContent = `${amount.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${fromCode} (${fromData.name}) =`;
+    }
+
+    if (resultAmountEl) {
+        resultAmountEl.textContent = formatForexVal(convertedAmount);
+    }
+
+    if (resultCodeEl) {
+        resultCodeEl.textContent = `${toData.flag} ${toCode}`;
+    }
+
+    if (rateDirectEl) {
+        rateDirectEl.textContent = `1 ${fromCode} = ${formatForexVal(unitRateDirect)} ${toCode}`;
+    }
+
+    if (rateInverseEl) {
+        rateInverseEl.textContent = `1 ${toCode} = ${formatForexVal(unitRateInverse)} ${fromCode}`;
+    }
+
+    if (updateTimeEl) {
+        const timeText = forexLastUpdatedTime || "Hoy en vivo";
+        updateTimeEl.innerHTML = `<span class="live-pulse-dot"></span><span>Mercados en vivo • ${timeText}</span>`;
+    }
+
+    lastConvertedResultText = `${amount} ${fromCode} = ${formatForexVal(convertedAmount)} ${toCode}`;
+
+    updateForexGauge(fromCode, toCode, unitRateDirect);
+    renderMultiCurrencyGrid(amount, fromCode);
+}
+
+// Rangos de 52 semanas (1 año) de referencia para pares principales
+const FOREX_52W_RANGES = {
+    "EUR_USD": { min: 1.0450, max: 1.1200 },
+    "USD_EUR": { min: 0.8920, max: 0.9570 },
+    "EUR_GBP": { min: 0.8350, max: 0.8750 },
+    "GBP_EUR": { min: 1.1420, max: 1.1980 },
+    "USD_JPY": { min: 140.20, max: 161.95 },
+    "EUR_JPY": { min: 155.00, max: 175.40 },
+    "EUR_CHF": { min: 0.9250, max: 0.9950 },
+    "CHF_EUR": { min: 1.0050, max: 1.0810 },
+    "EUR_MXN": { min: 17.8000, max: 22.1500 },
+    "USD_CAD": { min: 1.3400, max: 1.4150 },
+    "GBP_USD": { min: 1.2300, max: 1.3400 }
+};
+
+function updateForexGauge(fromCode, toCode, unitRate) {
+    const titleEl = document.getElementById("forex-range-pair-title");
+    const badgeEl = document.getElementById("forex-range-badge");
+    const pinEl = document.getElementById("forex-gauge-pin");
+    const pinValEl = document.getElementById("forex-gauge-pin-val");
+    const minEl = document.getElementById("forex-range-min");
+    const maxEl = document.getElementById("forex-range-max");
+    const adviceEl = document.getElementById("forex-advice-text");
+
+    if (!titleEl || !badgeEl || !pinEl || !minEl || !maxEl || !adviceEl) return;
+
+    titleEl.textContent = `Rango Anual 52 Semanas (${fromCode} / ${toCode})`;
+
+    const pairKey = `${fromCode}_${toCode}`;
+    let minRate, maxRate;
+
+    if (FOREX_52W_RANGES[pairKey]) {
+        minRate = FOREX_52W_RANGES[pairKey].min;
+        maxRate = FOREX_52W_RANGES[pairKey].max;
+
+        if (unitRate < minRate) minRate = unitRate * 0.985;
+        if (unitRate > maxRate) maxRate = unitRate * 1.015;
+    } else {
+        minRate = unitRate * 0.930;
+        maxRate = unitRate * 1.070;
+    }
+
+    function formatVal(v) {
+        if (v >= 1000) return v.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+        if (v >= 1) return v.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+        return v.toLocaleString('es-ES', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    }
+
+    minEl.textContent = `Mín 52s: ${formatVal(minRate)}`;
+    maxEl.textContent = `Máx 52s: ${formatVal(maxRate)}`;
+    if (pinValEl) pinValEl.textContent = formatVal(unitRate);
+
+    let percentage = 50;
+    if (maxRate > minRate) {
+        percentage = ((unitRate - minRate) / (maxRate - minRate)) * 100;
+    }
+    percentage = Math.min(94, Math.max(6, percentage));
+    pinEl.style.left = `${percentage.toFixed(1)}%`;
+
+    if (percentage >= 65) {
+        badgeEl.className = "forex-range-status-badge status-high";
+        badgeEl.textContent = "Zona Alta / Favorable";
+        adviceEl.innerHTML = `El <strong>${fromCode}</strong> cotiza cerca de sus máximos anuales de 52 semanas frente al <strong>${toCode}</strong>. Es un momento estadísticamente <strong>favorable para cambiar ${fromCode} por ${toCode}</strong>.`;
+    } else if (percentage <= 35) {
+        badgeEl.className = "forex-range-status-badge status-low";
+        badgeEl.textContent = "Zona Baja / Desfavorable";
+        adviceEl.innerHTML = `El <strong>${fromCode}</strong> se sitúa en la parte baja de su rango anual de 52 semanas frente al <strong>${toCode}</strong>. Si tienes flexibilidad, esperar a un repunte podría ofrecerte mejor cambio.`;
+    } else {
+        badgeEl.className = "forex-range-status-badge status-balanced";
+        badgeEl.textContent = "Rango Medio / Estable";
+        adviceEl.innerHTML = `El tipo de cambio entre <strong>${fromCode}</strong> y <strong>${toCode}</strong> cotiza en niveles intermedios y equilibrados de su ciclo anual de 52 semanas.`;
+    }
+}
+
+function renderMultiCurrencyGrid(amount, fromCode) {
+    const gridEl = document.getElementById("multicurrency-grid");
+    if (!gridEl) return;
+
+    const topCurrencies = ["EUR", "USD", "GBP", "JPY", "CHF", "CAD", "AUD", "MXN", "CNY", "BRL"]
+        .filter(c => c !== fromCode);
+
+    const rateFrom = currentForexRates[fromCode] || 1;
+
+    gridEl.innerHTML = topCurrencies.map(code => {
+        const data = CURRENCY_CATALOG[code] || { flag: "🌐", name: code };
+        const rate = currentForexRates[code] || 1;
+        const converted = (amount / rateFrom) * rate;
+        const unitRate = rate / rateFrom;
+
+        const formatted = converted.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const formattedUnit = unitRate >= 1 
+            ? unitRate.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 4 })
+            : unitRate.toLocaleString('es-ES', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+
+        return `
+            <div class="multicurrency-item" onclick="setCurrencyPair('${fromCode}', '${code}')" title="Haz clic para seleccionar este par">
+                <div class="multicurrency-meta">
+                    <span class="multicurrency-flag">${data.flag}</span>
+                    <div>
+                        <div class="multicurrency-name">${data.name}</div>
+                        <div class="multicurrency-code">${code}</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="multicurrency-amount">${formatted} ${code}</div>
+                    <div class="multicurrency-rate">1 ${fromCode} = ${formattedUnit} ${code}</div>
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+function swapCurrencies() {
+    const fromSelect = document.getElementById("currency-from");
+    const toSelect = document.getElementById("currency-to");
+    if (!fromSelect || !toSelect) return;
+
+    const temp = fromSelect.value;
+    fromSelect.value = toSelect.value;
+    toSelect.value = temp;
+
+    calculateCurrencyConversion();
+}
+
+function setCurrencyAmount(amount) {
+    const input = document.getElementById("currency-amount");
+    if (input) {
+        input.value = amount;
+        calculateCurrencyConversion();
+    }
+}
+
+function setCurrencyPair(from, to) {
+    const fromSelect = document.getElementById("currency-from");
+    const toSelect = document.getElementById("currency-to");
+    if (fromSelect && toSelect) {
+        fromSelect.value = from;
+        toSelect.value = to;
+        calculateCurrencyConversion();
+    }
+}
+
+function copyCurrencyResult() {
+    if (navigator.clipboard && lastConvertedResultText) {
+        navigator.clipboard.writeText(lastConvertedResultText).then(() => {
+            showToast(`Copiado: ${lastConvertedResultText}`, "success");
+        }).catch(() => {
+            showToast("No se pudo copiar.", "danger");
+        });
+    }
+}
+
+// ====================================================
+// CALCULADORA DE MARGEN DE BENEFICIO Y PRECIO DE VENTA
+// ====================================================
+
+let marginCurrentMode = "margin"; // "margin" (sobre venta) o "markup" (sobre coste)
+let lastMarginResultText = "";
+
+function initProfitCalculator() {
+    const costInput = document.getElementById("margin-cost-input");
+    const percentInput = document.getElementById("margin-percent-input");
+    const percentSlider = document.getElementById("margin-percent-slider");
+    
+    const shippingInput = document.getElementById("margin-shipping-input");
+    const shippingPctInput = document.getElementById("margin-shipping-percent-input");
+    
+    const packagingInput = document.getElementById("margin-packaging-input");
+    const packagingPctInput = document.getElementById("margin-packaging-percent-input");
+    
+    const otherCostsInput = document.getElementById("margin-other-costs-input");
+    const otherPctInput = document.getElementById("margin-other-percent-input");
+    
+    const vatSelect = document.getElementById("margin-vat-select");
+
+    const allInputs = [
+        costInput, percentInput, 
+        shippingInput, shippingPctInput, 
+        packagingInput, packagingPctInput, 
+        otherCostsInput, otherPctInput
+    ];
+
+    allInputs.forEach(inp => {
+        if (inp) inp.addEventListener("input", calculateProfitMargin);
+    });
+
+    if (percentInput) {
+        percentInput.addEventListener("input", () => {
+            if (percentSlider) percentSlider.value = percentInput.value;
+            calculateProfitMargin();
+        });
+    }
+    if (percentSlider) {
+        percentSlider.addEventListener("input", () => {
+            if (percentInput) percentInput.value = percentSlider.value;
+            calculateProfitMargin();
+        });
+    }
+    if (vatSelect) {
+        vatSelect.addEventListener("change", calculateProfitMargin);
+    }
+
+    calculateProfitMargin();
+}
+
+function setMarginCost(cost) {
+    const input = document.getElementById("margin-cost-input");
+    if (input) {
+        input.value = cost;
+        calculateProfitMargin();
+    }
+}
+
+function setMarginPercent(pct) {
+    const input = document.getElementById("margin-percent-input");
+    const slider = document.getElementById("margin-percent-slider");
+    if (input) input.value = pct;
+    if (slider) slider.value = pct;
+    calculateProfitMargin();
+}
+
+function calculateProfitMargin() {
+    const costInput = document.getElementById("margin-cost-input");
+    const percentInput = document.getElementById("margin-percent-input");
+    
+    const shippingInput = document.getElementById("margin-shipping-input");
+    const shippingPctInput = document.getElementById("margin-shipping-percent-input");
+    
+    const packagingInput = document.getElementById("margin-packaging-input");
+    const packagingPctInput = document.getElementById("margin-packaging-percent-input");
+    
+    const otherCostsInput = document.getElementById("margin-other-costs-input");
+    const otherPctInput = document.getElementById("margin-other-percent-input");
+    
+    const vatSelect = document.getElementById("margin-vat-select");
+
+    if (!costInput || !percentInput || !vatSelect) return;
+
+    function fmt(num) {
+        return num.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    const baseCost = Math.max(0, parseFloat(costInput.value) || 0);
+    const prodPct = Math.max(0, parseFloat(percentInput.value) || 0);
+    const gainProduct = baseCost * (prodPct / 100);
+
+    const shippingCost = Math.max(0, parseFloat(shippingInput ? shippingInput.value : 0) || 0);
+    const shippingPct = Math.max(0, parseFloat(shippingPctInput ? shippingPctInput.value : 0) || 0);
+    const gainShipping = shippingCost * (shippingPct / 100);
+
+    const packagingCost = Math.max(0, parseFloat(packagingInput ? packagingInput.value : 0) || 0);
+    const packagingPct = Math.max(0, parseFloat(packagingPctInput ? packagingPctInput.value : 0) || 0);
+    const gainPackaging = packagingCost * (packagingPct / 100);
+
+    const otherCost = Math.max(0, parseFloat(otherCostsInput ? otherCostsInput.value : 0) || 0);
+    const otherPct = Math.max(0, parseFloat(otherPctInput ? otherPctInput.value : 0) || 0);
+    const gainOther = otherCost * (otherPct / 100);
+
+    // Actualizar etiquetas individuales de ganancia en el panel de adyacentes
+    const shippingGainLbl = document.getElementById("lbl-gain-shipping");
+    const packagingGainLbl = document.getElementById("lbl-gain-packaging");
+    const otherGainLbl = document.getElementById("lbl-gain-other");
+
+    if (shippingGainLbl) shippingGainLbl.textContent = `+${fmt(gainShipping)} € ganancia (${shippingPct}%)`;
+    if (packagingGainLbl) packagingGainLbl.textContent = `+${fmt(gainPackaging)} € ganancia (${packagingPct}%)`;
+    if (otherGainLbl) otherGainLbl.textContent = `+${fmt(gainOther)} € ganancia (${otherPct}%)`;
+
+    const extraCostsTotal = shippingCost + packagingCost + otherCost;
+    const totalCost = baseCost + extraCostsTotal;
+    const totalProfit = gainProduct + gainShipping + gainPackaging + gainOther;
+    const avgMarginPct = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
+
+    const basePrice = totalCost + totalProfit;
+    const vatRate = parseFloat(vatSelect.value) || 0;
+    const vatAmount = basePrice * (vatRate / 100);
+    const finalPVP = basePrice + vatAmount;
+
+    // Actualizar elementos visuales
+    const totalCostBadge = document.getElementById("margin-total-cost-badge");
+    const pvpEl = document.getElementById("margin-pvp-amount");
+    const baseSubEl = document.getElementById("margin-base-sub");
+    const profitEl = document.getElementById("margin-profit-amount");
+    const roiEl = document.getElementById("margin-roi-text");
+
+    const costLbl = document.getElementById("lbl-cost-val");
+    const extraLbl = document.getElementById("lbl-extra-val");
+    const profitLbl = document.getElementById("lbl-profit-val");
+    const vatLbl = document.getElementById("lbl-vat-val");
+
+    const barCost = document.getElementById("bar-margin-cost");
+    const barExtra = document.getElementById("bar-margin-extra");
+    const barProfit = document.getElementById("bar-margin-profit");
+    const barVat = document.getElementById("bar-margin-vat");
+
+    if (totalCostBadge) totalCostBadge.textContent = `Coste Total: ${fmt(totalCost)} €`;
+    if (pvpEl) pvpEl.textContent = fmt(finalPVP);
+    if (baseSubEl) baseSubEl.textContent = `Base sin IVA: ${fmt(basePrice)} € (Coste: ${fmt(totalCost)} €)`;
+    if (profitEl) profitEl.textContent = `+${fmt(totalProfit)} €`;
+    if (roiEl) roiEl.textContent = `+${fmt(avgMarginPct)}% rentabilidad global`;
+
+    if (costLbl) costLbl.textContent = `${fmt(baseCost)} €`;
+    if (extraLbl) extraLbl.textContent = `${fmt(extraCostsTotal)} €`;
+    if (profitLbl) profitLbl.textContent = `${fmt(totalProfit)} €`;
+    if (vatLbl) vatLbl.textContent = `${fmt(vatAmount)} €`;
+
+    if (finalPVP > 0) {
+        const costPct = (baseCost / finalPVP) * 100;
+        const extraPct = (extraCostsTotal / finalPVP) * 100;
+        const profitPct = (totalProfit / finalPVP) * 100;
+        const vatPct = (vatAmount / finalPVP) * 100;
+
+        if (barCost) barCost.style.width = `${costPct.toFixed(1)}%`;
+        if (barExtra) barExtra.style.width = `${extraPct.toFixed(1)}%`;
+        if (barProfit) barProfit.style.width = `${profitPct.toFixed(1)}%`;
+        if (barVat) barVat.style.width = `${vatPct.toFixed(1)}%`;
+    }
+
+    lastMarginResultText = `Coste Total: ${fmt(totalCost)} € | PVP Final: ${fmt(finalPVP)} € | Beneficio Total: +${fmt(totalProfit)} € (Prod: +${fmt(gainProduct)}€, Envío: +${fmt(gainShipping)}€, Pack: +${fmt(gainPackaging)}€, Otros: +${fmt(gainOther)}€)`;
+
+    renderMarginScenarios(baseCost, shippingCost, shippingPct, packagingCost, packagingPct, otherCost, otherPct, vatRate, prodPct);
+}
+
+function renderMarginScenarios(baseCost, shippingCost, shippingPct, packagingCost, packagingPct, otherCost, otherPct, vatRate, currentProductPct) {
+    const gridEl = document.getElementById("margin-scenarios-grid");
+    if (!gridEl) return;
+
+    const samplePercentages = [15, 25, 50, 100, 200, 300, 500, 750, 1000];
+    const gainExtras = (shippingCost * (shippingPct / 100)) + (packagingCost * (packagingPct / 100)) + (otherCost * (otherPct / 100));
+    const totalCost = baseCost + shippingCost + packagingCost + otherCost;
+
+    gridEl.innerHTML = samplePercentages.map(pct => {
+        const gainProd = baseCost * (pct / 100);
+        const totalGain = gainProd + gainExtras;
+        const base = totalCost + totalGain;
+        const pvp = base * (1 + (vatRate / 100));
+        const isActive = Math.round(currentProductPct) === pct;
+
+        function fmt(n) { return n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+        let multiplierLabel = "";
+        if (pct === 100) multiplierLabel = " (x2)";
+        else if (pct === 200) multiplierLabel = " (x3)";
+        else if (pct === 300) multiplierLabel = " (x4)";
+        else if (pct === 500) multiplierLabel = " (x6)";
+        else if (pct === 1000) multiplierLabel = " (x11)";
+
+        return `
+            <div class="margin-scenario-row ${isActive ? 'active' : ''}" onclick="setMarginPercent(${pct})" title="Seleccionar +${pct}% de beneficio en producto">
+                <span class="margin-scenario-pct">+${pct}% Prod.${multiplierLabel}</span>
+                <div style="text-align: right;">
+                    <span class="margin-scenario-pvp">PVP: ${fmt(pvp)} €</span>
+                    <span class="margin-scenario-gain" style="display: block;">(Ganas: +${fmt(totalGain)} €)</span>
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+function copyMarginResult() {
+    if (navigator.clipboard && lastMarginResultText) {
+        navigator.clipboard.writeText(lastMarginResultText).then(() => {
+            showToast(`Copiado: ${lastMarginResultText}`, "success");
+        }).catch(() => {
+            showToast("No se pudo copiar.", "danger");
+        });
+    }
+}
+
 function openUtilityView(utilityType) {
     const catalogView = document.getElementById("utilities-catalog-view");
     const irpfView = document.getElementById("utility-view-irpf");
     const calcView = document.getElementById("utility-view-calc");
+    const currencyView = document.getElementById("utility-view-currency");
+    const marginView = document.getElementById("utility-view-margin");
 
     if (catalogView) catalogView.classList.add("hidden");
     if (irpfView) irpfView.classList.add("hidden");
     if (calcView) calcView.classList.add("hidden");
+    if (currencyView) currencyView.classList.add("hidden");
+    if (marginView) marginView.classList.add("hidden");
 
     if (utilityType === "irpf" && irpfView) {
         irpfView.classList.remove("hidden");
@@ -7785,6 +8378,12 @@ function openUtilityView(utilityType) {
         calcView.classList.remove("hidden");
         updateCalcDisplay();
         renderCalcHistory();
+    } else if (utilityType === "currency" && currencyView) {
+        currencyView.classList.remove("hidden");
+        calculateCurrencyConversion();
+    } else if (utilityType === "margin" && marginView) {
+        marginView.classList.remove("hidden");
+        calculateProfitMargin();
     }
 
     const panel = document.getElementById("panel-utilities");
@@ -7795,9 +8394,13 @@ function closeUtilityView() {
     const catalogView = document.getElementById("utilities-catalog-view");
     const irpfView = document.getElementById("utility-view-irpf");
     const calcView = document.getElementById("utility-view-calc");
+    const currencyView = document.getElementById("utility-view-currency");
+    const marginView = document.getElementById("utility-view-margin");
 
     if (irpfView) irpfView.classList.add("hidden");
     if (calcView) calcView.classList.add("hidden");
+    if (currencyView) currencyView.classList.add("hidden");
+    if (marginView) marginView.classList.add("hidden");
     if (catalogView) catalogView.classList.remove("hidden");
 }
 
@@ -7811,4 +8414,16 @@ window.clearCalcHistory = clearCalcHistory;
 window.restoreHistoryResult = restoreHistoryResult;
 window.openUtilityView = openUtilityView;
 window.closeUtilityView = closeUtilityView;
+window.swapCurrencies = swapCurrencies;
+window.setCurrencyAmount = setCurrencyAmount;
+window.setCurrencyPair = setCurrencyPair;
+window.refreshCurrencyRates = refreshCurrencyRates;
+window.copyCurrencyResult = copyCurrencyResult;
+window.setMarginMode = setMarginMode;
+window.setMarginCost = setMarginCost;
+window.setMarginPercent = setMarginPercent;
+window.calculateProfitMargin = calculateProfitMargin;
+window.copyMarginResult = copyMarginResult;
+
+
 
