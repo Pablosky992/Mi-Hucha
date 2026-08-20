@@ -8459,7 +8459,19 @@ function closeUtilityView() {
     if (catalogView) catalogView.classList.remove("hidden");
 }
 
-// Exponer a window para handlers inline
+// Exponer a window para handlers inline de Utilidades y CRUD
+window.openProjectFolder = openProjectFolder;
+window.openProjectSandbox = openProjectSandbox;
+window.deleteProjectInvestment = deleteProjectInvestment;
+window.deleteProjectEarning = deleteProjectEarning;
+window.deleteBank = deleteBank;
+window.openValuationModal = openValuationModal;
+window.openEditModal = openEditModal;
+window.deleteFixedExpense = deleteFixedExpense;
+window.deleteTransaction = deleteTransaction;
+window.switchProfile = switchProfile;
+window.deleteProfile = deleteProfile;
+
 window.setSalaryPreset = setSalaryPreset;
 window.calculateSalaryIRPF = calculateSalaryIRPF;
 window.calcAction = calcAction;
