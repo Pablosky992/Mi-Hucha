@@ -5554,7 +5554,14 @@ function initMobileMenu() {
     const navElements = document.querySelectorAll('.app-sidebar .nav-btn, .app-sidebar .nav-link, .app-sidebar .profile-active-btn, .app-sidebar .btn-lock-session');
 
     if (toggleBtn && sidebar && backdrop) {
-        const toggleSidebar = () => {
+        if (toggleBtn.dataset.menuBound === "true") return;
+        toggleBtn.dataset.menuBound = "true";
+
+        const toggleSidebar = (e) => {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             sidebar.classList.toggle('active');
             backdrop.classList.toggle('active');
         };

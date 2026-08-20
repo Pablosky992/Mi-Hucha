@@ -4130,6 +4130,9 @@ body {
     transition: var(--transition-fast);
     margin-right: 15px;
     flex-shrink: 0;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 100;
 }
 
 .mobile-menu-toggle:hover {

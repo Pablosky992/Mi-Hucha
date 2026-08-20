@@ -217,37 +217,6 @@
     <!-- Backdrop para cerrar el menú móvil al hacer clic fuera -->
     <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
 
-    <!-- Script para control de menú móvil -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.querySelector('.app-sidebar');
-            const toggleBtn = document.getElementById('btn-mobile-menu-toggle');
-            const backdrop = document.getElementById('sidebar-backdrop');
-            const navElements = document.querySelectorAll('.app-sidebar .nav-btn, .app-sidebar .nav-link, .app-sidebar .profile-active-btn, .app-sidebar .btn-lock-session');
-
-            if (toggleBtn && sidebar && backdrop) {
-                const toggleSidebar = () => {
-                    sidebar.classList.toggle('active');
-                    backdrop.classList.toggle('active');
-                };
-
-                const closeSidebar = () => {
-                    sidebar.classList.remove('active');
-                    backdrop.classList.remove('active');
-                };
-
-                toggleBtn.addEventListener('click', toggleSidebar);
-                backdrop.addEventListener('click', closeSidebar);
-
-                navElements.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        setTimeout(closeSidebar, 150);
-                    });
-                });
-            }
-        });
-    </script>
-
     <script type="module" src="src/app.js"></script>
 
 </body>
