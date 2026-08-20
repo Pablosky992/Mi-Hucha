@@ -494,6 +494,10 @@ function initNavigation() {
     tabs.forEach(tab => {
         tab.addEventListener("click", () => {
             const targetId = tab.getAttribute("data-target");
+            if (!targetId) return;
+
+            const activePanel = document.getElementById(targetId);
+            if (!activePanel) return;
 
             tabs.forEach(t => t.classList.remove("active"));
             panels.forEach(p => {
@@ -502,7 +506,6 @@ function initNavigation() {
             });
 
             tab.classList.add("active");
-            const activePanel = document.getElementById(targetId);
             activePanel.style.display = "block";
             
             // Forzar reflow para animación CSS
@@ -2571,6 +2574,7 @@ function renderAll() {
     renderBudgetEstimationsForm();
     renderDeviationAnalysisTable();
     renderProjectsList();
+    renderProfileWidget();
     
     // Validar el estado del embudo por si cambiaron los bancos
     validateFunnel();
@@ -5773,6 +5777,8 @@ async function startApp() {
         
         // Renderizado
         if (isDashboard) {
+            renderProfileWidget();
+            renderProfilesList();
             renderAll();
         } else if (hasProfileModal) {
             renderProfileWidget();
