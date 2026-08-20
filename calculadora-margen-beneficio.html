@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="SOOKd8az5XAz75Vr5nEHquusBeHQ88y1hA3EfTUVgWY" />
+    
+    <!-- SEO Meta Tags Primarios -->
+    <title>Calculadora de Margen de Beneficio y Precio de Venta (PVP con IVA) | Mi Hucha</title>
+    <meta name="description" content="Calcula el precio de venta recomendado (PVP), beneficio limpio por unidad, desglose de IVA (21%, 10%, 4%) y costes adyacentes (portes, packaging) para tus productos o servicios.">
+    <meta name="keywords" content="calculadora margen beneficio, calcular pvp con iva, margen comercial, precio de venta producto, calcular beneficio bruto y neto, markup e iva">
+    <link rel="canonical" href="https://mihucha.es/calculadora-margen-beneficio.html">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mihucha.es/calculadora-margen-beneficio.html">
+    <meta property="og:title" content="Calculadora de Margen de Beneficio & PVP con IVA - Mi Hucha">
+    <meta property="og:description" content="Fija precios de venta rentables según coste base, portes de envío, packaging y margen neto deseado.">
+    <meta property="og:image" content="https://mihucha.es/img/calculadora-margen-beneficio.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mihucha.es/calculadora-margen-beneficio.html">
+    <meta name="twitter:title" content="Calculadora de Margen & Precio de Venta - Mi Hucha">
+    <meta name="twitter:description" content="Simulador de precios de venta recomendado, beneficios netos e IVA para tiendas y negocios.">
+    <meta name="twitter:image" content="https://mihucha.es/img/calculadora-margen-beneficio.jpg">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calculadora de Margen de Beneficio y Precio de Venta",
+      "url": "https://mihucha.es/calculadora-margen-beneficio.html",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "description": "Simulador de fijación de precios recomendado, IVA, costes adyacentes y margen de rentabilidad por producto."
+    }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+    
+    <style>
+        body { overflow-y: auto !important; }
+    </style>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9370167145239765"
+     crossorigin="anonymous"></script>
+</head>
+<body class="theme-dark">
+    <!-- Fondos Ambientales Fluidos -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+        <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#investments" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span>Inversiones</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+
+                <a href="utilidades.html" class="nav-link active" title="Herramientas y Utilidades">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                    <span>Utilidades</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE&locale.x=es_ES" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body" style="overflow-y: auto; padding: 30px;">
+            
+            <div id="utility-view-margin">
+                <div class="project-details-header" style="margin-bottom: 20px;">
+                    <a href="utilidades.html" class="btn-back" style="text-decoration: none;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        <span>Volver a Utilidades</span>
+                    </a>
+                    <div class="project-details-title-area" style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="stat-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                            </div>
+                            <h1 style="margin: 0; font-size: 1.25rem; font-family: var(--font-header);">Calculadora de Margen de Beneficio & Precio de Venta</h1>
+                        </div>
+                        <p style="margin-top: 4px; color: var(--text-secondary); font-size: 0.8rem;">Calcula el precio de venta recomendado, tu beneficio neto por unidad y el IVA correspondiente</p>
+                    </div>
+                </div>
+
+                <div class="margin-hub-grid" style="max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: minmax(340px, 460px) 1fr; gap: 20px;">
+                    
+                    <!-- Columna Izquierda: Parámetros del Producto / Coste -->
+                    <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column; gap: 16px;">
+                        <div class="column-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; margin-bottom: 4px;">
+                            <h3 style="font-size: 0.95rem; margin: 0; font-weight: 700; color: var(--text-primary);">Costes y Margen Deseado</h3>
+                        </div>
+
+                        <!-- Coste Base del Producto y Margen del Producto -->
+                        <div class="form-group">
+                            <label for="margin-cost-input">Coste Base del Producto (€)</label>
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <input type="number" id="margin-cost-input" step="any" min="0" value="50" placeholder="Ej. 50" style="font-size: 1.2rem; font-weight: 700; font-family: var(--font-header); padding-right: 32px;" required>
+                                <span style="position: absolute; right: 12px; font-weight: 700; color: var(--text-muted);">€</span>
+                            </div>
+                        </div>
+
+                        <!-- Chips de coste rápido -->
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: -6px;">
+                            <span style="font-size: 0.72rem; color: var(--text-muted); align-self: center;">Costes:</span>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginCost(10)">10 €</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginCost(25)">25 €</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginCost(50)">50 €</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginCost(100)">100 €</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginCost(250)">250 €</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginCost(500)">500 €</button>
+                        </div>
+
+                        <!-- Porcentaje de Beneficio sobre el Producto -->
+                        <div class="form-group" style="margin-top: 2px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <label for="margin-percent-input" style="margin: 0; font-weight: 700; color: #6ee7b7;">Beneficio sobre el Producto (%)</label>
+                                <div style="display: flex; align-items: center; gap: 4px;">
+                                    <input type="number" id="margin-percent-input" min="0" max="1000" value="30" style="width: 80px; text-align: right; padding: 4px 6px; font-weight: 700; font-size: 0.95rem;">
+                                    <span style="font-weight: 700; color: #10b981; font-size: 0.9rem;">%</span>
+                                </div>
+                            </div>
+                            <input type="range" id="margin-percent-slider" min="0" max="1000" value="30" step="1" class="salary-range-slider" style="width: 100%; accent-color: #10b981;">
+                        </div>
+
+                        <!-- Chips de margen rápido para producto -->
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: -6px;">
+                            <span style="font-size: 0.72rem; color: var(--text-muted); align-self: center;">Ganancia Prod:</span>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginPercent(25)">+25%</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginPercent(50)">+50%</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginPercent(100)">+100% (x2)</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginPercent(200)">+200% (x3)</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginPercent(500)">+500% (x6)</button>
+                            <button type="button" class="btn-preset-salary" onclick="setMarginPercent(1000)">+1000%</button>
+                        </div>
+
+                        <!-- Costes Adyacentes con Beneficio Individual -->
+                        <div class="margin-extra-costs-panel">
+                            <div class="margin-extra-costs-header">
+                                <span class="margin-extra-costs-title">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color: #38bdf8;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                    Costes Adyacentes con Beneficio Individual
+                                </span>
+                                <span id="margin-total-cost-badge" class="margin-total-cost-badge">Coste Total: 50,00 €</span>
+                            </div>
+
+                            <!-- Fila 1: Envío / Portes Proveedor -->
+                            <div class="margin-extra-cost-item">
+                                <div class="margin-cost-item-header">
+                                    <span class="margin-cost-item-label">
+                                        <span>🚚</span> Envío Proveedor / Portes
+                                    </span>
+                                    <span id="lbl-gain-shipping" class="margin-cost-item-gain">+0,00 € ganancia (0%)</span>
+                                </div>
+                                <div class="margin-cost-inputs-grid">
+                                    <div class="margin-cost-input-wrapper">
+                                        <input type="number" id="margin-shipping-input" step="any" min="0" value="0" placeholder="0.00" class="margin-cost-input">
+                                        <span class="margin-cost-suffix">€ coste</span>
+                                    </div>
+                                    <div class="margin-cost-input-wrapper">
+                                        <input type="number" id="margin-shipping-percent-input" step="any" min="0" max="1000" value="0" placeholder="0" class="margin-cost-input">
+                                        <span class="margin-cost-suffix pct">% benef.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fila 2: Embalaje / Packaging -->
+                            <div class="margin-extra-cost-item">
+                                <div class="margin-cost-item-header">
+                                    <span class="margin-cost-item-label">
+                                        <span>📦</span> Embalaje / Packaging
+                                    </span>
+                                    <span id="lbl-gain-packaging" class="margin-cost-item-gain">+0,00 € ganancia (0%)</span>
+                                </div>
+                                <div class="margin-cost-inputs-grid">
+                                    <div class="margin-cost-input-wrapper">
+                                        <input type="number" id="margin-packaging-input" step="any" min="0" value="0" placeholder="0.00" class="margin-cost-input">
+                                        <span class="margin-cost-suffix">€ coste</span>
+                                    </div>
+                                    <div class="margin-cost-input-wrapper">
+                                        <input type="number" id="margin-packaging-percent-input" step="any" min="0" max="1000" value="0" placeholder="0" class="margin-cost-input">
+                                        <span class="margin-cost-suffix pct">% benef.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fila 3: Otros Gastos / Manipulación -->
+                            <div class="margin-extra-cost-item">
+                                <div class="margin-cost-item-header">
+                                    <span class="margin-cost-item-label">
+                                        <span>⚙️</span> Otros Gastos / Manipulación
+                                    </span>
+                                    <span id="lbl-gain-other" class="margin-cost-item-gain">+0,00 € ganancia (0%)</span>
+                                </div>
+                                <div class="margin-cost-inputs-grid">
+                                    <div class="margin-cost-input-wrapper">
+                                        <input type="number" id="margin-other-costs-input" step="any" min="0" value="0" placeholder="0.00" class="margin-cost-input">
+                                        <span class="margin-cost-suffix">€ coste</span>
+                                    </div>
+                                    <div class="margin-cost-input-wrapper">
+                                        <input type="number" id="margin-other-percent-input" step="any" min="0" max="1000" value="0" placeholder="0" class="margin-cost-input">
+                                        <span class="margin-cost-suffix pct">% benef.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- IVA Aplicable -->
+                        <div class="form-group">
+                            <label for="margin-vat-select">Impuesto / IVA Aplicable</label>
+                            <select id="margin-vat-select" class="currency-select">
+                                <option value="21">21% - IVA General (Estándar)</option>
+                                <option value="10">10% - IVA Reducido (Hostelería, alimentación)</option>
+                                <option value="4">4% - IVA Superreducido (Básicos)</option>
+                                <option value="0">0% - Sin IVA / Exento / B2B Intracomunitario</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!-- Columna Derecha: Precios Calculados, Rentabilidad y Desglose -->
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        
+                        <!-- Tarjeta Hero de Precios y Beneficio -->
+                        <div class="margin-result-card shadow-glass">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <span class="margin-result-tag">Precio de Venta Final (PVP)</span>
+                                    <div class="margin-pvp-hero">
+                                        <span id="margin-pvp-amount">78,65</span> <span style="font-size: 1.3rem; color: #6ee7b7;">€</span>
+                                    </div>
+                                    <div class="margin-base-price-sub" id="margin-base-sub">Base sin IVA: 65,00 €</div>
+                                </div>
+                                <div class="margin-profit-pill">
+                                    <span style="font-size: 0.7rem; color: #a7f3d0; font-weight: 700; text-transform: uppercase;">Beneficio Limpio</span>
+                                    <div id="margin-profit-amount" style="font-size: 1.35rem; font-weight: 800; color: #34d399; font-family: var(--font-header);">+15,00 €</div>
+                                    <div id="margin-roi-text" style="font-size: 0.72rem; color: #93c5fd; font-weight: 600;">+30,0% ganancia</div>
+                                </div>
+                            </div>
+
+                            <!-- Barra Visual de Desglose Proporcional -->
+                            <div style="margin-top: 6px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px;">
+                                    <span>Desglose por cada unidad vendida:</span>
+                                </div>
+                                <div class="salary-visual-bar" style="height: 12px; border-radius: 6px; overflow: hidden; display: flex; background: rgba(15, 23, 42, 0.6);">
+                                    <div id="bar-margin-cost" style="background: #475569; width: 50%; height: 100%; transition: width 0.3s ease;" title="Coste Base Producto"></div>
+                                    <div id="bar-margin-extra" style="background: #0284c7; width: 13%; height: 100%; transition: width 0.3s ease;" title="Envío / Extras"></div>
+                                    <div id="bar-margin-profit" style="background: #10b981; width: 19%; height: 100%; transition: width 0.3s ease;" title="Beneficio Limpio"></div>
+                                    <div id="bar-margin-vat" style="background: #f59e0b; width: 18%; height: 100%; transition: width 0.3s ease;" title="IVA Repercutido"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.68rem; margin-top: 6px; flex-wrap: wrap; gap: 4px;">
+                                    <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #475569; display: inline-block;"></span> Producto: <strong id="lbl-cost-val" style="color: #cbd5e1;">50,00 €</strong></span>
+                                    <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #0284c7; display: inline-block;"></span> Extras: <strong id="lbl-extra-val" style="color: #38bdf8;">0,00 €</strong></span>
+                                    <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #10b981; display: inline-block;"></span> Ganancia: <strong id="lbl-profit-val" style="color: #6ee7b7;">15,00 €</strong></span>
+                                    <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #f59e0b; display: inline-block;"></span> IVA: <strong id="lbl-vat-val" style="color: #fcd34d;">13,65 €</strong></span>
+                                </div>
+                            </div>
+
+                            <!-- Acciones del resultado -->
+                            <div class="currency-result-footer" style="margin-top: 4px;">
+                                <span style="font-size: 0.72rem; color: var(--text-muted);">Cálculo directo sobre coste</span>
+                                <button type="button" class="btn-copy-calc" onclick="copyMarginResult()" title="Copiar desglose y precio">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <span>Copiar Precio</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tabla Simuladora de Escenarios de Margen -->
+                        <div class="dashboard-column shadow-glass" style="padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h4 style="font-size: 0.85rem; font-weight: 700; margin: 0; color: var(--text-primary);">Escenarios de Beneficio sobre Coste</h4>
+                                <span style="font-size: 0.7rem; color: var(--text-muted);">Haz clic para seleccionar</span>
+                            </div>
+                            <div id="margin-scenarios-grid" class="custom-scrollbar" style="display: flex; flex-direction: column; gap: 6px; max-height: 190px; overflow-y: auto;">
+                                <!-- Inyectado dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Consejo de Fijación de Precios (Pricing Tip) -->
+                        <div class="forex-context-box">
+                            <p id="margin-tip-text" style="margin: 0; font-size: 0.74rem; color: #cbd5e1; line-height: 1.45;">
+                                💡 <strong>Fórmula directa:</strong> <em>Precio Base = Coste + (Coste × % Beneficio)</em>. Tu ganancia neta es exactamente el porcentaje que añades a tu coste, y sobre ese total se calcula el IVA para obtener el PVP final.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="app-footer-bar" style="margin-top: 50px;">
+                <p>&copy; 2026 Mi Hucha - Peseta a Peseta. Desarrollado con 💖 en Vanilla Stack.</p>
+                <p class="footer-legal-links" style="margin-top: 10px; opacity: 0.85;">
+                    <a href="aviso-legal.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px; font-weight: 500;">Aviso Legal</a> | 
+                    <a href="politica-privacidad.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px; font-weight: 500;">Política de Privacidad</a> | 
+                    <a href="politica-cookies.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px; font-weight: 500;">Política de Cookies</a>
+                </p>
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- Backdrop para móvil -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <script src="src/app.js"></script>
+</body>
+</html>

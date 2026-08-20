@@ -5543,6 +5543,34 @@ function initOnboarding() {
 // 14. INICIO DE LA APLICACIÓN AL CARGAR EL DOM
 // ----------------------------------------------------
 
+function initMobileMenu() {
+    const sidebar = document.querySelector('.app-sidebar');
+    const toggleBtn = document.getElementById('btn-mobile-menu-toggle');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    const navElements = document.querySelectorAll('.app-sidebar .nav-btn, .app-sidebar .nav-link, .app-sidebar .profile-active-btn, .app-sidebar .btn-lock-session');
+
+    if (toggleBtn && sidebar && backdrop) {
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            backdrop.classList.toggle('active');
+        };
+
+        const closeSidebar = () => {
+            sidebar.classList.remove('active');
+            backdrop.classList.remove('active');
+        };
+
+        toggleBtn.addEventListener('click', toggleSidebar);
+        backdrop.addEventListener('click', closeSidebar);
+
+        navElements.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setTimeout(closeSidebar, 150);
+            });
+        });
+    }
+}
+
 // ----------------------------------------------------
 // 13.5. DYNAMIC CONTACT MODAL
 // ----------------------------------------------------
@@ -5704,7 +5732,12 @@ async function startApp() {
             initPinVerifyManager();
             initAdvancedSecurity();
             initPremiumFeatures();
+        } else {
+            initUtilities();
         }
+
+        // Inicializar menú móvil en cualquier página que tenga el botón
+        initMobileMenu();
 
         // Registrar rastreador de actividad global en cualquier página (tablero o artículos)
         resetActivityTimer();

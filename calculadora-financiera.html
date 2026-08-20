@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="SOOKd8az5XAz75Vr5nEHquusBeHQ88y1hA3EfTUVgWY" />
+    
+    <!-- SEO Meta Tags Primarios -->
+    <title>Calculadora Financiera Digital Online con Historial | Mi Hucha</title>
+    <meta name="description" content="Calculadora financiera digital online gratuita con historial persistente, soporte físico de teclado, botones de IVA instantáneo (+21%, -21%), márgenes y operaciones matemáticas rápidas.">
+    <meta name="keywords" content="calculadora financiera, calculadora online gratis, calculadora con historial, calcular iva 21, calculadora teclado, calculadora porcentaje online">
+    <link rel="canonical" href="https://mihucha.es/calculadora-financiera.html">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mihucha.es/calculadora-financiera.html">
+    <meta property="og:title" content="Calculadora Financiera Digital Online - Mi Hucha">
+    <meta property="og:description" content="Calculadora financiera interactiva con atajos de teclado, cálculo de IVA e historial de operaciones.">
+    <meta property="og:image" content="https://mihucha.es/img/calculadora-financiera.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mihucha.es/calculadora-financiera.html">
+    <meta name="twitter:title" content="Calculadora Financiera Digital - Mi Hucha">
+    <meta name="twitter:description" content="Calculadora con soporte físico de teclado, porcentaje de IVA y almacenamiento de historial.">
+    <meta name="twitter:image" content="https://mihucha.es/img/calculadora-financiera.jpg">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calculadora Financiera Digital",
+      "url": "https://mihucha.es/calculadora-financiera.html",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "description": "Calculadora financiera digital online con historial guardado, teclado físico y botones de cálculo directo de IVA."
+    }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+    
+    <style>
+        body { overflow-y: auto !important; }
+    </style>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9370167145239765"
+     crossorigin="anonymous"></script>
+</head>
+<body class="theme-dark">
+    <!-- Fondos Ambientales Fluidos -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+        <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#investments" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span>Inversiones</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+
+                <a href="utilidades.html" class="nav-link active" title="Herramientas y Utilidades">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                    <span>Utilidades</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE&locale.x=es_ES" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body" style="overflow-y: auto; padding: 30px;">
+            
+            <div id="utility-view-calc">
+                <div class="project-details-header" style="margin-bottom: 20px;">
+                    <a href="utilidades.html" class="btn-back" style="text-decoration: none;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        <span>Volver a Utilidades</span>
+                    </a>
+                    <div class="project-details-title-area" style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="stat-icon-wrap" style="background: rgba(0, 229, 255, 0.15); color: var(--primary-light); width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                            </div>
+                            <h1 style="margin: 0; font-size: 1.25rem; font-family: var(--font-header);">Calculadora Financiera Digital</h1>
+                        </div>
+                        <p style="margin-top: 4px; color: var(--text-secondary); font-size: 0.8rem;">Cálculos rápidos, porcentajes, atajos de teclado e historial interactivo</p>
+                    </div>
+                </div>
+
+                <div class="calc-hub-grid" style="max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: minmax(320px, 380px) 1fr; gap: 20px;">
+                    
+                    <!-- Columna Izquierda: Calculadora -->
+                    <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column; gap: 14px;">
+                        
+                        <!-- Widget Calculadora Digital -->
+                        <div class="calc-widget-container">
+                            <!-- Pantalla de la Calculadora -->
+                            <div class="calc-display-wrap">
+                                <div id="calc-history" class="calc-history"></div>
+                                <div id="calc-current" class="calc-current">0</div>
+                            </div>
+
+                            <!-- Barra de Atajos Rápidos Financieros -->
+                            <div class="calc-quick-bar">
+                                <button type="button" class="calc-quick-btn" onclick="calcQuickTax(21)" title="Añadir +21% IVA">+21% IVA</button>
+                                <button type="button" class="calc-quick-btn" onclick="calcQuickTax(-21)" title="Descontar -21% IVA">-21% IVA</button>
+                                <button type="button" class="calc-quick-btn" onclick="calcQuickTax(10)" title="Añadir +10% IVA">+10%</button>
+                                <button type="button" class="calc-quick-btn" onclick="calcAction('sqrt')" title="Raíz Cuadrada">√</button>
+                            </div>
+
+                            <!-- Botonera con data-keys para teclado -->
+                            <div class="calc-keypad">
+                                <button type="button" class="calc-btn calc-btn-op" data-calc-key="Escape" onclick="calcAction('clear')">C</button>
+                                <button type="button" class="calc-btn calc-btn-op" data-calc-key="Backspace" onclick="calcAction('backspace')">⌫</button>
+                                <button type="button" class="calc-btn calc-btn-op" data-calc-key="%" onclick="calcAction('percent')">%</button>
+                                <button type="button" class="calc-btn calc-btn-action" data-calc-key="/" onclick="calcAction('operator', '/')">÷</button>
+
+                                <button type="button" class="calc-btn" data-calc-key="7" onclick="calcAction('num', '7')">7</button>
+                                <button type="button" class="calc-btn" data-calc-key="8" onclick="calcAction('num', '8')">8</button>
+                                <button type="button" class="calc-btn" data-calc-key="9" onclick="calcAction('num', '9')">9</button>
+                                <button type="button" class="calc-btn calc-btn-action" data-calc-key="*" onclick="calcAction('operator', '*')">×</button>
+
+                                <button type="button" class="calc-btn" data-calc-key="4" onclick="calcAction('num', '4')">4</button>
+                                <button type="button" class="calc-btn" data-calc-key="5" onclick="calcAction('num', '5')">5</button>
+                                <button type="button" class="calc-btn" data-calc-key="6" onclick="calcAction('num', '6')">6</button>
+                                <button type="button" class="calc-btn calc-btn-action" data-calc-key="-" onclick="calcAction('operator', '-')">−</button>
+
+                                <button type="button" class="calc-btn" data-calc-key="1" onclick="calcAction('num', '1')">1</button>
+                                <button type="button" class="calc-btn" data-calc-key="2" onclick="calcAction('num', '2')">2</button>
+                                <button type="button" class="calc-btn" data-calc-key="3" onclick="calcAction('num', '3')">3</button>
+                                <button type="button" class="calc-btn calc-btn-action" data-calc-key="+" onclick="calcAction('operator', '+')">+</button>
+
+                                <button type="button" class="calc-btn" data-calc-key="sign" onclick="calcAction('sign')">±</button>
+                                <button type="button" class="calc-btn" data-calc-key="0" onclick="calcAction('num', '0')">0</button>
+                                <button type="button" class="calc-btn" data-calc-key="." onclick="calcAction('dot')">.</button>
+                                <button type="button" class="calc-btn calc-btn-equal" data-calc-key="Enter" onclick="calcAction('equals')">=</button>
+                            </div>
+                        </div>
+
+                        <!-- Barra de Acciones Inferior -->
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <button type="button" class="btn-secondary" onclick="copyCalcResult()" style="font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <span>Copiar Resultado</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Historial de Operaciones -->
+                    <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column;">
+                        <div class="column-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-light);"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <h3 style="font-size: 0.95rem; margin: 0; font-weight: 700;">Historial de Cálculos</h3>
+                            </div>
+                            <button type="button" class="btn-clear-history" onclick="clearCalcHistory()" title="Limpiar historial">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <span>Limpiar</span>
+                            </button>
+                        </div>
+
+                        <!-- Lista de Historial -->
+                        <div id="calc-history-list" class="calc-history-feed custom-scrollbar" style="flex: 1; max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+
+                        <!-- Tip de teclado al pie -->
+                        <div class="calc-keyboard-tip">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M6 12h.001M10 12h.001M14 12h.001M18 12h.001M8 16h8"></path></svg>
+                            <span><strong>Teclado activado:</strong> Puedes escribir directamente números, operadores (+, -, *, /), Enter, Backspace y Escape.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="app-footer-bar" style="margin-top: 50px;">
+                <p>&copy; 2026 Mi Hucha - Peseta a Peseta. Desarrollado con 💖 en Vanilla Stack.</p>
+                <p class="footer-legal-links" style="margin-top: 10px; opacity: 0.85;">
+                    <a href="aviso-legal.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px; font-weight: 500;">Aviso Legal</a> | 
+                    <a href="politica-privacidad.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px; font-weight: 500;">Política de Privacidad</a> | 
+                    <a href="politica-cookies.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px; font-weight: 500;">Política de Cookies</a>
+                </p>
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- Backdrop para móvil -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <script src="src/app.js"></script>
+</body>
+</html>
