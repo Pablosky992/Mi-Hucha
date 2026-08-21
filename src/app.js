@@ -1,7 +1,7 @@
 // MOTOR DE FINANZAS PERSONAL: FINANZAS FLEX & SANDBOX PROYECTOS
 // Desarrollado con lógica robusta de doble entrada, persistencia y reactividad.
 
-var CONSEJOS = (typeof window !== "undefined" && (window.CONSEJOS_FINANCIEROS || window.CONSEJOS)) ? (window.CONSEJOS_FINANCIEROS || window.CONSEJOS) : [];
+import CONSEJOS from './consejos.js';
 
 // ----------------------------------------------------
 // 1. ESTADO DE LA APLICACIÓN (BASE DE DATOS LOCAL)
