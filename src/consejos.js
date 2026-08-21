@@ -1,4 +1,4 @@
-const CONSEJOS = [
+var CONSEJOS_FINANCIEROS = [
   "Págate a ti mismo primero: Automatiza una transferencia a tu cuenta de ahorro el mismo día que recibes tus ingresos.",
   "Registra cada céntimo: Lo que no se mide, no se puede controlar. Usa una app o una libreta.",
   "Aplica la regla 50/30/20: Destina el 50% a necesidades, el 30% a deseos y el 20% a ahorro o inversión.",
@@ -376,6 +376,10 @@ const CONSEJOS = [
 ];
 
 if (typeof window !== "undefined") {
-    window.CONSEJOS = CONSEJOS;
+    window.CONSEJOS = CONSEJOS_FINANCIEROS;
+    window.CONSEJOS_FINANCIEROS = CONSEJOS_FINANCIEROS;
 }
-export default CONSEJOS;
+if (typeof globalThis !== "undefined") {
+    globalThis.CONSEJOS = CONSEJOS_FINANCIEROS;
+    globalThis.CONSEJOS_FINANCIEROS = CONSEJOS_FINANCIEROS;
+}

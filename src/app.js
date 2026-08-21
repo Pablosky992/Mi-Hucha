@@ -1,7 +1,7 @@
 // MOTOR DE FINANZAS PERSONAL: FINANZAS FLEX & SANDBOX PROYECTOS
 // Desarrollado con lógica robusta de doble entrada, persistencia y reactividad.
 
-import CONSEJOS from './consejos.js';
+var CONSEJOS = (typeof window !== "undefined" && (window.CONSEJOS_FINANCIEROS || window.CONSEJOS)) ? (window.CONSEJOS_FINANCIEROS || window.CONSEJOS) : [];
 
 // ----------------------------------------------------
 // 1. ESTADO DE LA APLICACIÓN (BASE DE DATOS LOCAL)
@@ -87,6 +87,23 @@ const dbStorage = {
 // ====================================================
 // COMPONENTE DE SELECCIÓN Y CREACIÓN DE ETIQUETAS/CATEGORÍAS
 // ====================================================
+
+// ====================================================
+// FUNCIÓN DE SANITIZACIÓN Y PREVENCIÓN XSS
+// ====================================================
+function escapeHtml(str) {
+    if (str === null || str === undefined) return "";
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+if (typeof window !== "undefined") {
+    window.escapeHtml = escapeHtml;
+}
+
 const PRESET_BANK_TAGS = ["Nómina", "Ahorros", "Emergencias", "Gastos Diarios", "Viajes", "Facturas", "Seguro", "Colegiado", "Trastero", "Inversión"];
 
 function initTagSelector(containerId, initialTags = []) {
@@ -3314,7 +3331,7 @@ function renderFixedExpensesTable() {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>
-                <div style="font-weight: 600;">${fe.name}</div>
+                <div style="font-weight: 600;">${escapeHtml(fe.name)}</div>
                 <div style="font-size: 0.72rem; margin-top: 2px;">
                     ${statusText}
                 </div>
@@ -3443,8 +3460,8 @@ function renderTransactionsTable() {
         row.innerHTML = `
             <td>${formatDate(tx.date)}</td>
             <td>${subtypeBadge}</td>
-            <td style="font-weight: 500;">${tx.description}</td>
-            <td style="font-size: 0.8rem; color: var(--text-secondary); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${bankName}</td>
+            <td style="font-weight: 500;">${escapeHtml(tx.description)}</td>
+            <td style="font-size: 0.8rem; color: var(--text-secondary); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(bankName)}</td>
             <td class="amount-col">${amountFormatted}</td>
             <td class="actions-col">
                 <button onclick="deleteTransaction('${tx.id}')" class="btn-delete-mini-icon" title="Revertir Transacción">
@@ -3655,7 +3672,7 @@ function renderClosureCharts() {
                 <div class="closure-bank-title">
                     <div class="closure-bank-icon">${bank.name.charAt(0).toUpperCase()}</div>
                     <div>
-                        <div class="closure-bank-name">${bank.name}</div>
+                        <div class="closure-bank-name">${escapeHtml(bank.name)}</div>
                         <div class="closure-bank-month">${formatMonthString(state.currentMonth)}</div>
                     </div>
                 </div>
@@ -5564,13 +5581,15 @@ function initMobileMenu() {
                 e.preventDefault();
                 e.stopPropagation();
             }
-            sidebar.classList.toggle('active');
+            const isActive = sidebar.classList.toggle('active');
             backdrop.classList.toggle('active');
+            toggleBtn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
         };
 
         const closeSidebar = () => {
             sidebar.classList.remove('active');
             backdrop.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
         };
 
         toggleBtn.addEventListener('click', toggleSidebar);
@@ -6754,6 +6773,131 @@ function checkInactivity() {
 }
 
 // Renderizar la lista de eventos de la bitácora
+
+// ====================================================
+// GESTOR DE COPIAS DE SEGURIDAD Y RECORDATORIO AUTOMÁTICO
+// ====================================================
+
+async function exportBackupFile() {
+    const currentProfile = profilesState.profiles.find(p => p.id === profilesState.currentProfileId);
+    if (!currentProfile) return;
+    
+    try {
+        let backupData;
+        let isEncrypted = false;
+        
+        // Si la cuenta tiene contraseña/PIN, cifrar la copia de seguridad
+        if (currentProfile.pin) {
+            const plaintext = JSON.stringify(state, null, 2);
+            backupData = await encryptData(plaintext, currentProfile.pin);
+            isEncrypted = true;
+        } else {
+            backupData = state;
+        }
+        
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        
+        // Reemplazar espacios y caracteres raros en el nombre de archivo
+        const safeName = currentProfile.username.toLowerCase().replace(/[^a-z0-9]/gi, '_');
+        const suffix = isEncrypted ? "_cifrada" : "";
+        downloadAnchor.setAttribute("download", `finanzas_copia_${safeName}${suffix}_${state.currentMonth}.json`);
+        
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+
+        // Registrar timestamp de última copia de seguridad
+        const now = Date.now();
+        localStorage.setItem("finanzas_last_backup_time", now.toString());
+        
+        // Ocultar banner de recordatorio si estaba visible
+        const reminderBanner = document.getElementById("backup-reminder-banner");
+        if (reminderBanner) reminderBanner.remove();
+        
+        if (isEncrypted) {
+            logActivity("Copia de seguridad cifrada exportada correctamente.");
+            showToast("Copia de seguridad cifrada exportada correctamente.", "success");
+        } else {
+            logActivity("Copia de seguridad estándar exportada correctamente.");
+            showToast("Copia de seguridad (.json) exportada correctamente.", "success");
+        }
+    } catch (err) {
+        console.error("Error al exportar copia de seguridad:", err);
+        showToast("Error al exportar copia de seguridad.", "danger");
+    }
+}
+
+function checkBackupReminder() {
+    const dashboardPanel = document.getElementById("panel-dashboard");
+    if (!dashboardPanel) return;
+
+    // Si el usuario no tiene datos (no hay bancos ni transacciones), no avisar
+    const hasData = (state.banks && state.banks.length > 0) || (state.transactions && state.transactions.length > 0);
+    if (!hasData) return;
+
+    const lastBackup = parseInt(localStorage.getItem("finanzas_last_backup_time") || "0", 10);
+    const dismissedTime = parseInt(localStorage.getItem("finanzas_dismissed_backup_time") || "0", 10);
+    const now = Date.now();
+
+    const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+    const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+
+    // Si fue pospuesto en los últimos 7 días, no molestar
+    if (dismissedTime > 0 && (now - dismissedTime) < sevenDaysMs) {
+        return;
+    }
+
+    // Si nunca ha hecho backup o han pasado más de 30 días
+    const shouldShow = (lastBackup === 0) || ((now - lastBackup) > thirtyDaysMs);
+    if (!shouldShow) return;
+
+    // Evitar duplicados en DOM
+    if (document.getElementById("backup-reminder-banner")) return;
+
+    const daysSinceText = lastBackup === 0 
+        ? "más de 30 días" 
+        : `${Math.floor((now - lastBackup) / (24 * 60 * 60 * 1000))} días`;
+
+    const banner = document.createElement("div");
+    banner.id = "backup-reminder-banner";
+    banner.className = "backup-reminder-banner";
+    banner.innerHTML = `
+        <div class="backup-reminder-content">
+            <div class="backup-reminder-icon">💾</div>
+            <div class="backup-reminder-text">
+                <strong>Recordatorio de Seguridad:</strong> 
+                <span>Han pasado ${daysSinceText} sin respaldar tus datos financieros en un archivo descargable. Guarda una copia de seguridad para mantener tu historial a salvo.</span>
+            </div>
+        </div>
+        <div class="backup-reminder-actions">
+            <button type="button" class="btn-backup-now" id="btn-backup-now-action">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Descargar Copia Ahora
+            </button>
+            <button type="button" class="btn-backup-snooze" id="btn-backup-snooze-action">Recordar en 7 días</button>
+            <button type="button" class="btn-backup-close" id="btn-backup-close-action" aria-label="Cerrar aviso">&times;</button>
+        </div>
+    `;
+
+    dashboardPanel.prepend(banner);
+
+    document.getElementById("btn-backup-now-action")?.addEventListener("click", () => {
+        exportBackupFile();
+    });
+
+    document.getElementById("btn-backup-snooze-action")?.addEventListener("click", () => {
+        localStorage.setItem("finanzas_dismissed_backup_time", Date.now().toString());
+        banner.remove();
+        showToast("Recordatorio de copia pospuesto por 7 días.", "info");
+    });
+
+    document.getElementById("btn-backup-close-action")?.addEventListener("click", () => {
+        banner.remove();
+    });
+}
+
 function renderActivityLog() {
     const container = document.getElementById("activity-log-container");
     if (!container) return;
@@ -6769,7 +6913,7 @@ function renderActivityLog() {
         const formattedTime = date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         html += `
             <div class="activity-log-item">
-                <div class="activity-log-desc">${act.description}</div>
+                <div class="activity-log-desc">${escapeHtml(act.description)}</div>
                 <div class="activity-log-time">${formattedTime}</div>
             </div>
         `;
@@ -6939,16 +7083,23 @@ function initSearchAndExport() {
 
 function initKeyboardShortcuts() {
     window.addEventListener("keydown", (e) => {
-        // ESC Key: Cerrar cualquier modal abierto (excepto pantalla de bloqueo)
+        // ESC Key: Cerrar cualquier modal abierto (excepto pantalla de bloqueo) y menú móvil
         if (e.key === "Escape") {
-            const modals = ["modal-edit", "modal-profiles", "modal-pin", "modal-custom-dialog", "modal-activity-log", "modal-shortcuts", "modal-contact"];
-            modals.forEach(id => {
-                const modalEl = document.getElementById(id);
-                if (modalEl && !modalEl.classList.contains("hidden")) {
-                    modalEl.classList.add("hidden");
-                    logActivity(`Modal ${id} cerrado mediante atajo de teclado.`);
-                }
+            const openModals = document.querySelectorAll('.modal:not(.hidden):not(#screen-lock)');
+            openModals.forEach(modalEl => {
+                modalEl.classList.add("hidden");
+                logActivity(`Modal ${modalEl.id} cerrado mediante atajo de teclado.`);
             });
+
+            // Cerrar menú móvil si está desplegado
+            const sidebar = document.querySelector('.app-sidebar.active');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const toggleBtn = document.getElementById('btn-mobile-menu-toggle');
+            if (sidebar) {
+                sidebar.classList.remove('active');
+                if (backdrop) backdrop.classList.remove('active');
+                if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+            }
         }
 
         // Ignorar atajos si está bloqueada la sesión
@@ -7285,7 +7436,7 @@ function renderSavingGoals() {
         html += `
             <div class="goal-item-card">
                 <div class="goal-card-header">
-                    <h3>${goal.name}</h3>
+                    <h3>${escapeHtml(goal.name)}</h3>
                     <button onclick="deleteSavingGoal('${goal.id}')" class="btn-delete-goal" title="Eliminar Meta">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                     </button>
@@ -7300,7 +7451,7 @@ function renderSavingGoals() {
                     </div>
                 </div>
                 <div class="goal-meta">
-                    <span>Cuenta: ${bank ? bank.name : 'Desconocida'}</span>
+                    <span>Cuenta: ${bank ? escapeHtml(bank.name) : 'Desconocida'}</span>
                     <span>Límite: ${formattedDeadline}</span>
                 </div>
             </div>
@@ -8495,11 +8646,13 @@ window.setCurrencyAmount = setCurrencyAmount;
 window.setCurrencyPair = setCurrencyPair;
 window.refreshCurrencyRates = refreshCurrencyRates;
 window.copyCurrencyResult = copyCurrencyResult;
-window.setMarginMode = setMarginMode;
 window.setMarginCost = setMarginCost;
 window.setMarginPercent = setMarginPercent;
 window.calculateProfitMargin = calculateProfitMargin;
 window.copyMarginResult = copyMarginResult;
+window.exportBackupFile = exportBackupFile;
+window.checkBackupReminder = checkBackupReminder;
+window.escapeHtml = escapeHtml;
 
 
 

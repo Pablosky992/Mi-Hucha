@@ -5676,8 +5676,171 @@ body {
     color: #38bdf8;
 }
 
+/* ====================================================
+   ACCESIBILIDAD (A11Y) Y ENFOQUE POR TECLADO
+   ==================================================== */
+
+/* Estilos de foco visible accesible solo para navegación por teclado */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--primary-light) !important;
+    outline-offset: 2px !important;
+}
+
+/* Eliminar outline default molesto en clics de ratón */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Respeto a usuarios con preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
 
 
 
 
 
+
+
+
+
+/* ====================================================
+   BANNER DE RECORDATORIO DE COPIA DE SEGURIDAD (BACKUP)
+   ==================================================== */
+.backup-reminder-banner {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    border-left: 4px solid var(--primary);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    animation: fadeInSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.backup-reminder-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.backup-reminder-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.backup-reminder-text {
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+.backup-reminder-text strong {
+    color: #ffffff;
+    margin-right: 4px;
+}
+
+.backup-reminder-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.btn-backup-now {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 14px var(--primary-glow);
+    transition: all 0.2s ease;
+}
+
+.btn-backup-now:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px var(--primary-glow);
+}
+
+.btn-backup-snooze {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-backup-snooze:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.btn-backup-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: color 0.2s ease;
+}
+
+.btn-backup-close:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .backup-reminder-banner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .backup-reminder-actions {
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+}

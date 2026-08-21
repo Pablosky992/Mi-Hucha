@@ -5,7 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artículos y Guías Financieras - Mi Hucha</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    <meta name="description" content="Aprende sobre ahorro, inversión y finanzas personales con nuestras guías y artículos detallados.">
+        <link rel="canonical" href="https://mihucha.es/articulos.html">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mihucha.es/articulos.html">
+    <meta property="og:title" content="Artículos y Guías Financieras - Mi Hucha">
+    <meta property="og:description" content="Aprende sobre ahorro, inversión y finanzas personales con nuestras guías y artículos detallados.">
+    <meta property="og:image" content="https://mihucha.es/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mihucha.es/articulos.html">
+    <meta name="twitter:title" content="Artículos y Guías Financieras - Mi Hucha">
+    <meta name="twitter:description" content="Aprende sobre ahorro, inversión y finanzas personales con nuestras guías y artículos detallados.">
+    <meta name="twitter:image" content="https://mihucha.es/og-image.jpg">
+
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -181,7 +199,7 @@
         <aside class="app-sidebar">
             <div class="sidebar-brand-wrapper">
                 <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
-                    <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+                    <img src="logo.png" alt="Mi Hucha - Finanzas Personales" class="sidebar-brand-img" width="180" height="98" fetchpriority="high">
                 </a>
             </div>
 
@@ -274,7 +292,7 @@
                     <!-- Artículo 1 -->
                     <article class="article-card">
                         <a href="el-metodo-peseta-a-peseta.html" style="display: block; text-decoration: none;">
-                            <img src="img/ahorro-hormiga.png" alt="Ahorro hormiga y tecnología" class="article-card-img">
+                            <img src="img/ahorro-hormiga.png" alt="Ahorro hormiga y tecnología" class="article-card-img" loading="lazy" decoding="async" width="400" height="225">
                         </a>
                         <div class="article-card-content">
                             <span class="article-tag">Ahorro y Hábitos</span>
@@ -295,7 +313,7 @@
                     <!-- Artículo 2: Fondo de Emergencia -->
                     <article class="article-card">
                         <a href="fondo-de-emergencia.html" style="display: block; text-decoration: none;">
-                            <img src="img/fondo-emergencia.png" alt="Fondo de emergencia" class="article-card-img">
+                            <img src="img/fondo-emergencia.png" alt="Fondo de emergencia" class="article-card-img" loading="lazy" decoding="async" width="400" height="225">
                         </a>
                         <div class="article-card-content">
                             <span class="article-tag">Estrategia Financiera</span>
@@ -316,7 +334,7 @@
                     <!-- Artículo 3: 5 Sobres -->
                     <article class="article-card">
                         <a href="metodo-5-sobres.html" style="display: block; text-decoration: none;">
-                            <img src="img/5-sobres.png" alt="Método de los 5 sobres digitales" class="article-card-img">
+                            <img src="img/5-sobres.png" alt="Método de los 5 sobres digitales" class="article-card-img" loading="lazy" decoding="async" width="400" height="225">
                         </a>
                         <div class="article-card-content">
                             <span class="article-tag">Sistemas y Métodos</span>
@@ -337,7 +355,7 @@
                     <!-- Artículo 4: Sistema del Embudo -->
                     <article class="article-card">
                         <a href="sistema-del-embudo.html" style="display: block; text-decoration: none;">
-                            <img src="img/sistema-embudo.png" alt="El Sistema del Embudo" class="article-card-img">
+                            <img src="img/sistema-embudo.png" alt="El Sistema del Embudo" class="article-card-img" loading="lazy" decoding="async" width="400" height="225">
                         </a>
                         <div class="article-card-content">
                             <span class="article-tag">Automatización Financiera</span>
@@ -358,7 +376,7 @@
                     <!-- Artículo 5: Regla 72 Horas -->
                     <article class="article-card">
                         <a href="regla-72-horas.html" style="display: block; text-decoration: none;">
-                            <img src="img/regla-72-horas.png" alt="La Regla de las 72 Horas" class="article-card-img">
+                            <img src="img/regla-72-horas.png" alt="La Regla de las 72 Horas" class="article-card-img" loading="lazy" decoding="async" width="400" height="225">
                         </a>
                         <div class="article-card-content">
                             <span class="article-tag">Ahorro y Hábitos</span>
@@ -379,7 +397,7 @@
                     <!-- Artículo 6: Inflación de Estilo de Vida -->
                     <article class="article-card">
                         <a href="la-trampa-de-la-inflacion-del-estilo-de-vida.html" style="display: block; text-decoration: none;">
-                            <img src="img/lifestyle-creep.png" alt="La trampa de la inflación del estilo de vida" class="article-card-img">
+                            <img src="img/lifestyle-creep.png" alt="La trampa de la inflación del estilo de vida" class="article-card-img" loading="lazy" decoding="async" width="400" height="225">
                         </a>
                         <div class="article-card-content">
                             <span class="article-tag">Estrategia Financiera</span>
@@ -416,6 +434,7 @@
     <!-- Backdrop para cerrar el menú móvil al hacer clic fuera -->
     <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
 
-    <script type="module" src="src/app.js"></script>
+    <script src="src/consejos.js"></script>
+    <script src="src/app.js"></script>
 </body>
 </html>

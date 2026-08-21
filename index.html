@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="SOOKd8az5XAz75Vr5nEHquusBeHQ88y1hA3EfTUVgWY" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    
     <!-- SEO Meta Tags Primarios -->
     <title>Mi Hucha - Finanzas Personales, Ahorro y Calculadora de IRPF España</title>
     <meta name="description" content="Controla tus gastos, ahorros e inversiones con Mi Hucha. Utiliza nuestras herramientas gratuitas: Calculadora de IRPF y Sueldo Neto España 2026, retención recomendada en nómina y simuladores financieros.">
@@ -20,14 +16,16 @@
     <meta property="og:url" content="https://mihucha.es/">
     <meta property="og:title" content="Mi Hucha - Calculadora de IRPF, Sueldo Neto y Gestión Financiera">
     <meta property="og:description" content="Simula tu sueldo neto exacto, calcula la retención de IRPF recomendada en tu nómina y gestiona tus finanzas personales paso a paso.">
-    <meta property="og:image" content="https://mihucha.es/logo.png">
+    <meta property="og:image" content="https://mihucha.es/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://mihucha.es/">
     <meta name="twitter:title" content="Mi Hucha - Calculadora de IRPF & Finanzas Personales">
     <meta name="twitter:description" content="Calcula tu sueldo neto y retención de IRPF en España según tu salario bruto y situación familiar.">
-    <meta name="twitter:image" content="https://mihucha.es/logo.png">
+    <meta name="twitter:image" content="https://mihucha.es/og-image.jpg">
 
     <link rel="icon" type="image/png" href="favicon.png">
 
@@ -116,7 +114,7 @@
         <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
         <aside class="app-sidebar">
             <div class="sidebar-brand-wrapper">
-                <img src="logo.png" alt="Mi Hucha" class="sidebar-brand-img">
+                <img src="logo.png" alt="Mi Hucha - Finanzas Personales" class="sidebar-brand-img" width="180" height="98" fetchpriority="high">
             </div>
 
             <!-- Menú de navegación vertical -->
@@ -192,7 +190,7 @@
             <!-- CABECERA DE LA VISTA ACTIVA -->
             <header class="app-top-header">
                 <!-- Botón Toggle de Menú Móvil -->
-                <button id="btn-mobile-menu-toggle" class="mobile-menu-toggle" title="Abrir Menú">
+                <button id="btn-mobile-menu-toggle" class="mobile-menu-toggle" title="Abrir Menú" aria-label="Abrir menú de navegación" aria-expanded="false">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
 
@@ -204,23 +202,23 @@
                 <!-- Controles de cabecera (Selector de mes + Modo Incógnito) -->
                 <div class="header-controls-wrapper" style="display: flex; align-items: center; gap: 15px;">
                     <!-- Botón de Modo Incógnito -->
-                    <button id="btn-toggle-mask" class="btn-icon" title="Alternar Modo Incógnito (Ocultar Saldos)">
+                    <button id="btn-toggle-mask" class="btn-icon" title="Alternar Modo Incógnito (Ocultar Saldos)" aria-label="Alternar modo incógnito para ocultar saldos">
                         <svg id="icon-mask-visible" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         <svg id="icon-mask-hidden" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                     </button>
 
                     <!-- Botón de Atajos de Teclado -->
-                    <button id="btn-keyboard-help" class="btn-icon" title="Atajos de Teclado y Ayuda">
+                    <button id="btn-keyboard-help" class="btn-icon" title="Atajos de Teclado y Ayuda" aria-label="Ver atajos de teclado y ayuda">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6.01" y2="8"></line><line x1="10" y1="8" x2="10.01" y2="8"></line><line x1="14" y1="8" x2="14.01" y2="8"></line><line x1="18" y1="8" x2="18.01" y2="8"></line><line x1="6" y1="12" x2="6.01" y2="12"></line><line x1="18" y1="12" x2="18.01" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line><polyline points="10 12 12 12 14 12"></polyline></svg>
                     </button>
 
                     <!-- Botón de Guía de Inicio (Tour) -->
-                    <button id="btn-onboarding-help" class="btn-icon" title="Guía de Inicio y Funcionamiento">
+                    <button id="btn-onboarding-help" class="btn-icon" title="Guía de Inicio y Funcionamiento" aria-label="Abrir guía de inicio y funcionamiento">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                     </button>
 
                     <!-- Botón de Consejo Diario -->
-                    <button id="btn-daily-advice" class="btn-icon" title="Consejo Financiero del Día">
+                    <button id="btn-daily-advice" class="btn-icon" title="Consejo Financiero del Día" aria-label="Ver consejo financiero del día">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A7 7 0 0 0 4 8c0 1.3.5 2.6 1.5 3.5.7.8 1.3 1.5 1.5 2.5"></path><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line></svg>
                     </button>
 
@@ -1362,7 +1360,7 @@
                         <!-- Tarjeta Utilidad 1: Calculadora Financiera Digital -->
                         <div class="utility-card shadow-glass" onclick="openUtilityView('calc')">
                             <div class="utility-card-banner">
-                                <img src="img/calculadora-financiera.jpg" alt="Calculadora Financiera Digital con Historial" class="utility-card-img">
+                                <img src="img/calculadora-financiera.jpg" alt="Calculadora Financiera Digital con Historial" class="utility-card-img" loading="lazy" decoding="async" width="400" height="200">
                                 <span class="utility-badge">Operaciones Rápidas</span>
                             </div>
                             <div class="utility-card-body">
@@ -1382,7 +1380,7 @@
                         <!-- Tarjeta Utilidad 2: Calculadora de IRPF y Sueldo Neto -->
                         <div class="utility-card shadow-glass" onclick="openUtilityView('irpf')">
                             <div class="utility-card-banner">
-                                <img src="img/calculadora-irpf.jpg" alt="Calculadora de IRPF y Sueldo Neto España 2026" class="utility-card-img">
+                                <img src="img/calculadora-irpf.jpg" alt="Calculadora de IRPF y Sueldo Neto España 2026" class="utility-card-img" loading="lazy" decoding="async" width="400" height="200">
                                 <span class="utility-badge">Nóminas & IRPF</span>
                             </div>
                             <div class="utility-card-body">
@@ -1402,7 +1400,7 @@
                         <!-- Tarjeta Utilidad 3: Conversor de Divisas en Tiempo Real -->
                         <div class="utility-card shadow-glass" onclick="openUtilityView('currency')">
                             <div class="utility-card-banner">
-                                <img src="img/conversor-divisas.jpg" alt="Conversor de Divisas en Tiempo Real" class="utility-card-img">
+                                <img src="img/conversor-divisas.jpg" alt="Conversor de Divisas en Tiempo Real" class="utility-card-img" loading="lazy" decoding="async" width="400" height="200">
                                 <span class="utility-badge" style="background: rgba(139, 92, 246, 0.85); border-color: rgba(139, 92, 246, 0.4); color: #ede9fe;">Forex & Mercados</span>
                             </div>
                             <div class="utility-card-body">
@@ -1422,7 +1420,7 @@
                         <!-- Tarjeta Utilidad 4: Calculadora de Margen de Beneficio & Precio de Venta -->
                         <div class="utility-card shadow-glass" onclick="openUtilityView('margin')">
                             <div class="utility-card-banner">
-                                <img src="img/calculadora-margen-beneficio.jpg" alt="Calculadora de Margen de Beneficio y Precio de Venta" class="utility-card-img">
+                                <img src="img/calculadora-margen-beneficio.jpg" alt="Calculadora de Margen de Beneficio y Precio de Venta" class="utility-card-img" loading="lazy" decoding="async" width="400" height="200">
                                 <span class="utility-badge" style="background: rgba(16, 185, 129, 0.85); border-color: rgba(16, 185, 129, 0.4); color: #d1fae5;">Precios & Margen</span>
                             </div>
                             <div class="utility-card-body">
@@ -2197,11 +2195,11 @@
     </div> <!-- Fin de app-desktop-container -->
 
     <!-- MODAL DE EDICIÓN GLOBAL -->
-    <div id="modal-edit" class="modal hidden">
+    <div id="modal-edit" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-edit-title">
         <div class="modal-content shadow-glass">
             <div class="modal-header">
                 <h3 id="modal-edit-title">Editar Ficha</h3>
-                <button id="btn-close-modal" class="btn-close">&times;</button>
+                <button id="btn-close-modal" class="btn-close" aria-label="Cerrar modal de edición">&times;</button>
             </div>
             <form id="form-edit-global">
                 <div id="modal-edit-fields" class="modal-fields">
@@ -2216,11 +2214,11 @@
     </div>
 
     <!-- MODAL DE ACTUALIZACIÓN DE VALORACIÓN -->
-    <div id="modal-valuation" class="modal hidden">
+    <div id="modal-valuation" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-val-title">
         <div class="modal-content shadow-glass" style="max-width: 480px;">
             <div class="modal-header">
                 <h3 id="modal-val-title">Actualizar Valoración</h3>
-                <button id="btn-close-val-modal" class="btn-close">&times;</button>
+                <button id="btn-close-val-modal" class="btn-close" aria-label="Cerrar modal de valoración">&times;</button>
             </div>
             <form id="form-valuation-global">
                 <input type="hidden" id="val-bank-id">
@@ -2249,11 +2247,11 @@
     </div>
 
     <!-- MODAL DE GESTIÓN DE PERFILES Y USUARIOS -->
-    <div id="modal-profiles" class="modal hidden">
+    <div id="modal-profiles" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-profiles-title">
         <div class="modal-content profiles-modal shadow-glass">
             <div class="modal-header">
-                <h3>Gestión de Usuarios y Perfiles</h3>
-                <button id="btn-close-profiles" class="btn-close">&times;</button>
+                <h3 id="modal-profiles-title">Gestión de Usuarios y Perfiles</h3>
+                <button id="btn-close-profiles" class="btn-close" aria-label="Cerrar modal de perfiles">&times;</button>
             </div>
             
             <div class="profiles-modal-body">
@@ -2396,11 +2394,11 @@
     </div>
 
     <!-- MODAL DE VERIFICACIÓN DE PIN/CONTRASEÑA -->
-    <div id="modal-pin" class="modal hidden">
+    <div id="modal-pin" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-pin-title">
         <div class="modal-content pin-modal shadow-glass" style="max-width: 380px;">
             <div class="modal-header">
-                <h3>Verificación de Seguridad</h3>
-                <button id="btn-close-pin" class="btn-close">&times;</button>
+                <h3 id="modal-pin-title">Verificación de Seguridad</h3>
+                <button id="btn-close-pin" class="btn-close" aria-label="Cerrar modal de verificación">&times;</button>
             </div>
             <form id="form-pin-verify" style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 15px 0 0;">
                 <p style="font-size: 0.86rem; color: var(--text-secondary); text-align: center; line-height: 1.4;">
@@ -2408,7 +2406,7 @@
                 </p>
                 <div class="password-field-wrapper" style="width: 100%; max-width: 280px; position: relative; display: flex; align-items: center;">
                     <input type="password" id="profile-access-password" required placeholder="Contraseña o PIN..." style="width: 100%; padding: 12px 40px 12px 16px; font-size: 1.05rem; border-radius: 10px; background: rgba(15, 23, 42, 0.8); border: 1.5px solid var(--border-glass); color: white; text-align: center; font-family: var(--font-body); letter-spacing: 0.1em; transition: var(--transition-smooth);">
-                    <button type="button" class="btn-toggle-password" tabindex="-1" title="Alternar visibilidad" style="position: absolute; right: 12px; background: transparent; border: none; color: var(--text-muted); cursor: pointer;">
+                    <button type="button" class="btn-toggle-password" tabindex="-1" title="Alternar visibilidad" aria-label="Alternar visibilidad de contraseña" style="position: absolute; right: 12px; background: transparent; border: none; color: var(--text-muted); cursor: pointer;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-closed hidden"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                     </button>
@@ -2424,7 +2422,7 @@
     </div>
 
     <!-- MODAL DE CONFIRMACIÓN Y PROMPT PERSONALIZADO (PREMIUM DESKTOP DIALOG) -->
-    <div id="modal-custom-dialog" class="modal hidden" style="z-index: 10000;">
+    <div id="modal-custom-dialog" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="custom-dialog-title" style="z-index: 10000;">
         <div class="modal-content shadow-glass" style="max-width: 420px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);">
             <div class="modal-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
                 <h3 id="custom-dialog-title" style="font-family: var(--font-header); font-weight: 700; color: white; margin: 0; font-size: 1.1rem;">Confirmación</h3>
@@ -2444,7 +2442,7 @@
     </div>
 
     <!-- PANTALLA DE BLOQUEO DE SESIÓN ACTIVA (LOCK SCREEN) -->
-    <div id="screen-lock" class="modal hidden" style="z-index: 20000; background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(25px);">
+    <div id="screen-lock" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="lock-username" style="z-index: 20000; background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(25px);">
         <div class="lock-card shadow-glass">
             <div class="profile-avatar-large" id="lock-avatar" style="width: 70px; height: 70px; font-size: 1.8rem; margin-bottom: 8px;">UP</div>
             <div style="text-align: center;">
@@ -2458,7 +2456,7 @@
                 </p>
                 <div class="password-field-wrapper" style="width: 100%;">
                     <input type="password" id="lock-password" required placeholder="Contraseña o PIN..." style="width: 100%; padding: 12px 16px; font-size: 1.05rem; border-radius: 10px; background: rgba(15, 23, 42, 0.8); border: 1.5px solid var(--border-glass); color: white; text-align: center; letter-spacing: 0.1em;">
-                    <button type="button" class="btn-toggle-password" tabindex="-1" title="Alternar visibilidad">
+                    <button type="button" class="btn-toggle-password" tabindex="-1" title="Alternar visibilidad" aria-label="Alternar visibilidad de contraseña">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="eye-closed hidden"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                     </button>
@@ -2474,11 +2472,11 @@
     </div>
 
     <!-- MODAL DE HISTORIAL DE ACTIVIDAD / BITÁCORA -->
-    <div id="modal-activity-log" class="modal hidden">
+    <div id="modal-activity-log" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-activity-title">
         <div class="modal-content shadow-glass" style="max-width: 500px;">
             <div class="modal-header">
-                <h3>Bitácora de Actividad</h3>
-                <button id="btn-close-activity-log" class="btn-close">&times;</button>
+                <h3 id="modal-activity-title">Bitácora de Actividad</h3>
+                <button id="btn-close-activity-log" class="btn-close" aria-label="Cerrar bitácora">&times;</button>
             </div>
             <div class="modal-fields">
                 <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.4;">
@@ -2496,11 +2494,11 @@
     </div>
 
     <!-- MODAL DE ATAJOS DE TECLADO -->
-    <div id="modal-shortcuts" class="modal hidden">
+    <div id="modal-shortcuts" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-shortcuts-title">
         <div class="modal-content shadow-glass" style="max-width: 420px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);">
             <div class="modal-header">
-                <h3 style="font-family: var(--font-header); font-weight: 700; color: white; margin: 0; display: flex; align-items: center; gap: 8px;">⌨️ Atajos de Teclado & Ayuda</h3>
-                <button id="btn-close-shortcuts" class="btn-close">&times;</button>
+                <h3 id="modal-shortcuts-title" style="font-family: var(--font-header); font-weight: 700; color: white; margin: 0; display: flex; align-items: center; gap: 8px;">⌨️ Atajos de Teclado & Ayuda</h3>
+                <button id="btn-close-shortcuts" class="btn-close" aria-label="Cerrar ventana de atajos">&times;</button>
             </div>
             <div class="modal-fields" style="display: flex; flex-direction: column; gap: 14px; padding: 15px 0 0;">
                 <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
@@ -2528,11 +2526,11 @@
     </div>
 
     <!-- MODAL DE CONSEJO DIARIO -->
-    <div id="modal-daily-advice" class="modal hidden">
+    <div id="modal-daily-advice" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-advice-title">
         <div class="modal-content shadow-glass" style="max-width: 440px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);">
             <div class="modal-header">
-                <h3 style="font-family: var(--font-header); font-weight: 700; color: white; margin: 0; display: flex; align-items: center; gap: 8px;">💡 Consejo Financiero del Día</h3>
-                <button id="btn-close-daily-advice" class="btn-close">&times;</button>
+                <h3 id="modal-advice-title" style="font-family: var(--font-header); font-weight: 700; color: white; margin: 0; display: flex; align-items: center; gap: 8px;">💡 Consejo Financiero del Día</h3>
+                <button id="btn-close-daily-advice" class="btn-close" aria-label="Cerrar consejo del día">&times;</button>
             </div>
             <div class="modal-body" style="padding: 16px 0; display: flex; flex-direction: column; gap: 14px;">
                 <div style="background: rgba(255, 140, 0, 0.1); border: 1px solid rgba(255, 140, 0, 0.25); border-radius: 12px; padding: 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); text-align: center;">
@@ -2554,13 +2552,13 @@
     </div>
 
     <!-- MODAL DE BIENVENIDA / ONBOARDING -->
-    <div id="modal-onboarding" class="modal hidden" style="z-index: 15000;">
+    <div id="modal-onboarding" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-onboarding-title" style="z-index: 15000;">
         <div class="modal-content onboarding-modal shadow-glass" style="max-width: 600px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(25px); padding: 30px;">
             <div class="modal-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="font-family: var(--font-header); font-weight: 800; color: white; margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
+                <h3 id="modal-onboarding-title" style="font-family: var(--font-header); font-weight: 800; color: white; margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
                     ✨ Guía de Inicio: Mi Hucha
                 </h3>
-                <button id="btn-close-onboarding" class="btn-close" style="font-size: 1.6rem; cursor: pointer;">&times;</button>
+                <button id="btn-close-onboarding" class="btn-close" aria-label="Cerrar guía de inicio" style="font-size: 1.6rem; cursor: pointer;">&times;</button>
             </div>
             
             <!-- Carrusel de diapositivas -->
@@ -2741,8 +2739,9 @@
     <!-- Backdrop para cerrar el menú móvil al hacer clic fuera -->
     <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
 
-    <!-- Lógica Principal de la App -->
-    <script type="module" src="src/app.js"></script>
+    <!-- Lógica Principal de la App (compatible directamente con file:/// y con servidores web) -->
+    <script src="src/consejos.js"></script>
+    <script src="src/app.js"></script>
 </body>
 </html>
 
