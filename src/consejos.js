@@ -374,3 +374,8 @@ const CONSEJOS = [
   "Establece contratos de nivel de servicio (SLA) penalizados con tus proveedores tecnológicos: Si contratas el desarrollo de tu plataforma o el mantenimiento de tus servidores a una agencia externa, incluye cláusulas de penalización económica por retrasos en entregas o caídas de red prolongadas.",
   "Valora el coste de la cobertura de cambio de divisas (Hedging) al exportar servicios: Si facturas a clientes en mercados internacionales denominados en monedas volátiles, contrata coberturas de tipo de cambio mediante futuros o contratos forward para asegurar el margen neto de tus presupuestos frente a devaluaciones bruscas."
 ];
+
+if (typeof window !== "undefined") {
+    window.CONSEJOS = CONSEJOS;
+}
+export default CONSEJOS;

@@ -1,6 +1,8 @@
 // MOTOR DE FINANZAS PERSONAL: FINANZAS FLEX & SANDBOX PROYECTOS
 // Desarrollado con lógica robusta de doble entrada, persistencia y reactividad.
 
+import CONSEJOS from './consejos.js';
+
 // ----------------------------------------------------
 // 1. ESTADO DE LA APLICACIÓN (BASE DE DATOS LOCAL)
 // ----------------------------------------------------
