@@ -2582,15 +2582,15 @@ function renderProjectFolderView(folderId) {
         card.setAttribute("onclick", `openProjectSandbox('${proj.id}')`);
         card.innerHTML = `
             <div class="project-card-header">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                    <h3 style="margin: 0; flex: 1;">${escapeHtml(proj.name)}</h3>
+                <div class="project-card-top-row">
+                    <h3 title="${escapeHtml(proj.name)}">${escapeHtml(proj.name)}</h3>
                     <div class="card-reorder-controls" onclick="event.stopPropagation()">
                         <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveSubprojectOrder('${proj.id}', -1)" ${isFirst ? 'disabled' : ''} title="Mover a la izquierda / antes">◀</button>
                         <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveSubprojectOrder('${proj.id}', 1)" ${isLast ? 'disabled' : ''} title="Mover a la derecha / después">▶</button>
                         <span class="card-drag-handle" title="Arrastra para reordenar">⠿</span>
                     </div>
                 </div>
-                <p style="margin-top: 6px;">${escapeHtml(proj.description)}</p>
+                <p title="${escapeHtml(proj.description || '')}">${escapeHtml(proj.description || '')}</p>
             </div>
             <div class="project-card-footer">
                 <div>
@@ -4071,8 +4071,8 @@ function renderProjectsList() {
             folderCard.innerHTML = `
                 <div class="project-folder-header">
                     <div class="project-folder-title-row">
-                        <h3><span>📁</span> ${escapeHtml(folder.name)}</h3>
-                        <div style="display: flex; align-items: center; gap: 8px;">
+                        <h3 title="${escapeHtml(folder.name)}"><span>📁</span> <span class="folder-name-text">${escapeHtml(folder.name)}</span></h3>
+                        <div class="folder-header-badges">
                             <span class="folder-badge-count">${subprojects.length} ${subprojects.length === 1 ? 'subproyecto' : 'subproyectos'}</span>
                             <div class="card-reorder-controls" onclick="event.stopPropagation()">
                                 <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveFolderOrder('${folder.id}', -1)" ${isFirstFolder ? 'disabled' : ''} title="Mover antes">◀</button>
@@ -4081,7 +4081,7 @@ function renderProjectsList() {
                             </div>
                         </div>
                     </div>
-                    <p>${escapeHtml(folder.description)}</p>
+                    <p title="${escapeHtml(folder.description || '')}">${escapeHtml(folder.description || '')}</p>
                 </div>
                 <div class="project-card-footer">
                     <div>
@@ -4147,15 +4147,15 @@ function renderProjectsList() {
         card.setAttribute("onclick", `openProjectSandbox('${proj.id}')`);
         card.innerHTML = `
             <div class="project-card-header">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                    <h3 style="margin: 0; flex: 1;">${escapeHtml(proj.name)}</h3>
+                <div class="project-card-top-row">
+                    <h3 title="${escapeHtml(proj.name)}">${escapeHtml(proj.name)}</h3>
                     <div class="card-reorder-controls" onclick="event.stopPropagation()">
                         <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveStandaloneProjectOrder('${proj.id}', -1)" ${isFirstProj ? 'disabled' : ''} title="Mover antes">◀</button>
                         <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveStandaloneProjectOrder('${proj.id}', 1)" ${isLastProj ? 'disabled' : ''} title="Mover después">▶</button>
                         <span class="card-drag-handle" title="Arrastra para reordenar">⠿</span>
                     </div>
                 </div>
-                <p style="margin-top: 6px;">${escapeHtml(proj.description)}</p>
+                <p title="${escapeHtml(proj.description || '')}">${escapeHtml(proj.description || '')}</p>
             </div>
             <div class="project-card-footer">
                 <div>
