@@ -384,4 +384,4 @@ if (typeof globalThis !== "undefined") {
     globalThis.CONSEJOS_FINANCIEROS = CONSEJOS_FINANCIEROS;
 }
 
-export default CONSEJOS_FINANCIEROS;
+

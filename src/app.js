@@ -1,7 +1,11 @@
 // MOTOR DE FINANZAS PERSONAL: FINANZAS FLEX & SANDBOX PROYECTOS
 // Desarrollado con lógica robusta de doble entrada, persistencia y reactividad.
 
-import CONSEJOS from './consejos.js';
+const CONSEJOS = (typeof window !== "undefined" && (window.CONSEJOS || window.CONSEJOS_FINANCIEROS)) 
+    ? (window.CONSEJOS || window.CONSEJOS_FINANCIEROS) 
+    : (typeof globalThis !== "undefined" && (globalThis.CONSEJOS || globalThis.CONSEJOS_FINANCIEROS)) 
+        ? (globalThis.CONSEJOS || globalThis.CONSEJOS_FINANCIEROS) 
+        : [];
 
 // ----------------------------------------------------
 // 1. ESTADO DE LA APLICACIÓN (BASE DE DATOS LOCAL)
@@ -2366,6 +2370,156 @@ function openProjectFolder(folderId) {
     renderProjectFolderView(folderId);
 }
 
+
+// ====================================================
+// GESTIÓN DE ORDENACIÓN Y DRAG & DROP DE PROYECTOS / SUBPROYECTOS
+// ====================================================
+
+let _draggedProjectItem = null;
+
+function setupDraggableCard(cardElement, itemType, itemId, parentFolderId = null) {
+    cardElement.setAttribute("draggable", "true");
+    cardElement.dataset.dragType = itemType;
+    cardElement.dataset.dragId = itemId;
+    if (parentFolderId) cardElement.dataset.folderId = parentFolderId;
+
+    cardElement.addEventListener("dragstart", (e) => {
+        _draggedProjectItem = { type: itemType, id: itemId, folderId: parentFolderId };
+        cardElement.classList.add("is-dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", itemId);
+    });
+
+    cardElement.addEventListener("dragend", () => {
+        cardElement.classList.remove("is-dragging");
+        document.querySelectorAll(".is-drag-over").forEach(el => el.classList.remove("is-drag-over"));
+        _draggedProjectItem = null;
+    });
+
+    cardElement.addEventListener("dragover", (e) => {
+        if (!_draggedProjectItem) return;
+        if (_draggedProjectItem.type !== itemType) return;
+        if (_draggedProjectItem.id === itemId) return;
+        if (itemType === 'subproject' && _draggedProjectItem.folderId !== parentFolderId) return;
+
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        cardElement.classList.add("is-drag-over");
+    });
+
+    cardElement.addEventListener("dragleave", () => {
+        cardElement.classList.remove("is-drag-over");
+    });
+
+    cardElement.addEventListener("drop", (e) => {
+        if (!_draggedProjectItem) return;
+        if (_draggedProjectItem.type !== itemType) return;
+        if (_draggedProjectItem.id === itemId) return;
+        if (itemType === 'subproject' && _draggedProjectItem.folderId !== parentFolderId) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        cardElement.classList.remove("is-drag-over");
+
+        const sourceId = _draggedProjectItem.id;
+        const targetId = itemId;
+
+        if (itemType === 'folder') {
+            const folders = state.projectFolders || [];
+            const srcIdx = folders.findIndex(f => f.id === sourceId);
+            const tgtIdx = folders.findIndex(f => f.id === targetId);
+            if (srcIdx !== -1 && tgtIdx !== -1) {
+                const [moved] = folders.splice(srcIdx, 1);
+                folders.splice(tgtIdx, 0, moved);
+                saveState();
+                renderProjectsList();
+            }
+        } else {
+            const srcIdx = state.projects.findIndex(p => p.id === sourceId);
+            const tgtIdx = state.projects.findIndex(p => p.id === targetId);
+            if (srcIdx !== -1 && tgtIdx !== -1) {
+                const [moved] = state.projects.splice(srcIdx, 1);
+                state.projects.splice(tgtIdx, 0, moved);
+                saveState();
+                if (itemType === 'subproject') {
+                    renderProjectFolderView(parentFolderId);
+                } else {
+                    renderProjectsList();
+                }
+            }
+        }
+    });
+}
+
+function moveSubprojectOrder(projectId, delta) {
+    const proj = state.projects.find(p => p.id === projectId);
+    if (!proj || !proj.folderId) return;
+
+    const folderId = proj.folderId;
+    const subprojects = state.projects.filter(p => p.folderId === folderId);
+    const currIdx = subprojects.findIndex(p => p.id === projectId);
+    if (currIdx === -1) return;
+
+    const targetIdx = currIdx + delta;
+    if (targetIdx < 0 || targetIdx >= subprojects.length) return;
+
+    const targetProj = subprojects[targetIdx];
+
+    const realIdxA = state.projects.findIndex(p => p.id === projectId);
+    const realIdxB = state.projects.findIndex(p => p.id === targetProj.id);
+
+    if (realIdxA !== -1 && realIdxB !== -1) {
+        const temp = state.projects[realIdxA];
+        state.projects[realIdxA] = state.projects[realIdxB];
+        state.projects[realIdxB] = temp;
+
+        saveState();
+        renderProjectFolderView(folderId);
+    }
+}
+
+function moveStandaloneProjectOrder(projectId, delta) {
+    const folders = state.projectFolders || [];
+    const validFolderIds = new Set(folders.map(f => f.id));
+    const standalones = state.projects.filter(p => !p.folderId || !validFolderIds.has(p.folderId));
+    
+    const currIdx = standalones.findIndex(p => p.id === projectId);
+    if (currIdx === -1) return;
+
+    const targetIdx = currIdx + delta;
+    if (targetIdx < 0 || targetIdx >= standalones.length) return;
+
+    const targetProj = standalones[targetIdx];
+
+    const realIdxA = state.projects.findIndex(p => p.id === projectId);
+    const realIdxB = state.projects.findIndex(p => p.id === targetProj.id);
+
+    if (realIdxA !== -1 && realIdxB !== -1) {
+        const temp = state.projects[realIdxA];
+        state.projects[realIdxA] = state.projects[realIdxB];
+        state.projects[realIdxB] = temp;
+
+        saveState();
+        renderProjectsList();
+    }
+}
+
+function moveFolderOrder(folderId, delta) {
+    const folders = state.projectFolders || [];
+    const currIdx = folders.findIndex(f => f.id === folderId);
+    if (currIdx === -1) return;
+
+    const targetIdx = currIdx + delta;
+    if (targetIdx < 0 || targetIdx >= folders.length) return;
+
+    const temp = state.projectFolders[currIdx];
+    state.projectFolders[currIdx] = state.projectFolders[targetIdx];
+    state.projectFolders[targetIdx] = temp;
+
+    saveState();
+    renderProjectsList();
+}
+
 function renderProjectFolderView(folderId) {
     const folder = (state.projectFolders || []).find(f => f.id === folderId);
     if (!folder) return;
@@ -2412,7 +2566,7 @@ function renderProjectFolderView(folderId) {
         return;
     }
 
-    subprojects.forEach(proj => {
+    subprojects.forEach((proj, index) => {
         let subInv = 0;
         let subEar = 0;
         (proj.investments || []).forEach(i => subInv += i.amount);
@@ -2420,13 +2574,23 @@ function renderProjectFolderView(folderId) {
         const subNet = subEar - subInv;
         const subRoi = subInv > 0 ? ((subNet / subInv) * 100) : 0;
 
+        const isFirst = index === 0;
+        const isLast = index === subprojects.length - 1;
+
         const card = document.createElement("div");
         card.className = "project-item-card";
         card.setAttribute("onclick", `openProjectSandbox('${proj.id}')`);
         card.innerHTML = `
             <div class="project-card-header">
-                <h3>${proj.name}</h3>
-                <p>${proj.description}</p>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                    <h3 style="margin: 0; flex: 1;">${escapeHtml(proj.name)}</h3>
+                    <div class="card-reorder-controls" onclick="event.stopPropagation()">
+                        <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveSubprojectOrder('${proj.id}', -1)" ${isFirst ? 'disabled' : ''} title="Mover a la izquierda / antes">◀</button>
+                        <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveSubprojectOrder('${proj.id}', 1)" ${isLast ? 'disabled' : ''} title="Mover a la derecha / después">▶</button>
+                        <span class="card-drag-handle" title="Arrastra para reordenar">⠿</span>
+                    </div>
+                </div>
+                <p style="margin-top: 6px;">${escapeHtml(proj.description)}</p>
             </div>
             <div class="project-card-footer">
                 <div>
@@ -2439,6 +2603,7 @@ function renderProjectFolderView(folderId) {
                 </div>
             </div>
         `;
+        setupDraggableCard(card, 'subproject', proj.id, folderId);
         grid.appendChild(card);
     });
 }
@@ -3884,7 +4049,7 @@ function renderProjectsList() {
     // Renderizar Sección de Carpetas
     if (folders.length > 0) {
         if (foldersSection) foldersSection.classList.remove("hidden");
-        folders.forEach(folder => {
+        folders.forEach((folder, index) => {
             const subprojects = allProjects.filter(p => p.folderId === folder.id);
 
             let totalInvested = 0;
@@ -3897,16 +4062,26 @@ function renderProjectsList() {
             const netProfit = totalEarned - totalInvested;
             const roi = totalInvested > 0 ? ((netProfit / totalInvested) * 100) : 0;
 
+            const isFirstFolder = index === 0;
+            const isLastFolder = index === folders.length - 1;
+
             const folderCard = document.createElement("div");
             folderCard.className = "project-folder-card";
             folderCard.setAttribute("onclick", `openProjectFolder('${folder.id}')`);
             folderCard.innerHTML = `
                 <div class="project-folder-header">
                     <div class="project-folder-title-row">
-                        <h3><span>📁</span> ${folder.name}</h3>
-                        <span class="folder-badge-count">${subprojects.length} ${subprojects.length === 1 ? 'subproyecto' : 'subproyectos'}</span>
+                        <h3><span>📁</span> ${escapeHtml(folder.name)}</h3>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="folder-badge-count">${subprojects.length} ${subprojects.length === 1 ? 'subproyecto' : 'subproyectos'}</span>
+                            <div class="card-reorder-controls" onclick="event.stopPropagation()">
+                                <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveFolderOrder('${folder.id}', -1)" ${isFirstFolder ? 'disabled' : ''} title="Mover antes">◀</button>
+                                <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveFolderOrder('${folder.id}', 1)" ${isLastFolder ? 'disabled' : ''} title="Mover después">▶</button>
+                                <span class="card-drag-handle" title="Arrastra para reordenar">⠿</span>
+                            </div>
+                        </div>
                     </div>
-                    <p>${folder.description}</p>
+                    <p>${escapeHtml(folder.description)}</p>
                 </div>
                 <div class="project-card-footer">
                     <div>
@@ -3919,6 +4094,7 @@ function renderProjectsList() {
                     </div>
                 </div>
             `;
+            setupDraggableCard(folderCard, 'folder', folder.id);
             if (foldersContainer) foldersContainer.appendChild(folderCard);
         });
     } else {
@@ -3946,7 +4122,7 @@ function renderProjectsList() {
         return;
     }
 
-    standaloneProjects.forEach(proj => {
+    standaloneProjects.forEach((proj, index) => {
         let totalInvested = 0;
         (proj.investments || []).forEach(i => totalInvested += i.amount);
 
@@ -3963,13 +4139,23 @@ function renderProjectsList() {
         if (totalInvested === 0) roiClass = "zero";
         else if (roi < 0) roiClass = "minus";
 
+        const isFirstProj = index === 0;
+        const isLastProj = index === standaloneProjects.length - 1;
+
         const card = document.createElement("div");
         card.className = "project-item-card";
         card.setAttribute("onclick", `openProjectSandbox('${proj.id}')`);
         card.innerHTML = `
             <div class="project-card-header">
-                <h3>${proj.name}</h3>
-                <p>${proj.description}</p>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                    <h3 style="margin: 0; flex: 1;">${escapeHtml(proj.name)}</h3>
+                    <div class="card-reorder-controls" onclick="event.stopPropagation()">
+                        <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveStandaloneProjectOrder('${proj.id}', -1)" ${isFirstProj ? 'disabled' : ''} title="Mover antes">◀</button>
+                        <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveStandaloneProjectOrder('${proj.id}', 1)" ${isLastProj ? 'disabled' : ''} title="Mover después">▶</button>
+                        <span class="card-drag-handle" title="Arrastra para reordenar">⠿</span>
+                    </div>
+                </div>
+                <p style="margin-top: 6px;">${escapeHtml(proj.description)}</p>
             </div>
             <div class="project-card-footer">
                 <div>
@@ -3978,10 +4164,11 @@ function renderProjectsList() {
                 </div>
                 <div>
                     <span style="font-size: 0.7rem; color: var(--text-muted); display: block; text-transform: uppercase; text-align: right;">ROI</span>
-                    <span class="project-badge-roi ${roiClass}">${totalInvested === 0 ? 'Sin Inversión' : roi.toFixed(1) + '%'}</span>
+                    <span class="project-badge-roi ${roiClass}">${totalInvested === 0 ? 'Sin Inversión' : (roi >= 0 ? '+' : '') + roi.toFixed(1) + '%'}</span>
                 </div>
             </div>
         `;
+        setupDraggableCard(card, 'standalone', proj.id);
         if (standaloneContainer) standaloneContainer.appendChild(card);
     });
 }
@@ -5733,6 +5920,11 @@ function initContactModal() {
 }
 
 async function startApp() {
+    if (typeof window !== "undefined") {
+        if (window._finanzasAppStarted) return;
+        window._finanzasAppStarted = true;
+        window.finanzasAppLoaded = true;
+    }
     try {
         await loadState();
         initContactModal();
@@ -8651,6 +8843,9 @@ window.setMarginPercent = setMarginPercent;
 window.calculateProfitMargin = calculateProfitMargin;
 window.copyMarginResult = copyMarginResult;
 window.exportBackupFile = exportBackupFile;
+window.moveSubprojectOrder = moveSubprojectOrder;
+window.moveStandaloneProjectOrder = moveStandaloneProjectOrder;
+window.moveFolderOrder = moveFolderOrder;
 window.checkBackupReminder = checkBackupReminder;
 window.escapeHtml = escapeHtml;
 

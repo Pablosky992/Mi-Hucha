@@ -5929,3 +5929,84 @@ select:focus:not(:focus-visible) {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* ====================================================
+   ESTILOS DE REORDENACIÓN Y DRAG & DROP EN PROYECTOS
+   ==================================================== */
+.card-reorder-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 2px 5px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.btn-card-move {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    border-radius: 4px;
+    padding: 3px 6px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.btn-card-move:hover {
+    background: var(--primary);
+    border-color: var(--primary-light);
+    color: #ffffff;
+    transform: scale(1.1);
+    box-shadow: 0 0 8px var(--primary-glow);
+}
+
+.btn-card-move:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.card-drag-handle {
+    color: var(--text-muted);
+    cursor: grab;
+    font-size: 0.95rem;
+    padding: 0 3px;
+    user-select: none;
+    line-height: 1;
+    transition: color 0.15s ease;
+}
+
+.card-drag-handle:hover {
+    color: var(--primary-light);
+}
+
+.project-item-card[draggable="true"],
+.project-folder-card[draggable="true"] {
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.project-item-card.is-dragging,
+.project-folder-card.is-dragging {
+    opacity: 0.45;
+    transform: scale(0.96);
+    border: 2px dashed var(--primary-light) !important;
+    box-shadow: 0 8px 30px rgba(0, 229, 255, 0.2) !important;
+}
+
+.project-item-card.is-drag-over,
+.project-folder-card.is-drag-over {
+    transform: scale(1.02) translateY(-2px);
+    border: 2px solid var(--primary-light) !important;
+    box-shadow: 0 0 25px var(--primary-glow) !important;
+}
