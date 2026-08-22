@@ -1,11 +1,15 @@
 // MOTOR DE FINANZAS PERSONAL: FINANZAS FLEX & SANDBOX PROYECTOS
 // Desarrollado con lógica robusta de doble entrada, persistencia y reactividad.
 
-const CONSEJOS = (typeof window !== "undefined" && (window.CONSEJOS || window.CONSEJOS_FINANCIEROS)) 
-    ? (window.CONSEJOS || window.CONSEJOS_FINANCIEROS) 
-    : (typeof globalThis !== "undefined" && (globalThis.CONSEJOS || globalThis.CONSEJOS_FINANCIEROS)) 
-        ? (globalThis.CONSEJOS || globalThis.CONSEJOS_FINANCIEROS) 
-        : [];
+import CONSEJOS_FINANCIEROS from './consejos.js';
+
+const CONSEJOS = (typeof CONSEJOS_FINANCIEROS !== "undefined" && Array.isArray(CONSEJOS_FINANCIEROS) && CONSEJOS_FINANCIEROS.length)
+    ? CONSEJOS_FINANCIEROS
+    : (typeof window !== "undefined" && (window.CONSEJOS || window.CONSEJOS_FINANCIEROS)) 
+        ? (window.CONSEJOS || window.CONSEJOS_FINANCIEROS) 
+        : (typeof globalThis !== "undefined" && (globalThis.CONSEJOS || globalThis.CONSEJOS_FINANCIEROS)) 
+            ? (globalThis.CONSEJOS || globalThis.CONSEJOS_FINANCIEROS) 
+            : [];
 
 // ----------------------------------------------------
 // 1. ESTADO DE LA APLICACIÓN (BASE DE DATOS LOCAL)
