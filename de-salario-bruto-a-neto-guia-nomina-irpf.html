@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Salario Bruto a Neto: Guía Definitiva de Nómina e IRPF en España - Mi Hucha</title>
+    
+    <!-- Meta tags SEO Primarios -->
+    <meta name="description" content="Aprende a calcular tu salario neto a partir del bruto en España. Conoce las cotizaciones a la Seguridad Social (6,35%), cómo funcionan los tramos progresivos del IRPF y qué hacer si tienes dos pagadores.">
+    <meta name="keywords" content="de salario bruto a neto, calcular sueldo neto, tramos irpf españa 2026, entender mi nomina, retenciones irpf nomina, seguridad social 6.35, dos pagadores hacienda, modelo 145">
+    <meta name="author" content="Mi Hucha - Finanzas Personales">
+    <link rel="canonical" href="https://mihucha.es/de-salario-bruto-a-neto-guia-nomina-irpf.html">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mihucha.es/de-salario-bruto-a-neto-guia-nomina-irpf.html">
+    <meta property="og:title" content="De Salario Bruto a Neto: Guía Definitiva de Nómina e IRPF en España">
+    <meta property="og:description" content="Descubre cómo se desglosa tu sueldo, por qué es imposible cobrar menos al subir de tramo y cómo optimizar tu retención de IRPF.">
+    <meta property="og:image" content="https://mihucha.es/img/guia-nomina-irpf.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="675">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="De Salario Bruto a Neto: Guía de Nómina e IRPF en España">
+    <meta name="twitter:description" content="Aprende a interpretar cada concepto de tu nómina y calcular tu sueldo neto exacto.">
+    <meta name="twitter:image" content="https://mihucha.es/img/guia-nomina-irpf.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+
+    <style>
+        /* Override global body hidden overflow from main app */
+        body { overflow-y: auto !important; }
+
+        /* Estilos específicos para lectura */
+        .article-layout { max-width: 840px; margin: 0 auto; padding: 40px 20px 80px 20px; }
+        .article-header { margin-bottom: 35px; text-align: center; }
+        .article-category { color: var(--primary-light); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.85rem; margin-bottom: 12px; display: inline-block; background: rgba(0, 229, 255, 0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(0, 229, 255, 0.25); }
+        .article-title { font-size: 2.6rem; color: var(--text-primary); line-height: 1.25; margin-bottom: 18px; font-family: 'Outfit', sans-serif; font-weight: 800; }
+        .article-meta { color: var(--text-muted); font-size: 0.92rem; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .hero-image-container { width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 45px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid var(--border-glass); }
+        .hero-image { width: 100%; height: auto; display: block; }
+        .article-content { font-family: 'Inter', sans-serif; color: var(--text-secondary); font-size: 1.12rem; line-height: 1.85; }
+        .article-content p { margin-bottom: 24px; }
+        .article-content h2 { font-family: 'Outfit', sans-serif; font-size: 1.85rem; color: var(--text-primary); margin-top: 48px; margin-bottom: 20px; font-weight: 700; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; }
+        .article-content h3 { font-family: 'Outfit', sans-serif; font-size: 1.35rem; color: var(--text-primary); margin-top: 32px; margin-bottom: 14px; font-weight: 600; }
+        .article-content strong { color: var(--text-primary); font-weight: 600; }
+        .article-content .lead { font-size: 1.28rem; color: var(--text-primary); font-weight: 400; margin-bottom: 35px; line-height: 1.65; background: rgba(15, 23, 42, 0.5); padding: 20px; border-left: 4px solid var(--primary); border-radius: 0 12px 12px 0; }
+        
+        /* Cajas de Alerta y Tablas Explicativas */
+        .info-box { background: rgba(0, 229, 255, 0.06); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 12px; padding: 20px; margin: 30px 0; }
+        .info-box h4 { margin: 0 0 10px 0; color: var(--primary-light); font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-family: 'Outfit', sans-serif; }
+        .info-box p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
+
+        .myth-box { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 12px; padding: 20px; margin: 30px 0; }
+        .myth-box h4 { margin: 0 0 10px 0; color: var(--danger-light); font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-family: 'Outfit', sans-serif; }
+        
+        .article-table-wrap { overflow-x: auto; margin: 30px 0; border-radius: 12px; border: 1px solid var(--border-glass); }
+        .article-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+        .article-table th { background: rgba(15, 23, 42, 0.85); color: var(--text-primary); padding: 14px 16px; font-weight: 700; border-bottom: 1px solid var(--border-glass); }
+        .article-table td { padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: var(--text-secondary); }
+        .article-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .faq-item h4 { margin: 0 0 8px 0; color: var(--text-primary); font-size: 1.15rem; font-family: 'Outfit', sans-serif; }
+        .faq-item p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
+
+        /* Banner CTA a la Calculadora */
+        .cta-calc-banner { background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(15, 23, 42, 0.95)); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 28px; margin: 45px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .cta-calc-banner h3 { margin: 0 0 8px 0; color: #ffffff; font-size: 1.45rem; font-family: 'Outfit', sans-serif; }
+        .cta-calc-banner p { margin: 0; color: var(--text-secondary); font-size: 0.95rem; max-width: 520px; }
+    </style>
+
+    <!-- Schema.org JSON-LD para Rich Snippets de Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Article",
+          "@id": "https://mihucha.es/de-salario-bruto-a-neto-guia-nomina-irpf.html#article",
+          "isPartOf": {
+            "@type": "WebPage",
+            "@id": "https://mihucha.es/de-salario-bruto-a-neto-guia-nomina-irpf.html"
+          },
+          "headline": "De Salario Bruto a Neto: La Guía Definitiva sobre tu Nómina e IRPF en España",
+          "description": "Guía completa y práctica para entender las retenciones de IRPF, cotizaciones a la Seguridad Social (6,35%) y el cálculo de salario neto en España.",
+          "image": "https://mihucha.es/img/guia-nomina-irpf.jpg",
+          "datePublished": "2026-08-22T10:00:00+02:00",
+          "dateModified": "2026-08-22T10:00:00+02:00",
+          "author": {
+            "@type": "Organization",
+            "name": "Mi Hucha",
+            "url": "https://mihucha.es/"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Mi Hucha",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://mihucha.es/logo.png"
+            }
+          },
+          "mainEntityOfPage": "https://mihucha.es/de-salario-bruto-a-neto-guia-nomina-irpf.html"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://mihucha.es/de-salario-bruto-a-neto-guia-nomina-irpf.html#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Es posible cobrar menos sueldo neto al subir de tramo de IRPF?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No, es matemáticamente imposible. El IRPF en España es un impuesto marginal y progresivo: el porcentaje superior solo se aplica sobre la parte del dinero que supera el límite del tramo anterior, nunca sobre la totalidad de tu salario."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cuánto descuenta la Seguridad Social en la nómina del trabajador?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "En España, el trabajador por cuenta ajena cotiza un 6,35% de su base de cotización, desglosado en: 4,70% por Contingencias Comunes, 1,55% por Desempleo (contrato indefinido), 0,10% por Formación Profesional y 0,12% por el Mecanismo de Equidad Intergeneracional (MEI)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Por qué tengo que pagar a Hacienda si he tenido dos pagadores en el año?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Porque cada empresa calcula tu retención como si fuera tu único ingreso en el año, aplicando un porcentaje de IRPF más bajo del que corresponde a la suma de ambos salarios. Al hacer la Declaración de la Renta, Hacienda calcula tu tipo real global y debes abonar la diferencia que no te retuvieron mensualmente."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://mihucha.es/de-salario-bruto-a-neto-guia-nomina-irpf.html#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Inicio",
+              "item": "https://mihucha.es/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Artículos y Guías",
+              "item": "https://mihucha.es/articulos.html"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "De Salario Bruto a Neto: Guía de Nómina",
+              "item": "https://mihucha.es/de-salario-bruto-a-neto-guia-nomina-irpf.html"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9370167145239765" crossorigin="anonymous"></script>
+</head>
+<body class="theme-dark">
+    <!-- Fondos Ambientales Fluidos -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+        <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha - Finanzas Personales" class="sidebar-brand-img" width="180" height="98" fetchpriority="high">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#investments" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span>Inversiones</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link active" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+
+                <a href="utilidades.html" class="nav-btn" style="text-decoration: none;" title="Herramientas y Utilidades">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                    <span>Utilidades</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <!-- Botón de Donación -->
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE&locale.x=es_ES" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body" style="overflow-y: auto;">
+            <!-- Cabecera de artículo con botón atrás -->
+            <div class="app-top-header" style="padding: 20px 40px; border-bottom: 1px solid var(--border-glass); position: sticky; top: 0; background: rgba(11, 15, 25, 0.6); backdrop-filter: blur(20px); z-index: 90; display: flex; align-items: center; justify-content: flex-start; gap: 15px;">
+                <button id="btn-mobile-menu-toggle" class="mobile-menu-toggle" title="Abrir Menú" style="margin-right: 0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+
+                <a href="articulos.html" class="back-to-hub" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.95rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Volver a Artículos
+                </a>
+            </div>
+
+            <main class="article-layout">
+                <article>
+                    <header class="article-header">
+                        <span class="article-category">Educación Fiscal & Nóminas</span>
+                        <h1 class="article-title">De Salario Bruto a Neto: La Guía Definitiva sobre tu Nómina e IRPF en España</h1>
+                        <div class="article-meta">
+                            <span>Publicado: 22 de Agosto, 2026</span>
+                            <span>•</span>
+                            <span>8 min de lectura (1.500 palabras)</span>
+                        </div>
+                    </header>
+
+                    <div class="hero-image-container">
+                        <img src="img/guia-nomina-irpf.jpg" alt="Guía visual de cálculo de nómina, salario bruto a neto y tramos de IRPF en España" class="hero-image" fetchpriority="high" decoding="async">
+                    </div>
+
+                    <div class="article-content">
+                        <div class="lead">
+                            Pocos momentos generan tanta confusión en la vida laboral como abrir la primera nómina tras una subida de sueldo o al firmar un nuevo contrato. Te prometieron 30.000 € brutos al año, pero al mirar tu cuenta bancaria a fin de mes, la cifra dista mucho de lo que esperabas. ¿A dónde se va exactamente la diferencia entre lo que paga la empresa y lo que ingresas? En esta guía práctica desglosamos cada céntimo de tu nómina, desmontamos los grandes mitos sobre los tramos del IRPF y te enseñamos a optimizar tu salario legalmente.
+                        </div>
+
+                        <h2>1. Anatomía de una Nómina: Devengos vs. Deducciones</h2>
+                        <p>
+                            Para comprender por qué tu <strong>salario neto</strong> (el dinero real que llega a tu cuenta corriente) es inferior a tu <strong>salario bruto</strong> pactado en contrato, primero debemos diferenciar los dos grandes bloques que componen cualquier recibo salarial oficial en España:
+                        </p>
+
+                        <div class="article-table-wrap">
+                            <table class="article-table">
+                                <thead>
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th>Definición</th>
+                                        <th>Ejemplos Habituales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Devengos (Total Bruto)</strong></td>
+                                        <td>La suma de todas las retribuciones que la empresa te abona por tu trabajo antes de aplicar impuestos.</td>
+                                        <td>Salario base, complementos de destino, pagas extraordinarias, horas extra, plus de nocturnidad o retribución en especie.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Deducciones (Retenciones)</strong></td>
+                                        <td>Las cantidades que la empresa retiene obligatoriamente de tu sueldo para ingresarlas a la Seguridad Social y a Hacienda en tu nombre.</td>
+                                        <td>Cotizaciones a la Seguridad Social (6,35%) y Retención a cuenta del IRPF (variable según ingresos y situación familiar).</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>
+                            La fórmula matemática fundamental es sencilla:
+                        </p>
+                        <div style="background: rgba(15, 23, 42, 0.7); border: 1px dashed var(--primary); padding: 16px 20px; border-radius: 10px; text-align: center; font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin: 25px 0;">
+                            Salario Neto = Total Devengos (Bruto) − Cotizaciones Seg. Social − Retención IRPF
+                        </div>
+
+                        <h2>2. Las Cotizaciones a la Seguridad Social (El 6,35% del trabajador)</h2>
+                        <p>
+                            A diferencia del IRPF, que varía según tu nivel de ingresos, las aportaciones que el empleado realiza a la <strong>Seguridad Social</strong> tienen tipos porcentuales fijos regulados por ley. En España, todo trabajador con contrato laboral por cuenta ajena aporta un <strong>6,35%</strong> sobre su <strong>Base de Cotización por Contingencias Comunes</strong>:
+                        </p>
+
+                        <ul>
+                            <li><strong>Contingencias Comunes (4,70%):</strong> Financia la cobertura médica pública, las bajas por enfermedad común o accidente no laboral, las prestaciones por incapacidad temporal y tu futura pensión pública de jubilación.</li>
+                            <li><strong>Desempleo (1,55% en contratos indefinidos / 1,60% en temporales):</strong> Alimenta la hucha del Servicio Público de Empleo Estatal (SEPE) para financiar la prestación contributiva por desempleo ("el paro").</li>
+                            <li><strong>Formación Profesional (0,10%):</strong> Destinado a fondos públicos de capacitación laboral y reciclaje profesional de los trabajadores.</li>
+                            <li><strong>Mecanismo de Equidad Intergeneracional - MEI (0,12%):</strong> Aportación introducida en la reforma de pensiones para reforzar el Fondo de Reserva de la Seguridad Social de cara a la jubilación de la generación del <em>baby boom</em>.</li>
+                        </ul>
+
+                        <div class="info-box">
+                            <h4>💡 ¿Sabías qué? La cotización total real es mucho mayor</h4>
+                            <p>
+                                El 6,35% que ves en tu nómina es únicamente la parte que aporta el trabajador. La empresa paga, de forma adicional e invisible para la mayoría de empleados, entre un <strong>29,9% y un 32,5% extra</strong> sobre tu salario bruto en concepto de cotizaciones patronales. Si ganas 2.000 € brutos al mes, el coste total que la empresa desembolsa por tu puesto supera los 2.600 € mensuales.
+                            </p>
+                        </div>
+
+                        <h2>3. El IRPF y el Gran Mito de los Tramos Fiscales</h2>
+                        <p>
+                            El <strong>Impuesto sobre la Renta de las Personas Físicas (IRPF)</strong> es un tributo personal, directo y, sobre todo, <strong>progresivo</strong>. Su objetivo es que quien más gana, aporte un porcentaje mayor a las arcas públicas para sostener los servicios comunes.
+                        </p>
+
+                        <div class="myth-box">
+                            <h4>❌ El Gran Mito: "Si me suben el sueldo, voy a cobrar menos porque salto de tramo"</h4>
+                            <p>
+                                Este es probablemente el error de educación financiera más extendido en España. Muchas personas rechazan horas extras o aumentos salariales temiendo que <em>"Hacienda les quite más de lo que ganan"</em>. <strong>Esto es matemáticamente imposible</strong> gracias a la naturaleza <strong>marginal</strong> del IRPF.
+                            </p>
+                        </div>
+
+                        <h3>¿Cómo funcionan realmente los tramos de IRPF?</h3>
+                        <p>
+                            Los tramos del IRPF no funcionan como un interruptor de todo o nada sobre la totalidad de tu nómina. Funcionan por <strong>escalones de agua</strong>: cada porcentaje impositivo se aplica únicamente sobre el tramo de dinero que cae dentro de ese intervalo específico.
+                        </p>
+
+                        <div class="article-table-wrap">
+                            <table class="article-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tramo Salarial (Base Liquidable)</th>
+                                        <th>Tipo Marginal Estatal + Autonómico Medio</th>
+                                        <th>¿Sobre qué dinero se aplica?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>De 0 € a 12.450 €</td>
+                                        <td><strong>19,00%</strong></td>
+                                        <td>Sobre los primeros 12.450 € de tu renta.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>De 12.450 € a 20.200 €</td>
+                                        <td><strong>24,00%</strong></td>
+                                        <td>Únicamente sobre los 7.750 € que caen en este rango.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>De 20.200 € a 35.200 €</td>
+                                        <td><strong>30,00%</strong></td>
+                                        <td>Únicamente sobre el dinero entre 20.200 € y 35.200 €.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>De 35.200 € a 60.000 €</td>
+                                        <td><strong>37,00%</strong></td>
+                                        <td>Únicamente sobre el dinero entre 35.200 € y 60.000 €.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>De 60.000 € a 300.000 €</td>
+                                        <td><strong>45,00%</strong></td>
+                                        <td>Únicamente sobre el dinero entre 60.000 € y 300.000 €.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Más de 300.000 €</td>
+                                        <td><strong>47,00%</strong></td>
+                                        <td>Sobre cualquier euro que exceda los 300.000 €.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>
+                            <strong>Ejemplo clarificador:</strong> Si ganas 20.190 € y tu empresa te sube el sueldo 100 € (pasando a 20.290 €), no vas a pagar el 30% sobre los 20.290 €. Pagarás el 19% sobre los primeros 12.450 €, el 24% sobre los siguientes 7.750 € y el 30% <strong>solamente sobre los 90 €</strong> que han superado la barrera de los 20.200 €. En tu bolsillo siempre habrá más dinero tras un aumento salarial.
+                        </p>
+
+                        <!-- BANNER INTERNO DE LLAMADA A LA ACCIÓN A LA CALCULADORA -->
+                        <div class="cta-calc-banner">
+                            <div>
+                                <h3>Simula tu nómina en segundos</h3>
+                                <p>Descubre tu sueldo neto exacto, las cotizaciones sociales y tu tipo medio de IRPF con nuestra herramienta interactiva gratuita.</p>
+                            </div>
+                            <a href="calculadora-irpf.html" class="btn-primary" style="text-decoration: none; padding: 14px 24px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+                                <span>Abrir Calculadora de IRPF</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            </a>
+                        </div>
+
+                        <h2>4. Mínimo Personal y Familiar Exento: El dinero que no tributa</h2>
+                        <p>
+                            La Agencia Tributaria (AEAT) considera que una parte básica de tus ingresos debe destinarse a cubrir tus necesidades vitales más elementales, por lo que esa porción no está sujeta al pago del impuesto.
+                        </p>
+                        <ul>
+                            <li><strong>Mínimo del contribuyente general:</strong> 5.550 € anuales con carácter general para todos los contribuyentes (se incrementa a 6.700 € para mayores de 65 años y a 8.100 € para mayores de 75 años).</li>
+                            <li><strong>Mínimo por descendientes (hijos a cargo menores de 25 años):</strong> 2.400 € por el primer hijo, 2.700 € por el segundo, 4.000 € por el tercero y 4.500 € a partir del cuarto (más 2.800 € adicionales si el menor tiene menos de 3 años).</li>
+                            <li><strong>Mínimo por ascendientes y discapacidad:</strong> Deducciones complementarias si convives con progenitores mayores de 65 años o personas con grado de discapacidad reconocida.</li>
+                        </ul>
+
+                        <h2>5. El Laberinto de los Dos Pagadores: Por qué te sale a pagar la Renta</h2>
+                        <p>
+                            Una de las sorpresas más desagradables en la campaña anual de la Declaración de la Renta ocurre cuando un trabajador ha cambiado de empleo durante el año o ha cobrado una parte de la empresa y otra del SEPE (paro o ERTE).
+                        </p>
+                        <p>
+                            <strong>¿Por qué ocurre esto?</strong>
+                        </p>
+                        <p>
+                            Cuando trabajas para una sola empresa, el departamento de Recursos Humanos calcula tu IRPF anual conociendo exactamente cuánto vas a ganar a lo largo de los 12 meses, reteniéndote el porcentaje exacto (por ejemplo, un 14%).
+                        </p>
+                        <p>
+                            Sin embargo, si trabajas 6 meses en la Empresa A (ganando 12.000 €) y 6 meses en la Empresa B (ganando otros 12.000 €):
+                        </p>
+                        <ol>
+                            <li>La Empresa A te retiene pensando que solo vas a ganar 12.000 € en todo el año (te retiene un 2% o un 3%).</li>
+                            <li>La Empresa B hace lo mismo al contratarte en julio (te retiene otro 2% o 3%).</li>
+                            <li>A final de año has cobrado 24.000 € en total, por lo que tu tipo real de IRPF correspondía al 14%.</li>
+                            <li><strong>Resultado:</strong> Cada mes te ingresaron más dinero neto del que te correspondía. Hacienda no te está "multando por tener dos trabajos", sino que te está reclamando los 1.500 € que tus pagadores no te retuvieron mes a mes.</li>
+                        </ol>
+
+                        <div class="info-box">
+                            <h4>📝 Cómo evitar sustos: El Modelo 145</h4>
+                            <p>
+                                Si cambias de trabajo a mitad de año o sabes que vas a tener dos pagadores, entrega el <strong>Modelo 145</strong> en tu nueva empresa solicitando voluntariamente que te aumenten la retención mensual un <strong>2% o 4% adicional</strong>. De este modo, evitarás tener que desembolsar una suma elevada de golpe al hacer la declaración.
+                            </p>
+                        </div>
+
+                        <h2>6. Retribución Flexible: Cómo ahorrar hasta un 25% de IRPF</h2>
+                        <p>
+                            La <strong>retribución flexible</strong> es un mecanismo legal que permite al empleado destinar hasta un 30% de su salario bruto anual a contratar productos y servicios exentos de IRPF directamente a través de la empresa:
+                        </p>
+
+                        <ul>
+                            <li><strong>Cheque Guardería:</strong> Exención del 100% de IRPF sin límite de importe para hijos de 0 a 3 años en escuelas infantiles autorizadas.</li>
+                            <li><strong>Tarjeta de Transporte Público:</strong> Exento de IRPF hasta un límite de 1.500 € anuales (136,36 €/mes) para abonos de metro, tren o autobús.</li>
+                            <li><strong>Tickets Restaurante:</strong> Exención de hasta 11 € por día laborable (unos 220 €/mes) en comidas y hostelería.</li>
+                            <li><strong>Seguro Médico Privado:</strong> Exento hasta 500 € anuales por cada miembro de la unidad familiar (trabajador, cónyuge e hijos) o hasta 1.500 € en caso de discapacidad.</li>
+                        </ul>
+
+                        <p>
+                            Al pagar estos servicios con dinero bruto antes de impuestos, tu base liquidable disminuye y ahorras tu tipo marginal directo (entre el 19% y el 37% del coste del servicio).
+                        </p>
+
+                        <h2>7. Preguntas Frecuentes sobre Nóminas e IRPF (FAQ)</h2>
+                        
+                        <div class="faq-item">
+                            <h4>¿Cuál es el salario mínimo interprofesional (SMI) exento de retención?</h4>
+                            <p>En España, los contribuyentes que perciben el Salario Mínimo Interprofesional (SMI) o rentas del trabajo inferiores a 15.876 € anuales sin otros ingresos no sufren retención de IRPF en nómina.</p>
+                        </div>
+
+                        <div class="faq-item">
+                            <h4>¿Qué es mejor, cobrar en 12 o en 14 pagas?</h4>
+                            <p>Financieramente, es más eficiente cobrar en <strong>12 pagas (pagas extras prorrateadas)</strong>, ya que dispones del dinero mes a mes desde el primer momento para ahorrarlo, invertirlo o rentabilizarlo, en lugar de prestarle dinero sin intereses a tu empresa hasta junio y diciembre.</p>
+                        </div>
+
+                        <div class="faq-item">
+                            <h4>¿Por qué me sube la retención de IRPF a final de año (en noviembre o diciembre)?</h4>
+                            <p>Si has cobrado complementos imprevistos, horas extra, subidas salariales o bonus a mitad de año, la empresa debe recalcular tu tipo de retención en los últimos meses del ejercicio para compensar lo no retenido en los meses anteriores y cumplir con el total fiscal anual exigido por la AEAT.</p>
+                        </div>
+
+                        <h2>8. Conclusión: Toma el control de tus ingresos reales</h2>
+                        <p>
+                            Comprender tu nómina no es una cuestión de gestores o expertos fiscales, sino el primer pilar de tu salud financiera. Saber exactamente cuánto ganas en bruto, cuánto aportas a tu colchón social y cuál es tu tipo efectivo de IRPF te permite negociar salarios con criterio, planificar tu presupuesto familiar con realismo y evitar sorpresas fiscales en primavera.
+                        </p>
+                        <p>
+                            Utiliza nuestra <strong>Calculadora de IRPF y Sueldo Neto</strong> para realizar simulaciones personalizadas de tu nómina según tu situación familiar y salario bruto:
+                        </p>
+
+                        <div style="text-align: center; margin: 40px 0;">
+                            <a href="calculadora-irpf.html" class="btn-primary" style="text-decoration: none; padding: 16px 32px; font-size: 1.1rem; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0, 229, 255, 0.35);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                                <span>Calcular mi Sueldo Neto y Retención de IRPF</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </main>
+
+            <!-- FOOTER LEGAL Y POLÍTICAS -->
+            <footer class="app-legal-footer" style="margin-top: 60px; padding: 30px 20px; border-top: 1px solid var(--border-glass); text-align: center; font-size: 0.8rem; color: var(--text-muted);">
+                <div style="margin-bottom: 12px;">
+                    © 2026 Mi Hucha - Peseta a Peseta. Desarrollado con ❤️ y excelencia en Vanilla Stack.
+                </div>
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <a href="aviso-legal.html" style="color: var(--text-secondary); text-decoration: none;">Aviso Legal</a>
+                    <a href="politica-privacidad.html" style="color: var(--text-secondary); text-decoration: none;">Política de Privacidad</a>
+                    <a href="politica-cookies.html" style="color: var(--text-secondary); text-decoration: none;">Política de Cookies</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts universales: compatibles con file:/// (doble clic en local) y con Vite/Vercel (https://) -->
+    <script src="src/consejos.js"></script>
+    <script type="module" src="src/app.js"></script>
+    <script>
+        if (window.location.protocol === 'file:' && !window._finanzasAppStarted) {
+            var s = document.createElement('script');
+            s.src = 'src/app.js';
+            document.body.appendChild(s);
+        }
+    </script>
+</body>
+</html>

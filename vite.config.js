@@ -19,6 +19,9 @@ export default defineConfig({
         reglaSetentaydosHoras: resolve(__dirname, 'regla-72-horas.html'),
         sistemaEmbudo: resolve(__dirname, 'sistema-del-embudo.html'),
         avisoLegal: resolve(__dirname, 'aviso-legal.html'),
+        guiaNominaIrpf: resolve(__dirname, 'de-salario-bruto-a-neto-guia-nomina-irpf.html'),
+        guiaCashback: resolve(__dirname, 'guia-cashback-ganar-dinero-compras-beruby.html'),
+        cuentasRemuneradas: resolve(__dirname, 'cuentas-remuneradas-depositos-rentabilidad-ahorro.html'),
         politicaCookies: resolve(__dirname, 'politica-cookies.html'),
         politicaPrivacidad: resolve(__dirname, 'politica-privacidad.html')
       }
