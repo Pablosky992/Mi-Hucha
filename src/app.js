@@ -4076,14 +4076,14 @@ function renderProjectsList() {
                 <div class="project-folder-header">
                     <div class="project-folder-title-row">
                         <h3 title="${escapeHtml(folder.name)}"><span>📁</span> <span class="folder-name-text">${escapeHtml(folder.name)}</span></h3>
-                        <div class="folder-header-badges">
-                            <span class="folder-badge-count">${subprojects.length} ${subprojects.length === 1 ? 'subproyecto' : 'subproyectos'}</span>
-                            <div class="card-reorder-controls" onclick="event.stopPropagation()">
-                                <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveFolderOrder('${folder.id}', -1)" ${isFirstFolder ? 'disabled' : ''} title="Mover antes">◀</button>
-                                <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveFolderOrder('${folder.id}', 1)" ${isLastFolder ? 'disabled' : ''} title="Mover después">▶</button>
-                                <span class="card-drag-handle" title="Arrastra para reordenar">⠿</span>
-                            </div>
+                        <div class="card-reorder-controls" onclick="event.stopPropagation()">
+                            <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveFolderOrder('${folder.id}', -1)" ${isFirstFolder ? 'disabled' : ''} title="Mover antes">◀</button>
+                            <button type="button" class="btn-card-move" onclick="event.stopPropagation(); moveFolderOrder('${folder.id}', 1)" ${isLastFolder ? 'disabled' : ''} title="Mover después">▶</button>
+                            <span class="card-drag-handle" title="Arrastra para reordenar">⠿</span>
                         </div>
+                    </div>
+                    <div class="folder-badge-row">
+                        <span class="folder-badge-count">${subprojects.length} ${subprojects.length === 1 ? 'subproyecto' : 'subproyectos'}</span>
                     </div>
                     <p title="${escapeHtml(folder.description || '')}">${escapeHtml(folder.description || '')}</p>
                 </div>

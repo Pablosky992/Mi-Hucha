@@ -2440,13 +2440,13 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     gap: 8px;
-    min-height: 2.7rem;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
+    min-height: auto;
 }
 
 .project-folder-title-row h3 {
     font-family: var(--font-header);
-    font-size: 1.05rem;
+    font-size: 1.08rem;
     font-weight: 700;
     color: #f1f5f9;
     margin: 0;
@@ -2468,22 +2468,24 @@ body {
     flex: 1;
 }
 
-.folder-header-badges {
+.folder-badge-row {
     display: flex;
     align-items: center;
     gap: 6px;
-    flex-shrink: 0;
+    margin-bottom: 6px;
 }
 
 .folder-badge-count {
     background: rgba(139, 92, 246, 0.2);
     border: 1px solid rgba(139, 92, 246, 0.35);
     color: #c4b5fd;
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-weight: 700;
     padding: 2px 8px;
     border-radius: 6px;
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
 }
 
 .project-folder-header p {
@@ -2495,7 +2497,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.4;
-    margin-top: 6px;
+    margin-top: 4px;
     margin-bottom: 0;
     min-height: 2.15em;
 }
