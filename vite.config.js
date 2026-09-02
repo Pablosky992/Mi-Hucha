@@ -12,6 +12,8 @@ export default defineConfig({
         conversorDivisas: resolve(__dirname, 'conversor-divisas.html'),
         calculadoraMargen: resolve(__dirname, 'calculadora-margen-beneficio.html'),
         calculadoraFinanciera: resolve(__dirname, 'calculadora-financiera.html'),
+        calculadoraDepositos: resolve(__dirname, 'calculadora-depositos.html'),
+        calculadoraHipoteca: resolve(__dirname, 'calculadora-hipoteca.html'),
         fondoEmergencia: resolve(__dirname, 'fondo-de-emergencia.html'),
         metodoPeseta: resolve(__dirname, 'el-metodo-peseta-a-peseta.html'),
         trampaInflacion: resolve(__dirname, 'la-trampa-de-la-inflacion-del-estilo-de-vida.html'),

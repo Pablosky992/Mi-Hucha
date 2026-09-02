@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="SOOKd8az5XAz75Vr5nEHquusBeHQ88y1hA3EfTUVgWY" />
+    
+    <!-- SEO Meta Tags Primarios -->
+    <title>Calculadora de Depósitos y Cuentas Remuneradas | Mi Hucha</title>
+    <meta name="description" content="Calcula los intereses brutos y netos de tus depósitos a plazo fijo y cuentas remuneradas. Simula la retención del IRPF en España, la frecuencia de cobro mensual o a vencimiento y el efecto del interés compuesto.">
+    <meta name="keywords" content="calculadora depositos plazo fijo, calcular intereses deposito bancario, simulador cuenta remunerada, calcular rentabilidad deposito irpf, tae vs tin deposito, retencion irpf intereses bancos espana, simulador fondo de garantia depositos">
+    <link rel="canonical" href="https://www.mihucha.es/calculadora-depositos.html">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.mihucha.es/calculadora-depositos.html">
+    <meta property="og:title" content="Calculadora de Depósitos y Cuentas Remuneradas - Mi Hucha">
+    <meta property="og:description" content="Simula los intereses brutos y netos limpios de tus ahorros en depósitos a plazo fijo y cuentas remuneradas con retención de IRPF.">
+    <meta property="og:image" content="https://www.mihucha.es/img/calculadora-depositos.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="675">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://www.mihucha.es/calculadora-depositos.html">
+    <meta name="twitter:title" content="Calculadora de Depósitos y Cuentas Remuneradas - Mi Hucha">
+    <meta name="twitter:description" content="Simula los intereses brutos y netos limpios de tus ahorros con retención de IRPF y frecuencia de cobro.">
+    <meta name="twitter:image" content="https://www.mihucha.es/img/calculadora-depositos.jpg">
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://www.mihucha.es/calculadora-depositos.html#app",
+          "name": "Calculadora de Depósitos y Cuentas Remuneradas",
+          "url": "https://www.mihucha.es/calculadora-depositos.html",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "All",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+          "description": "Simulador financiero interactivo para calcular los intereses netos, retenciones fiscales de IRPF y evolución temporal de depósitos bancarios a plazo fijo y cuentas remuneradas."
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://www.mihucha.es/calculadora-depositos.html#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Cómo se calculan los intereses de un depósito a plazo fijo?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Los intereses brutos se calculan multiplicando el capital depositado por el Tipo de Interés Nominal (TIN) anual y por la fracción de tiempo en años (meses / 12 o días / 365). A esa cantidad se le descuenta la retención del IRPF (normalmente el 19% en España) para obtener los intereses netos limpios."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cuál es la diferencia entre TIN y TAE en un depósito?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "El TIN (Tipo de Interés Nominal) es el porcentaje pactado con la entidad sin incluir la periodicidad del pago de intereses ni comisiones. La TAE (Tasa Anual Equivalente) refleja el rendimiento efectivo anual, teniendo en cuenta si los intereses se liquidan de forma mensual, trimestral o a vencimiento."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cómo tributan los depósitos bancarios en el IRPF en España?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Los intereses tributan en la base del ahorro del IRPF como rendimientos del capital mobiliario: 19% hasta 6.000 € de intereses al año, 21% entre 6.000 € y 50.000 €, 23% entre 50.000 € y 200.000 €, 27% entre 200.000 € y 300.000 €, y 28% para importes superiores."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Están protegidos mis ahorros por el Fondo de Garantía de Depósitos (FGD)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí, en la Unión Europea todos los bancos regulados están cubiertos por su respectivo Fondo de Garantía de Depósitos estatal, que garantiza hasta 100.000 € por titular y por entidad bancaria en caso de quiebra de la institución financiera."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://www.mihucha.es/calculadora-depositos.html#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Inicio",
+              "item": "https://www.mihucha.es/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Utilidades",
+              "item": "https://www.mihucha.es/utilidades.html"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Calculadora de Depósitos",
+              "item": "https://www.mihucha.es/calculadora-depositos.html"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+    
+    <style>
+        body { overflow-y: auto !important; }
+        
+        .calc-deposit-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 960px) {
+            .calc-deposit-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .deposit-result-card {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .deposit-hero-badge {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(0, 229, 255, 0.15));
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .deposit-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .deposit-stat-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .deposit-stat-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .deposit-stat-value {
+            font-family: var(--font-header);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .deposit-progress-bar-wrap {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            height: 14px;
+            overflow: hidden;
+            display: flex;
+            margin: 14px 0 8px 0;
+            border: 1px solid var(--border-glass);
+        }
+
+        .deposit-bar-capital {
+            background: #3b82f6;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .deposit-bar-net {
+            background: #10b981;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .deposit-bar-tax {
+            background: #ef4444;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .deposit-timeline-table-wrap {
+            max-height: 340px;
+            overflow-y: auto;
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-glass);
+            background: rgba(11, 15, 25, 0.5);
+            margin-top: 14px;
+        }
+
+        .deposit-amort-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.82rem;
+            background: transparent;
+        }
+
+        .deposit-amort-table th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: #0d1527;
+            color: var(--text-secondary);
+            font-family: var(--font-header);
+            font-weight: 700;
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-glass);
+            white-space: nowrap;
+        }
+
+        .deposit-amort-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .deposit-amort-table tbody tr:hover td {
+            background: rgba(0, 229, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .deposit-amort-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .preset-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        .preset-pill:hover, .preset-pill.active {
+            background: rgba(0, 229, 255, 0.15);
+            border-color: rgba(0, 229, 255, 0.4);
+            color: var(--primary-light);
+        }
+    </style>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9370167145239765"
+     crossorigin="anonymous"></script>
+</head>
+<body class="theme-dark">
+    <!-- Fondos Ambientales Fluidos -->
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+        <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha - Finanzas Personales" class="sidebar-brand-img" width="180" height="98" fetchpriority="high">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#investments" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span>Inversiones</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+
+                <a href="utilidades.html" class="nav-link active" title="Herramientas y Utilidades">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                    <span>Utilidades</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <!-- Botón de Donación -->
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE&locale.x=es_ES" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL (APP BODY) -->
+        <div class="app-body" style="overflow-y: auto; padding: 30px;">
+            
+            <!-- Barra superior con botón volver a utilidades -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button id="btn-mobile-menu-toggle" class="mobile-menu-toggle" title="Abrir Menú" style="margin-right: 0;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <a href="utilidades.html" class="back-to-hub" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.95rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        Volver a Utilidades
+                    </a>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <a href="cuentas-remuneradas-depositos-rentabilidad-ahorro.html" class="btn-secondary" style="font-size: 0.85rem; padding: 8px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <span>Leer Guía de Cuentas & Depósitos</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Cabecera de la Utilidad -->
+            <div class="column-header" style="margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 1.65rem; color: var(--text-primary); font-family: var(--font-header);">Calculadora de Depósitos Bancarios y Cuentas Remuneradas</h1>
+                    <p style="color: var(--text-secondary); font-size: 0.92rem; margin-top: 4px;">Simula la rentabilidad exacta de tus ahorros: intereses brutos, retención de IRPF, ganancia neta y efecto del interés compuesto.</p>
+                </div>
+            </div>
+
+            <!-- Bloque Introductorio SEO (350-450 palabras) -->
+            <section class="utility-seo-intro shadow-glass" style="margin-bottom: 24px; max-width: 100%;">
+                <h2>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color: var(--success-light);"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Cómo calcular los intereses reales de tu depósito o cuenta de ahorro a plazo fijo
+                </h2>
+                <p>
+                    A la hora de contratar un <strong>depósito bancario a plazo fijo</strong> o abrir una <strong>cuenta remunerada</strong>, es fundamental distinguir entre la rentabilidad comercial prometida por la entidad y el dinero neto que realmente ingresará en tu cuenta bancaria. Los tipos de interés anunciados suelen expresarse como <strong>TIN (Tipo de Interés Nominal)</strong> o <strong>TAE (Tasa Anual Equivalente)</strong>, pero no contemplan las deducciones fiscales por IRPF ni la frecuencia con la que el banco abona las liquidaciones.
+                </p>
+                <p>
+                    En España, los rendimientos generados por imposiciones a plazo y cuentas de ahorro están catalogados como <strong>Rendimientos del Capital Mobiliario</strong> y tributan dentro de la base imponible del ahorro del IRPF. Si contratas un depósito en un banco con IBAN español (o sucursal en España), la propia entidad practica automáticamente una <strong>retención fiscal del 19%</strong> en cada pago de intereses para los primeros 6.000 € anuales, ajustándose en la Declaración de la Renta según los tramos progresivos oficiales (21% hasta 50.000 €, 23% hasta 200.000 €, 27% hasta 300.000 € y 28% para importes superiores).
+                </p>
+                <p>
+                    La periodicidad de liquidación también tiene un impacto directo en el rendimiento final. En los depósitos con <strong>liquidación mensual y reinversión</strong>, los intereses generados cada mes se suman al saldo inicial, generando nuevos intereses al mes siguiente gracias a la fuerza del <strong>interés compuesto</strong>. Por el contrario, en los depósitos con liquidación <strong>al vencimiento</strong>, el interés se calcula de forma simple y se abona íntegramente al expirar el plazo acordado.
+                </p>
+                <p>
+                    Asimismo, todos los depósitos en entidades reguladas de la Unión Europea cuentan con el respaldo legal del <strong>Fondo de Garantía de Depósitos (FGD)</strong>, que asegura hasta <strong>100.000 € por titular y banco</strong> en caso de insolvencia. Utiliza este simulador interactivo para calcular tus ganancias brutas y netas, proyectar aportaciones periódicas, simular retenciones de Hacienda y comparar tus beneficios frente a la pérdida de poder adquisitivo provocada por la inflación.
+                </p>
+            </section>
+
+            <!-- INTERFAZ DE LA CALCULADORA -->
+            <div class="calc-deposit-layout">
+                
+                <!-- COLUMNA IZQUIERDA: FORMULARIO DE ENTRADA DE DATOS -->
+                <div class="card shadow-glass" style="padding: 24px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+                        <h3 style="font-size: 1.15rem; color: var(--text-primary); font-family: var(--font-header); margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-light);"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                            Parámetros del Depósito
+                        </h3>
+                        <button type="button" id="btn-reset-deposit" class="btn-secondary" style="font-size: 0.75rem; padding: 4px 10px;">Restablecer</button>
+                    </div>
+
+                    <form id="form-deposit-calc" onsubmit="return false;" style="display: flex; flex-direction: column; gap: 18px;">
+                        
+                        <!-- Capital Inicial -->
+                        <div class="form-group">
+                            <label for="dep-amount" style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); display: flex; justify-content: space-between;">
+                                <span>Capital Inicial Depositado (€)</span>
+                                <span id="lbl-dep-amount-val" style="color: var(--primary-light); font-weight: 700;">10.000 €</span>
+                            </label>
+                            <input type="number" id="dep-amount" class="form-control" value="10000" min="100" max="1000000" step="100" style="font-size: 1.05rem; font-weight: 600;">
+                            
+                            <!-- Presets de Capital -->
+                            <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+                                <span class="preset-pill" data-preset-dep-amount="3000" onclick="setDepositAmount(3000)">3.000 €</span>
+                                <span class="preset-pill" data-preset-dep-amount="5000" onclick="setDepositAmount(5000)">5.000 €</span>
+                                <span class="preset-pill" data-preset-dep-amount="10000" onclick="setDepositAmount(10000)">10.000 €</span>
+                                <span class="preset-pill" data-preset-dep-amount="25000" onclick="setDepositAmount(25000)">25.000 €</span>
+                                <span class="preset-pill" data-preset-dep-amount="50000" onclick="setDepositAmount(50000)">50.000 €</span>
+                                <span class="preset-pill" data-preset-dep-amount="100000" onclick="setDepositAmount(100000)">100.000 € (Límite FGD)</span>
+                            </div>
+                        </div>
+
+                        <!-- Tipo de Interés Anual (TIN / TAE %) -->
+                        <div class="form-group">
+                            <label for="dep-rate" style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); display: flex; justify-content: space-between;">
+                                <span>Tipo de Interés Anual (% TIN / TAE)</span>
+                                <span id="lbl-dep-rate-val" style="color: var(--success-light); font-weight: 700;">3,50 %</span>
+                            </label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" id="dep-rate" class="form-control" value="3.50" min="0.01" max="20" step="0.05" style="font-size: 1.05rem; font-weight: 600; flex: 1;">
+                                <span style="font-weight: 700; color: var(--text-secondary);">%</span>
+                            </div>
+                            <!-- Presets de Interés -->
+                            <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+                                <span class="preset-pill" data-preset-dep-rate="2.50" onclick="setDepositRate(2.50)">2,50%</span>
+                                <span class="preset-pill" data-preset-dep-rate="3.00" onclick="setDepositRate(3.00)">3,00%</span>
+                                <span class="preset-pill" data-preset-dep-rate="3.50" onclick="setDepositRate(3.50)">3,50%</span>
+                                <span class="preset-pill" data-preset-dep-rate="3.75" onclick="setDepositRate(3.75)">3,75%</span>
+                                <span class="preset-pill" data-preset-dep-rate="4.00" onclick="setDepositRate(4.00)">4,00%</span>
+                            </div>
+                        </div>
+
+                        <!-- Plazo de la Inversión -->
+                        <div class="form-group">
+                            <label style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary);">Plazo del Depósito</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <input type="number" id="dep-term-value" class="form-control" value="12" min="1" max="120" step="1">
+                                <select id="dep-term-unit" class="form-control">
+                                    <option value="months" selected>Meses</option>
+                                    <option value="years">Años</option>
+                                </select>
+                            </div>
+                            <!-- Presets de Plazo -->
+                            <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+                                <span class="preset-pill" data-preset-dep-months="3" onclick="setDepositTerm(3, 'months')">3 Meses</span>
+                                <span class="preset-pill" data-preset-dep-months="6" onclick="setDepositTerm(6, 'months')">6 Meses</span>
+                                <span class="preset-pill" data-preset-dep-months="12" onclick="setDepositTerm(12, 'months')">1 Año (12m)</span>
+                                <span class="preset-pill" data-preset-dep-months="24" onclick="setDepositTerm(24, 'months')">2 Años (24m)</span>
+                                <span class="preset-pill" data-preset-dep-months="36" onclick="setDepositTerm(36, 'months')">3 Años (36m)</span>
+                            </div>
+                        </div>
+
+                        <!-- Frecuencia de Cobro / Liquidación -->
+                        <div class="form-group">
+                            <label for="dep-frequency" style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary);">Frecuencia de Liquidación de Intereses</label>
+                            <select id="dep-frequency" class="form-control">
+                                <option value="maturity" selected>Al Vencimiento del Plazo (Depósito tradicional)</option>
+                                <option value="monthly-compound">Mensual con Reinversión (Interés Compuesto)</option>
+                                <option value="monthly-simple">Mensual (Ingreso directo en cuenta corriente)</option>
+                                <option value="quarterly">Trimestral</option>
+                                <option value="semiannual">Semestral</option>
+                                <option value="annual">Anual</option>
+                            </select>
+                        </div>
+
+                        <!-- Aportación Mensual Adicional (Opcional) -->
+                        <div class="form-group">
+                            <label for="dep-monthly-add" style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); display: flex; justify-content: space-between;">
+                                <span>Aportación Mensual Adicional (Opcional)</span>
+                                <span id="lbl-monthly-add-val" style="color: var(--text-muted); font-size: 0.8rem;">0 €/mes</span>
+                            </label>
+                            <input type="number" id="dep-monthly-add" class="form-control" value="0" min="0" max="10000" step="25" placeholder="0">
+                            <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;">Útil si estás simulando una cuenta de ahorro remunerada donde ingresas dinero cada mes.</span>
+                        </div>
+
+                        <!-- Fiscalidad e IRPF -->
+                        <div class="form-group">
+                            <label for="dep-tax-mode" style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary);">Fiscalidad (Retención del IRPF)</label>
+                            <select id="dep-tax-mode" class="form-control">
+                                <option value="spain-standard" selected>Banco en España (Retención fija 19% IRPF)</option>
+                                <option value="spain-progressive">Escala IRPF Progresiva España (19% a 28%)</option>
+                                <option value="foreign-no-tax">Banco Extranjero UE (Sin retención inicial 0%)</option>
+                                <option value="custom-exempt">Exento de Impuestos (0%)</option>
+                            </select>
+                        </div>
+
+                        <!-- Inflación Estimada para Rentabilidad Real -->
+                        <div class="form-group">
+                            <label for="dep-inflation" style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); display: flex; justify-content: space-between;">
+                                <span>Tasa de Inflación Estimada Anual</span>
+                                <span id="lbl-inflation-val" style="color: #ff9d5c; font-weight: 700;">2,50 %</span>
+                            </label>
+                            <input type="number" id="dep-inflation" class="form-control" value="2.50" min="0" max="15" step="0.1">
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- COLUMNA DERECHA: RESULTADOS Y PROYECCIÓN -->
+                <div class="card shadow-glass" style="padding: 24px; display: flex; flex-direction: column;">
+                    
+                    <div style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; margin-bottom: 20px;">
+                        <h3 style="font-size: 1.15rem; color: var(--text-primary); font-family: var(--font-header); margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--success-light);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                            Resultado de la Simulación
+                        </h3>
+                    </div>
+
+                    <!-- HERO BADGE: INTERESES NETOS -->
+                    <div class="deposit-hero-badge">
+                        <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; letter-spacing: 0.5px; display: block;">Ganancia Neta Limpia (Intereses tras IRPF)</span>
+                        <div id="res-net-interest" style="font-size: 2.2rem; font-family: var(--font-header); font-weight: 800; color: var(--success-light); margin: 6px 0;">+283,50 €</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);" id="res-hero-subtitle">Sobre un capital final acumulado de <strong id="res-final-capital" style="color: #ffffff;">10.283,50 €</strong></div>
+                    </div>
+
+                    <!-- CUADRÍCULA DE MÉTRICAS -->
+                    <div class="deposit-results-grid">
+                        <div class="deposit-stat-item">
+                            <span class="deposit-stat-label">Intereses Brutos</span>
+                            <div id="res-gross-interest" class="deposit-stat-value" style="color: var(--primary-light);">+350,00 €</div>
+                        </div>
+                        <div class="deposit-stat-item">
+                            <span class="deposit-stat-label">Retención Hacienda (IRPF)</span>
+                            <div id="res-tax-amount" class="deposit-stat-value" style="color: var(--danger-light);">-66,50 €</div>
+                        </div>
+                        <div class="deposit-stat-item">
+                            <span class="deposit-stat-label">Ganancia Mensual Media</span>
+                            <div id="res-monthly-gain" class="deposit-stat-value" style="color: var(--success-light);">+23,63 €/mes</div>
+                        </div>
+                        <div class="deposit-stat-item">
+                            <span class="deposit-stat-label">Ganancia Diaria Media</span>
+                            <div id="res-daily-gain" class="deposit-stat-value" style="color: var(--text-primary);">+0,78 €/día</div>
+                        </div>
+                        <div class="deposit-stat-item">
+                            <span class="deposit-stat-label">Rentabilidad Neta Efectiva</span>
+                            <div id="res-net-yield" class="deposit-stat-value" style="color: var(--success-light);">+2,84 %</div>
+                        </div>
+                        <div class="deposit-stat-item">
+                            <span class="deposit-stat-label">Rentabilidad Real (vs Inflación)</span>
+                            <div id="res-real-yield" class="deposit-stat-value" style="color: #ff9d5c;">+0,34 %</div>
+                        </div>
+                    </div>
+
+                    <!-- BARRA DE DISTRIBUCIÓN DEL CAPITAL -->
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary);">
+                            <span>Composición del Capital Final:</span>
+                            <span id="lbl-bar-summary">Capital 96,6% | Intereses Netos 2,8% | IRPF 0,6%</span>
+                        </div>
+                        <div class="deposit-progress-bar-wrap">
+                            <div id="bar-capital" class="deposit-bar-capital" style="width: 96.6%;" title="Capital Aportado"></div>
+                            <div id="bar-net" class="deposit-bar-net" style="width: 2.8%;" title="Intereses Netos"></div>
+                            <div id="bar-tax" class="deposit-bar-tax" style="width: 0.6%;" title="Retención IRPF"></div>
+                        </div>
+                        <div style="display: flex; gap: 14px; font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; flex-wrap: wrap;">
+                            <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; display: inline-block;"></span> Capital aportado</span>
+                            <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span> Intereses limpios</span>
+                            <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; display: inline-block;"></span> Retención IRPF</span>
+                        </div>
+                    </div>
+
+                    <!-- TABLA COMPARATIVA VS CUENTA AL 0% -->
+                    <div style="margin-top: 22px; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border-glass); border-radius: 12px; padding: 16px;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 0.9rem; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                            <span>⚖️</span> Comparativa: En este Depósito vs. Cuenta al 0%
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem;">
+                            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 10px;">
+                                <span style="color: var(--danger-light); font-weight: 700; display: block; font-size: 0.75rem;">CUENTA CORRIENTE (0%)</span>
+                                <div style="color: var(--danger-light); font-size: 1rem; font-weight: 700; margin: 4px 0;" id="comp-zero-loss">-250,00 €</div>
+                                <span style="font-size: 0.72rem; color: var(--text-muted);">Pérdida de poder adquisitivo por inflación</span>
+                            </div>
+                            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 10px;">
+                                <span style="color: var(--success-light); font-weight: 700; display: block; font-size: 0.75rem;">ESTE DEPÓSITO</span>
+                                <div style="color: var(--success-light); font-size: 1rem; font-weight: 700; margin: 4px 0;" id="comp-deposit-gain">+283,50 €</div>
+                                <span style="font-size: 0.72rem; color: var(--text-muted);">Ganancia neta real en tu cuenta</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLA DE DESGLOSE TEMPORAL -->
+                    <div style="margin-top: 20px;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 0.92rem; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                            <span>📊</span> Desglose Temporal de Intereses
+                        </h4>
+                        <div class="deposit-timeline-table-wrap">
+                            <table class="deposit-amort-table">
+                                <thead>
+                                    <tr>
+                                        <th>Periodo</th>
+                                        <th>Interés Bruto</th>
+                                        <th>Retención IRPF</th>
+                                        <th>Interés Neto</th>
+                                        <th>Saldo Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deposit-table-body">
+                                    <!-- Generado dinámicamente por JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SECCIÓN DE PREGUNTAS FRECUENTES (FAQ) -->
+            <section class="card shadow-glass" style="padding: 24px; margin-bottom: 30px;">
+                <h3 style="font-size: 1.25rem; color: var(--text-primary); font-family: var(--font-header); margin-top: 0; margin-bottom: 18px;">
+                    Preguntas Frecuentes sobre Depósitos y Cuentas de Ahorro
+                </h3>
+
+                <div class="faq-accordion-item" style="margin-bottom: 14px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+                    <h4 style="color: var(--text-primary); font-size: 0.98rem; margin: 0 0 6px 0;">¿Cómo se calcula el importe de los intereses de un depósito?</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.88rem; margin: 0; line-height: 1.55;">
+                        La fórmula matemática básica para el interés simple es: <strong>Intereses Brutos = Capital × (TIN / 100) × (Días / 365)</strong>. A estos intereses brutos se le descuenta el porcentaje de IRPF correspondiente para calcular la ganancia líquida que se abonará en tu cuenta.
+                    </p>
+                </div>
+
+                <div class="faq-accordion-item" style="margin-bottom: 14px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+                    <h4 style="color: var(--text-primary); font-size: 0.98rem; margin: 0 0 6px 0;">¿Qué sucede si cancelo un depósito antes de que termine el plazo?</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.88rem; margin: 0; line-height: 1.55;">
+                        Por ley en España, la penalización por cancelación anticipada nunca puede superar el importe de los intereses brutos devengados desde el inicio de la imposición. Es decir, <strong>tu capital inicial siempre está 100% garantizado</strong> y no puedes perder dinero de lo que aportaste, aunque podrías perder parte o la totalidad de los intereses generados.
+                    </p>
+                </div>
+
+                <div class="faq-accordion-item" style="margin-bottom: 14px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+                    <h4 style="color: var(--text-primary); font-size: 0.98rem; margin: 0 0 6px 0;">¿Qué es el Fondo de Garantía de Depósitos (FGD) y qué cobertura tiene?</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.88rem; margin: 0; line-height: 1.55;">
+                        El <strong>FGD</strong> es una institución legal en todos los países de la Unión Europea que asegura hasta <strong>100.000 € por titular y banco</strong> en caso de quiebra de la entidad. Si una cuenta o depósito tiene 2 titulares, la cobertura se eleva automáticamente a <strong>200.000 €</strong>.
+                    </p>
+                </div>
+
+                <div class="faq-accordion-item">
+                    <h4 style="color: var(--text-primary); font-size: 0.98rem; margin: 0 0 6px 0;">¿Tengo que declarar los intereses si el banco es extranjero?</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.88rem; margin: 0; line-height: 1.55;">
+                        Si contratas un depósito o cuenta en un banco extranjero de la UE (por ejemplo a través de plataformas como Raisin o entidades como Trade Republic con IBAN alemán), el banco te abonará los intereses brutos sin practicar retención en origen. Deberás incluir esos intereses brutos en la casilla de <em>"Rendimientos de cuentas y depósitos"</em> en tu Declaración de la Renta anual para liquidar el 19% correspondiente.
+                    </p>
+                </div>
+            </section>
+
+            <!-- FOOTER LEGAL Y POLÍTICAS -->
+            <footer class="app-legal-footer" style="margin-top: 40px; padding: 24px 20px; border-top: 1px solid var(--border-glass); text-align: center; font-size: 0.8rem; color: var(--text-muted);">
+                <div style="margin-bottom: 10px;">
+                    © 2026 Mi Hucha - Peseta a Peseta. Simulador financiero formativo con fines informativos.
+                </div>
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <a href="aviso-legal.html" style="color: var(--text-secondary); text-decoration: none;">Aviso Legal</a>
+                    <a href="politica-privacidad.html" style="color: var(--text-secondary); text-decoration: none;">Política de Privacidad</a>
+                    <a href="politica-cookies.html" style="color: var(--text-secondary); text-decoration: none;">Política de Cookies</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Script de Lógica de la Calculadora de Depósitos -->
+    <script>
+        function formatEUR(amount) {
+            return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(amount);
+        }
+
+        function setDepositAmount(val) {
+            document.getElementById('dep-amount').value = val;
+            calculateDeposit();
+        }
+
+        function setDepositRate(val) {
+            document.getElementById('dep-rate').value = val;
+            calculateDeposit();
+        }
+
+        function setDepositTerm(val, unit) {
+            document.getElementById('dep-term-value').value = val;
+            document.getElementById('dep-term-unit').value = unit;
+            calculateDeposit();
+        }
+
+        function syncDepositPresets(amount, rate, totalMonths) {
+            document.querySelectorAll('[data-preset-dep-amount]').forEach(el => {
+                el.classList.toggle('active', parseFloat(el.getAttribute('data-preset-dep-amount')) === amount);
+            });
+
+            document.querySelectorAll('[data-preset-dep-rate]').forEach(el => {
+                const r = parseFloat(el.getAttribute('data-preset-dep-rate'));
+                el.classList.toggle('active', Math.abs(r - rate) < 0.005);
+            });
+
+            document.querySelectorAll('[data-preset-dep-months]').forEach(el => {
+                el.classList.toggle('active', parseFloat(el.getAttribute('data-preset-dep-months')) === totalMonths);
+            });
+        }
+
+        function calculateDeposit() {
+            const initialCapital = parseFloat(document.getElementById('dep-amount').value) || 0;
+            const annualRate = parseFloat(document.getElementById('dep-rate').value) || 0;
+            const termVal = parseFloat(document.getElementById('dep-term-value').value) || 1;
+            const termUnit = document.getElementById('dep-term-unit').value;
+            const frequency = document.getElementById('dep-frequency').value;
+            const monthlyAdd = parseFloat(document.getElementById('dep-monthly-add').value) || 0;
+            const taxMode = document.getElementById('dep-tax-mode').value;
+            const inflationRate = parseFloat(document.getElementById('dep-inflation').value) || 0;
+
+            // Convertir plazo total a meses y años
+            const totalMonths = termUnit === 'years' ? Math.round(termVal * 12) : Math.round(termVal);
+            const totalYears = totalMonths / 12;
+
+            // Sincronizar estado visual de los botones de preset
+            syncDepositPresets(initialCapital, annualRate, totalMonths);
+
+            // Actualizar etiquetas de inputs
+            document.getElementById('lbl-dep-amount-val').textContent = formatEUR(initialCapital);
+            document.getElementById('lbl-dep-rate-val').textContent = annualRate.toFixed(2).replace('.', ',') + ' %';
+            document.getElementById('lbl-monthly-add-val').textContent = formatEUR(monthlyAdd) + '/mes';
+            document.getElementById('lbl-inflation-val').textContent = inflationRate.toFixed(2).replace('.', ',') + ' %';
+
+            let currentBalance = initialCapital;
+            let totalGrossInterest = 0;
+            let totalTax = 0;
+            let totalNetInterest = 0;
+            let totalContributed = initialCapital;
+
+            const tableBody = document.getElementById('deposit-table-body');
+            tableBody.innerHTML = '';
+
+            const rateDecimal = annualRate / 100;
+            const monthlyRate = rateDecimal / 12;
+
+            function calculateTax(gross) {
+                if (taxMode === 'foreign-no-tax' || taxMode === 'custom-exempt') return 0;
+                if (taxMode === 'spain-standard') return gross * 0.19;
+                
+                // Escala progresiva IRPF anual
+                let tax = 0;
+                if (gross <= 6000) {
+                    tax = gross * 0.19;
+                } else if (gross <= 50000) {
+                    tax = (6000 * 0.19) + ((gross - 6000) * 0.21);
+                } else if (gross <= 200000) {
+                    tax = (6000 * 0.19) + (44000 * 0.21) + ((gross - 50000) * 0.23);
+                } else {
+                    tax = (6000 * 0.19) + (44000 * 0.21) + (150000 * 0.23) + ((gross - 200000) * 0.27);
+                }
+                return tax;
+            }
+
+            if (frequency === 'maturity') {
+                // Cálculo simple a vencimiento
+                let accumulatedBalance = initialCapital;
+                for (let m = 1; m <= totalMonths; m++) {
+                    if (m > 1) {
+                        accumulatedBalance += monthlyAdd;
+                        totalContributed += monthlyAdd;
+                    }
+                }
+                totalGrossInterest = initialCapital * rateDecimal * totalYears;
+                if (monthlyAdd > 0 && totalMonths > 1) {
+                    for (let m = 2; m <= totalMonths; m++) {
+                        const remainingYears = (totalMonths - m + 1) / 12;
+                        totalGrossInterest += monthlyAdd * rateDecimal * remainingYears;
+                    }
+                }
+
+                totalTax = calculateTax(totalGrossInterest);
+                totalNetInterest = totalGrossInterest - totalTax;
+                currentBalance = totalContributed + totalNetInterest;
+
+                const row = document.createElement('tr');
+                row.innerHTML = '<td><strong style="color: var(--text-primary);">Mes 1 al ' + totalMonths + ' (Vencimiento)</strong></td>' +
+                    '<td style="color: var(--primary-light); font-weight: 600;">+' + formatEUR(totalGrossInterest) + '</td>' +
+                    '<td style="color: var(--danger-light); font-weight: 600;">-' + formatEUR(totalTax) + '</td>' +
+                    '<td style="color: var(--success-light); font-weight: 600;">+' + formatEUR(totalNetInterest) + '</td>' +
+                    '<td><strong style="color: #ffffff; font-weight: 700;">' + formatEUR(currentBalance) + '</strong></td>';
+                tableBody.appendChild(row);
+
+            } else {
+                let interval = 1;
+                if (frequency === 'quarterly') interval = 3;
+                else if (frequency === 'semiannual') interval = 6;
+                else if (frequency === 'annual') interval = 12;
+
+                let periodGrossInterestAcc = 0;
+
+                for (let m = 1; m <= totalMonths; m++) {
+                    if (m > 1 && monthlyAdd > 0) {
+                        currentBalance += monthlyAdd;
+                        totalContributed += monthlyAdd;
+                    }
+
+                    const monthGross = currentBalance * monthlyRate;
+                    periodGrossInterestAcc += monthGross;
+
+                    if (m % interval === 0 || m === totalMonths) {
+                        const periodTax = calculateTax(periodGrossInterestAcc);
+                        const periodNet = periodGrossInterestAcc - periodTax;
+
+                        totalGrossInterest += periodGrossInterestAcc;
+                        totalTax += periodTax;
+                        totalNetInterest += periodNet;
+
+                        if (frequency === 'monthly-compound') {
+                            currentBalance += periodNet;
+                        }
+
+                        const finalBal = frequency === 'monthly-compound' ? currentBalance : (totalContributed + totalNetInterest);
+                        const row = document.createElement('tr');
+                        row.innerHTML = '<td><span style="color: var(--text-secondary); font-weight: 500;">Mes ' + m + '</span></td>' +
+                            '<td style="color: var(--primary-light); font-weight: 600;">+' + formatEUR(periodGrossInterestAcc) + '</td>' +
+                            '<td style="color: var(--danger-light); font-weight: 600;">-' + formatEUR(periodTax) + '</td>' +
+                            '<td style="color: var(--success-light); font-weight: 600;">+' + formatEUR(periodNet) + '</td>' +
+                            '<td><strong style="color: #ffffff; font-weight: 700;">' + formatEUR(finalBal) + '</strong></td>';
+                        tableBody.appendChild(row);
+
+                        periodGrossInterestAcc = 0;
+                    }
+                }
+
+                if (frequency !== 'monthly-compound') {
+                    currentBalance = totalContributed + totalNetInterest;
+                }
+            }
+
+            // Actualizar Tarjetas de Resultados
+            document.getElementById('res-net-interest').textContent = '+' + formatEUR(totalNetInterest);
+            document.getElementById('res-final-capital').textContent = formatEUR(currentBalance);
+            document.getElementById('res-gross-interest').textContent = '+' + formatEUR(totalGrossInterest);
+            document.getElementById('res-tax-amount').textContent = '-' + formatEUR(totalTax);
+
+            const monthlyGain = totalMonths > 0 ? (totalNetInterest / totalMonths) : 0;
+            const dailyGain = (totalMonths * 30.416) > 0 ? (totalNetInterest / (totalMonths * 30.416)) : 0;
+            document.getElementById('res-monthly-gain').textContent = '+' + formatEUR(monthlyGain) + '/mes';
+            document.getElementById('res-daily-gain').textContent = '+' + formatEUR(dailyGain) + '/día';
+
+            const netYield = totalContributed > 0 ? ((totalNetInterest / totalContributed) * (12 / totalMonths) * 100) : 0;
+            document.getElementById('res-net-yield').textContent = '+' + netYield.toFixed(2).replace('.', ',') + ' %';
+
+            const realYield = netYield - inflationRate;
+            const realYieldEl = document.getElementById('res-real-yield');
+            realYieldEl.textContent = (realYield >= 0 ? '+' : '') + realYield.toFixed(2).replace('.', ',') + ' %';
+            realYieldEl.style.color = realYield >= 0 ? 'var(--success-light)' : 'var(--danger-light)';
+
+            // Barra de Progreso y Composición
+            const totalForBar = totalContributed + totalNetInterest + totalTax;
+            const capPct = ((totalContributed / totalForBar) * 100).toFixed(1);
+            const netPct = ((totalNetInterest / totalForBar) * 100).toFixed(1);
+            const taxPct = ((totalTax / totalForBar) * 100).toFixed(1);
+
+            document.getElementById('bar-capital').style.width = capPct + '%';
+            document.getElementById('bar-net').style.width = netPct + '%';
+            document.getElementById('bar-tax').style.width = taxPct + '%';
+            document.getElementById('lbl-bar-summary').textContent = 'Capital ' + capPct + '% | Intereses Netos ' + netPct + '% | IRPF ' + taxPct + '%';
+
+            // Comparativa vs 0%
+            const inflationLoss = totalContributed * (inflationRate / 100) * totalYears;
+            document.getElementById('comp-zero-loss').textContent = '-' + formatEUR(inflationLoss);
+            document.getElementById('comp-deposit-gain').textContent = '+' + formatEUR(totalNetInterest);
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = [
+                'dep-amount', 'dep-rate', 'dep-term-value', 'dep-term-unit',
+                'dep-frequency', 'dep-monthly-add', 'dep-tax-mode', 'dep-inflation'
+            ];
+
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', calculateDeposit);
+                    el.addEventListener('change', calculateDeposit);
+                }
+            });
+
+            document.getElementById('btn-reset-deposit').addEventListener('click', () => {
+                document.getElementById('dep-amount').value = 10000;
+                document.getElementById('dep-rate').value = 3.50;
+                document.getElementById('dep-term-value').value = 12;
+                document.getElementById('dep-term-unit').value = 'months';
+                document.getElementById('dep-frequency').value = 'maturity';
+                document.getElementById('dep-monthly-add').value = 0;
+                document.getElementById('dep-tax-mode').value = 'spain-standard';
+                document.getElementById('dep-inflation').value = 2.50;
+                calculateDeposit();
+            });
+
+            calculateDeposit();
+        });
+    </script>
+
+    <!-- Scripts universales: compatibles con file:/// (doble clic en local) y con Vite/Vercel (https://) -->
+    <script src="src/consejos.js"></script>
+    <script type="module" src="src/app.js"></script>
+    <script>
+        if (window.location.protocol === 'file:' && !window._finanzasAppStarted) {
+            var s = document.createElement('script');
+            s.src = 'src/app.js';
+            document.body.appendChild(s);
+        }
+    </script>
+</body>
+</html>
