@@ -2660,8 +2660,9 @@ function deleteProjectEarning(projId, earId) {
 
 function checkMaturedDeposits() {
     if (!state.currentMonth || !state.banks) return;
-    const [currYear, currMonth] = state.currentMonth.split("-").map(Number);
-    const viewMonthDate = new Date(currYear, currMonth - 1, 1);
+    
+    const sysDate = new Date();
+    const todayStr = `${sysDate.getFullYear()}-${String(sysDate.getMonth() + 1).padStart(2, '0')}-${String(sysDate.getDate()).padStart(2, '0')}`;
     
     let stateChanged = false;
     
@@ -2675,10 +2676,17 @@ function checkMaturedDeposits() {
             const endDate = new Date(startParts[0], startParts[1] - 1 + parseInt(bank.durationMonths), startParts[2]);
             const endYear = endDate.getFullYear();
             const endMonth = endDate.getMonth(); // 0-indexed
+            const endDay = endDate.getDate();
             
-            const maturityMonthDate = new Date(endYear, endMonth, 1);
+            const endDateStr = `${endYear}-${String(endMonth + 1).padStart(2, '0')}-${String(endDay).padStart(2, '0')}`;
+            const endMonthStr = `${endYear}-${String(endMonth + 1).padStart(2, '0')}`;
             
-            if (viewMonthDate >= maturityMonthDate) {
+            // Comprobación de vencimiento rigurosa:
+            // Solo vence si el día actual es igual o posterior al día exacto de vencimiento (todayStr >= endDateStr)
+            // o si el mes consultado/cerrado es estrictamente posterior al mes de vencimiento.
+            const hasMatured = (todayStr >= endDateStr) || (state.currentMonth > endMonthStr);
+            
+            if (hasMatured) {
                 const destBank = state.banks.find(b => b.id === bank.destinationBankId);
                 if (destBank) {
                     const principal = bank.balance;
@@ -2695,9 +2703,6 @@ function checkMaturedDeposits() {
                     destBank.balance = parseFloat((destBank.balance + totalPayout).toFixed(2));
                     bank.balance = 0;
                     bank.maturedTransferDone = true;
-                    
-                    const endDateStr = `${endYear}-${String(endMonth + 1).padStart(2, '0')}-${String(endDate.getDate()).padStart(2, '0')}`;
-                    const endMonthStr = `${endYear}-${String(endMonth + 1).padStart(2, '0')}`;
                     
                     state.transactions.push({
                         id: "tx_dep_out_" + Date.now() + "_" + Math.floor(Math.random()*1000),
