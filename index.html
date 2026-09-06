@@ -51,6 +51,7 @@
             "Calculadora Financiera Digital con Historial",
             "Conversor de Divisas en Tiempo Real (Forex & BCE)",
             "Calculadora de Margen de Beneficio y Precio de Venta (PVP con IVA)",
+            "Calculadora de Finiquito e Indemnización por Despido (España)",
             "Control de Gastos e Ingresos por Categorías",
             "Gestión de Proyectos y Metas de Ahorro"
           ]
@@ -285,8 +286,13 @@
                     <div class="stat-card card-expense">
                         <div class="stat-card-header">
                             <span class="stat-title">Gastos Reales del Mes</span>
-                            <div class="stat-icon icon-rose">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <button type="button" id="btn-quick-add-expense-dash" class="btn-primary-mini" style="background: rgba(244, 63, 94, 0.15); color: var(--danger-light); border-color: rgba(244, 63, 94, 0.3); padding: 2px 8px; font-size: 0.72rem; cursor: pointer;" title="Registrar un gasto rápidamente">
+                                    + Gasto
+                                </button>
+                                <div class="stat-icon icon-rose">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
+                                </div>
                             </div>
                         </div>
                         <div class="stat-value" id="global-monthly-expense">0.00 €</div>
@@ -494,11 +500,84 @@
                         </div>
                     </div>
 
-                    <!-- Columna Derecha: Embudo de Ingresos -->
+                    <!-- Columna Derecha: Control del Mes & Embudo de Ingresos -->
                     <div class="dashboard-column shadow-glass">
-                        <div class="column-header">
-                            <h2>El Embudo: Distribuidor de Ingresos</h2>
+                        <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                            <div class="sub-tab-selectors" style="margin: 0; padding: 0; border: none;">
+                                <button type="button" id="btn-subtab-dash-overview" class="btn-subtab active">📅 Control del Mes</button>
+                                <button type="button" id="btn-subtab-dash-funnel" class="btn-subtab">🌪️ El Embudo</button>
+                            </div>
+                            <button type="button" id="btn-dash-open-funnel" class="btn-primary-mini" style="background: rgba(0, 229, 255, 0.12); color: var(--primary-light); border-color: rgba(0, 229, 255, 0.3);">
+                                <span>+ Repartir Ingreso</span>
+                            </button>
                         </div>
+
+                        <!-- PESTAÑA 1: VISTA CONTROL DIARIO DEL MES -->
+                        <div id="container-dash-overview" class="dash-overview-container">
+                            <!-- Widget: Ritmo de Gasto y Presupuesto Restante -->
+                            <div class="dash-pace-card shadow-glass" style="background: rgba(255, 255, 255, 0.025); border: 1px solid var(--border-glass); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                    <div>
+                                        <span id="dash-pace-label" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700;">Ritmo de Gasto Disponible</span>
+                                        <h3 id="dash-pace-amount" style="margin: 4px 0 0; font-size: 1.35rem; font-weight: 700; color: var(--primary-light);">0,00 € / día</h3>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <span id="dash-remaining-budget-label" style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Presupuesto Restante</span>
+                                        <div id="dash-remaining-budget" style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-top: 2px;">0,00 €</div>
+                                    </div>
+                                </div>
+                                <div class="validator-progress-bg" style="height: 6px; margin-bottom: 8px;">
+                                    <div id="dash-pace-progress-bar" class="validator-progress-fill" style="width: 0%; background: var(--primary);"></div>
+                                </div>
+                                <p id="dash-pace-description" style="margin: 0; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4;">
+                                    Calculando ritmo de gasto según días restantes del mes...
+                                </p>
+                            </div>
+
+                            <!-- Próximos Recibos Fijos a vencer -->
+                            <div class="dash-upcoming-fixed-section" style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <h3 style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 6px;">
+                                        <span>🔔 Próximos Recibos Fijos</span>
+                                        <span id="dash-upcoming-count-badge" class="badge-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--warning-light); border-color: rgba(245, 158, 11, 0.3); font-size: 0.65rem; padding: 1px 6px;">0</span>
+                                    </h3>
+                                    <button type="button" onclick="navigateToTab('tab-expenses')" class="btn-helper" style="font-size: 0.7rem; padding: 2px 8px;">Ver Matriz</button>
+                                </div>
+                                <div id="dash-upcoming-fixed-list" style="display: flex; flex-direction: column; gap: 8px;">
+                                    <!-- Inyectado dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Últimos Movimientos del Mes -->
+                            <div class="dash-recent-tx-section" style="margin-bottom: 18px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <h3 style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+                                        <span>💳 Últimos Movimientos</span>
+                                    </h3>
+                                    <button type="button" onclick="navigateToTab('tab-expenses')" class="btn-helper" style="font-size: 0.7rem; padding: 2px 8px;">Ver Todos</button>
+                                </div>
+                                <div id="dash-recent-tx-list" style="display: flex; flex-direction: column; gap: 6px;">
+                                    <!-- Inyectado dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Banner inteligente de Embudo -->
+                            <div class="dash-funnel-cta-banner" style="background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(99, 102, 241, 0.08)); border: 1px dashed rgba(0, 229, 255, 0.3); border-radius: 12px; padding: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="font-size: 1.5rem;">🌪️</div>
+                                    <div>
+                                        <strong style="font-size: 0.85rem; color: var(--text-primary); display: block;">¿Has cobrado la nómina o un extra?</strong>
+                                        <span style="font-size: 0.74rem; color: var(--text-secondary);">Repártelo entre tus cuentas y metas con el Embudo.</span>
+                                    </div>
+                                </div>
+                                <button type="button" id="btn-dash-cta-open-funnel" class="btn-submit" style="white-space: nowrap; padding: 8px 14px; font-size: 0.8rem; margin: 0;">
+                                    Abrir Embudo
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- PESTAÑA 2: EL EMBUDO DE INGRESOS -->
+                        <div id="container-dash-funnel" class="dash-funnel-container hidden">
                         
                         <!-- PANEL: INGRESO PREVISTO GUARDADO -->
                         <div id="planned-income-banner" class="planned-income-banner hidden">
@@ -600,6 +679,7 @@
                                 </div>
                             </div>
                         </form>
+                        </div> <!-- Fin container-dash-funnel -->
                     </div>
                 </div>
             </section>
@@ -687,6 +767,44 @@
                             </div>
                         </form>
 
+                        <!-- Barra de Herramientas y Filtro de Matriz de Gastos Fijos -->
+                        <div class="fixed-matrix-toolbar">
+                            <div class="fixed-filter-controls">
+                                <span class="filter-label">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                                    <span>Cuenta:</span>
+                                </span>
+                                <div id="fixed-bank-filter-chips" class="fixed-bank-segmented-group">
+                                    <!-- Botones de acceso rápido inyectados dinámicamente -->
+                                </div>
+                                <select id="filter-fixed-bank-select" class="filter-select fixed-bank-mobile-select">
+                                    <!-- Inyectado dinámicamente -->
+                                </select>
+                            </div>
+                            <div id="fixed-filter-feedback" class="filter-feedback-text">
+                                Mostrando todos
+                            </div>
+                        </div>
+
+                        <!-- Métricas Rápidas de Gastos Fijos (KPIs Anual y Mes) - Reactivas a la cuenta seleccionada -->
+                        <div id="fixed-kpi-bar" class="fixed-kpi-grid">
+                            <div class="fixed-kpi-card shadow-glass">
+                                <span id="fixed-kpi-month-label" style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 700;">Comprometido Este Mes</span>
+                                <div id="fixed-kpi-month-total" style="font-size: 1.25rem; font-weight: 700; color: var(--danger-light); margin-top: 2px;">0,00 €</div>
+                                <div id="fixed-kpi-month-status" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">✓ 0,00 € cobrado · 0,00 € pendiente</div>
+                            </div>
+                            <div class="fixed-kpi-card shadow-glass">
+                                <span id="fixed-kpi-year-label" style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 700;">Coste Total Anual</span>
+                                <div id="fixed-kpi-year-total" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-light); margin-top: 2px;">0,00 €</div>
+                                <div id="fixed-kpi-year-sub" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Suma anualizada de todos los fijos</div>
+                            </div>
+                            <div class="fixed-kpi-card shadow-glass">
+                                <span id="fixed-kpi-avg-label" style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 700;">Media Mensual Teórica</span>
+                                <div id="fixed-kpi-avg-monthly" style="font-size: 1.25rem; font-weight: 700; color: var(--primary-light); margin-top: 2px;">0,00 € / mes</div>
+                                <div id="fixed-kpi-count" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">0 recibos activos</div>
+                            </div>
+                        </div>
+
                         <!-- Botón de Ejecución de Gastos Fijos del Mes -->
                         <div class="fixed-expenses-execution-bar">
                             <div class="exec-info">
@@ -699,7 +817,6 @@
                             </button>
                         </div>
 
-                        <!-- Lista de Gastos Fijos Registrados -->
                         <div class="table-container" id="container-fixed-list">
                             <table class="premium-table" id="table-fixed-expenses">
                                 <thead>
@@ -715,6 +832,9 @@
                                 <tbody id="tbody-fixed-expenses">
                                     <!-- Inyectado dinámicamente -->
                                 </tbody>
+                                <tfoot id="tfoot-fixed-expenses">
+                                    <!-- Inyectado dinámicamente -->
+                                </tfoot>
                             </table>
                         </div>
 
@@ -878,9 +998,28 @@
                     </div>
                 </div>
 
+                <!-- Barra Selectora de Cuentas para Cierre de Mes -->
+                <div id="closure-bank-filter-toolbar" class="closure-bank-filter-toolbar">
+                    <div class="fixed-filter-controls">
+                        <span class="filter-label">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                            <span>Vista:</span>
+                        </span>
+                        <div id="closure-bank-filter-chips" class="fixed-bank-segmented-group">
+                            <!-- Inyectado dinámicamente: [ 🌐 Global ] [ 🏦 Cuenta Nómina ] [ 💳 Cuenta 2 ] ... -->
+                        </div>
+                        <select id="closure-bank-filter-select" class="filter-select fixed-bank-mobile-select">
+                            <!-- Inyectado dinámicamente para móviles -->
+                        </select>
+                    </div>
+                    <div id="closure-filter-feedback" class="filter-feedback-text">
+                        Mostrando consolidado global
+                    </div>
+                </div>
+
                 <!-- Contenedor de gráficas por banco (inyectado por JS) -->
                 <div id="closure-charts-container">
-                    <!-- JS inyecta una card por banco -->
+                    <!-- JS inyecta la vista activa (Global o Cuenta seleccionada) -->
                 </div>
 
                 <!-- Estado vacío -->
@@ -904,13 +1043,38 @@
                         <div class="performance-header-controls">
                             <div>
                                 <h2 style="font-family: var(--font-header); font-size: 1.25rem; font-weight: 700;">Rendimiento & Análisis de Capital</h2>
-                                <p class="section-desc" style="margin-top: 4px;">Evolución mensual consolidada y desglose analítico por cuenta bancaria.</p>
+                                <p class="section-desc" style="margin-top: 4px;">Evolución de patrimonio, flujo de caja mensual y diagnóstico financiero estratégico.</p>
                             </div>
-                            <div class="performance-selectors">
-                                <label for="perf-bank-selector" style="font-size: 0.75rem; font-weight:700; color: var(--text-secondary); text-transform:uppercase; margin-right: 8px;">Seleccionar Análisis:</label>
-                                <select id="perf-bank-selector" class="premium-select-inline" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-glass-focus); color: white; padding: 6px 12px; border-radius: 8px; font-family: var(--font-header); font-weight: 600; font-size: 0.86rem; outline: none; cursor: pointer;">
-                                    <!-- Inyectado dinámicamente -->
+                            <!-- Selector de Rango Temporal (3M · 6M · 12M) -->
+                            <div class="perf-timerange-group">
+                                <span class="filter-label">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    <span>Periodo:</span>
+                                </span>
+                                <div id="perf-timerange-chips" class="fixed-bank-segmented-group">
+                                    <button type="button" class="btn-filter-chip" data-range="3">3 Meses</button>
+                                    <button type="button" class="btn-filter-chip active" data-range="6">6 Meses</button>
+                                    <button type="button" class="btn-filter-chip" data-range="12">12 Meses (1A)</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Barra Selectora de Cuentas / Bancos de Rendimiento -->
+                        <div id="perf-bank-filter-toolbar" class="closure-bank-filter-toolbar" style="margin-top: 14px; margin-bottom: 0;">
+                            <div class="fixed-filter-controls">
+                                <span class="filter-label">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                                    <span>Entidad:</span>
+                                </span>
+                                <div id="perf-bank-filter-chips" class="fixed-bank-segmented-group">
+                                    <!-- Inyectado dinámicamente: [ 🌐 Consolidado ] [ 🏦 BBVA ] ... -->
+                                </div>
+                                <select id="perf-bank-filter-select" class="filter-select fixed-bank-mobile-select">
+                                    <!-- Inyectado dinámicamente para móviles -->
                                 </select>
+                            </div>
+                            <div id="perf-filter-feedback" class="filter-feedback-text">
+                                Analizando consolidado global (últimos 6 meses)
                             </div>
                         </div>
                     </div>
@@ -927,13 +1091,13 @@
                             </div>
                         </div>
 
-                        <!-- Card Derecha: Desglose Categorías / Gastos -->
+                        <!-- Card Derecha: Desglose Secundario (Flujo Ingresos vs Gastos O Reparto Capital) -->
                         <div class="performance-card shadow-glass breakdown-chart-card">
                             <div class="column-header" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
-                                <h3 id="perf-breakdown-title" style="font-family: var(--font-header); font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">Desglose de Gastos del Mes</h3>
+                                <h3 id="perf-breakdown-title" style="font-family: var(--font-header); font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">Flujo Mensual: Ingresos vs Gastos</h3>
                                 <div class="segmented-control">
-                                    <button type="button" id="btn-perf-show-expenses" class="segmented-btn active">Gastos</button>
-                                    <button type="button" id="btn-perf-show-distribution" class="segmented-btn">Bancos</button>
+                                    <button type="button" id="btn-perf-show-flow" class="segmented-btn active" title="Comparativa mensual de ingresos y gastos">Flujo Mensual</button>
+                                    <button type="button" id="btn-perf-show-distribution" class="segmented-btn" title="Distribución de saldos por entidad bancaria">Reparto Capital</button>
                                 </div>
                             </div>
                             <div class="chart-container-wrapper compact">
@@ -942,7 +1106,7 @@
                         </div>
                     </div>
 
-                    <!-- Fila Inferior: Indicadores Financieros -->
+                    <!-- Fila Inferior: Indicadores Financieros (5 KPIs basados en el periodo) -->
                     <div class="performance-stats-layout">
                         <!-- Tarjeta 1: Ahorro Promedio -->
                         <div class="perf-metric-card shadow-glass">
@@ -950,7 +1114,7 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                             </div>
                             <div class="metric-info-text">
-                                <span class="metric-title">Ahorro Promedio Mensual</span>
+                                <span class="metric-title" id="perf-metric-title-savings">Ahorro Promedio Mensual</span>
                                 <span class="metric-value" id="perf-metric-avg-savings">0.00 €</span>
                             </div>
                         </div>
@@ -961,7 +1125,7 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
                             </div>
                             <div class="metric-info-text">
-                                <span class="metric-title">Crecimiento Neto (6m)</span>
+                                <span class="metric-title" id="perf-metric-title-growth">Crecimiento Neto</span>
                                 <span class="metric-value" id="perf-metric-net-growth">0.00 €</span>
                             </div>
                         </div>
@@ -972,7 +1136,7 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
                             </div>
                             <div class="metric-info-text">
-                                <span class="metric-title">Ratio de Gasto / Ingreso</span>
+                                <span class="metric-title" id="perf-metric-title-ratio">Ratio Medio Gasto / Ingreso</span>
                                 <span class="metric-value" id="perf-metric-expense-ratio">0.0%</span>
                             </div>
                         </div>
@@ -983,19 +1147,19 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
                             </div>
                             <div class="metric-info-text">
-                                <span class="metric-title">Tasa de Ahorro Neto</span>
+                                <span class="metric-title" id="perf-metric-title-saverate">Tasa Media de Ahorro</span>
                                 <span class="metric-value" id="perf-metric-savings-rate">0.0%</span>
                             </div>
                         </div>
 
-                        <!-- Tarjeta 5: Previsión a 90 días -->
+                        <!-- Tarjeta 5: Meses de Colchón (Runway de Fondo de Emergencia) -->
                         <div class="perf-metric-card shadow-glass">
                             <div class="metric-icon icon-violet">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                             </div>
                             <div class="metric-info-text">
-                                <span class="metric-title">Previsión Saldo (90d)</span>
-                                <span class="metric-value" id="perf-metric-forecast">0.00 €</span>
+                                <span class="metric-title">Meses de Colchón (Runway)</span>
+                                <span class="metric-value" id="perf-metric-runway">0.0 meses</span>
                             </div>
                         </div>
                     </div>
@@ -1440,6 +1604,26 @@
                                 <div class="utility-card-footer">
                                     <span class="utility-action-link" style="color: #6ee7b7;">
                                         <span>Calcular Margen</span>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Utilidad 5: Calculadora de Finiquito e Indemnización por Despido -->
+                        <div class="utility-card shadow-glass" onclick="openUtilityView('finiquito')">
+                            <div class="utility-card-banner">
+                                <img src="img/guia-nomina-irpf.jpg" alt="Calculadora de Finiquito e Indemnización por Despido España" class="utility-card-img" loading="lazy" decoding="async" width="400" height="200">
+                                <span class="utility-badge" style="background: rgba(239, 68, 68, 0.85); border-color: rgba(239, 68, 68, 0.4); color: #fee2e2;">Laboral & Despido</span>
+                            </div>
+                            <div class="utility-card-body">
+                                <div>
+                                    <h3>Calculadora de Finiquito & Indemnización</h3>
+                                    <p>Calcula tu indemnización legal por despido (improcedente 33d, objetivo 20d, temporal o baja voluntaria) y finiquito con pagas extra y vacaciones pendientes según el Estatuto de los Trabajadores.</p>
+                                </div>
+                                <div class="utility-card-footer">
+                                    <span class="utility-action-link" style="color: #f87171;">
+                                        <span>Calcular Finiquito</span>
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                                     </span>
                                 </div>
@@ -2187,6 +2371,197 @@
                     </div>
                 </div>
 
+                <!-- VISTA 5F: HERRAMIENTA ESPECÍFICA - CALCULADORA DE FINIQUITO E INDEMNIZACIÓN (Oculta por defecto) -->
+                <div id="utility-view-finiquito" class="hidden">
+                    <div class="project-details-header" style="margin-bottom: 20px;">
+                        <button class="btn-back" onclick="closeUtilityView()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            <span>Volver a Utilidades</span>
+                        </button>
+                        <div class="project-details-title-area" style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="stat-icon-wrap" style="background: rgba(239, 68, 68, 0.15); color: #f87171; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                                </div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Calculadora de Finiquito & Indemnización</h2>
+                            </div>
+                            <p style="margin-top: 4px; color: var(--text-secondary); font-size: 0.8rem;">Cálculo conforme al Estatuto de los Trabajadores español y normativa fiscal de IRPF</p>
+                        </div>
+                    </div>
+
+                    <div class="finiquito-hub-grid" style="max-width: 1020px; margin: 0 auto; display: grid; grid-template-columns: minmax(320px, 420px) 1fr; gap: 22px;">
+                        
+                        <!-- Columna Izquierda: Parámetros y Datos Laborales -->
+                        <div class="dashboard-column shadow-glass" style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="column-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; margin-bottom: 2px;">
+                                <h3 style="font-size: 0.95rem; margin: 0; font-weight: 700; color: var(--text-primary);">Datos del Contrato & Salario</h3>
+                            </div>
+
+                            <!-- Salario Bruto & Selector Mensual/Anual -->
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <label for="finiquito-salary-input" style="margin: 0;">Salario Bruto</label>
+                                    <div class="finiquito-period-segmented">
+                                        <button type="button" id="btn-period-monthly" class="btn-period-toggle active" onclick="setFiniquitoSalaryPeriod('monthly')">Mensual</button>
+                                        <button type="button" id="btn-period-annual" class="btn-period-toggle" onclick="setFiniquitoSalaryPeriod('annual')">Anual</button>
+                                    </div>
+                                </div>
+                                <div style="position: relative;">
+                                    <input type="number" id="finiquito-salary-input" step="50" min="0" value="2000" placeholder="Ej. 2000" oninput="calculateFiniquito()" required style="padding-right: 40px;">
+                                    <span style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted); font-size: 0.9rem;">€</span>
+                                </div>
+                                <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;">
+                                    <button type="button" class="btn-preset-salary" onclick="setFiniquitoPreset(1323)">1.323 € (SMI)</button>
+                                    <button type="button" class="btn-preset-salary" onclick="setFiniquitoPreset(1800)">1.800 €</button>
+                                    <button type="button" class="btn-preset-salary" onclick="setFiniquitoPreset(2200)">2.200 €</button>
+                                    <button type="button" class="btn-preset-salary" onclick="setFiniquitoPreset(3000)">3.000 €</button>
+                                </div>
+                            </div>
+
+                            <!-- Número de Pagas Anuales -->
+                            <div class="form-group">
+                                <label for="finiquito-num-pagas">Distribución de Pagas</label>
+                                <select id="finiquito-num-pagas" onchange="calculateFiniquito()">
+                                    <option value="12">12 Pagas (Pagas extras prorrateadas mes a mes)</option>
+                                    <option value="14" selected>14 Pagas (Verano y Navidad independientes)</option>
+                                </select>
+                            </div>
+
+                            <!-- Fechas de Inicio y Extinción del Contrato -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label for="finiquito-start-date">Fecha Inicio</label>
+                                    <input type="date" id="finiquito-start-date" onchange="calculateFiniquito()" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="finiquito-end-date">Fecha Despido / Fin</label>
+                                    <input type="date" id="finiquito-end-date" onchange="calculateFiniquito()" required>
+                                </div>
+                            </div>
+
+                            <!-- Causa de Extinción / Tipo de Despido -->
+                            <div class="form-group">
+                                <label for="finiquito-dismissal-type">Motivo de Extinción de Contrato</label>
+                                <select id="finiquito-dismissal-type" onchange="calculateFiniquito()">
+                                    <option value="improcedente" selected>Despido Improcedente (33 días/año - Máx. 24 meses)</option>
+                                    <option value="objetivo">Despido Objetivo o ERE (20 días/año - Máx. 12 meses)</option>
+                                    <option value="temporal">Fin de Contrato Temporal (12 días/año)</option>
+                                    <option value="voluntaria">Baja Voluntaria / Dimisión (0 días indemnización)</option>
+                                    <option value="disciplinario">Despido Disciplinario Procedente (0 días indemnización)</option>
+                                </select>
+                                <div id="finiquito-type-hint" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; line-height: 1.35;">
+                                    33 días de salario por año de servicio con tope de 720 días (24 mensualidades).
+                                </div>
+                            </div>
+
+                            <!-- Vacaciones del Año en Curso -->
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <label for="finiquito-vacations-taken" style="margin: 0;">Vacaciones disfrutadas este año</label>
+                                    <span style="font-size: 0.72rem; color: var(--text-muted);">Base: 30 días/año</span>
+                                </div>
+                                <div style="position: relative;">
+                                    <input type="number" id="finiquito-vacations-taken" min="0" max="30" value="0" placeholder="0" oninput="calculateFiniquito()" style="padding-right: 50px;">
+                                    <span style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">días</span>
+                                </div>
+                                <span style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; display: block;">
+                                    Días naturales que ya hayas disfrutado entre el 1 de enero y la fecha de cese.
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <!-- Columna Derecha: Tarjetas de Resultados, Tabla de Desglose y Resumen -->
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            
+                            <!-- Tarjeta Destacada: TOTAL A PERCIBIR -->
+                            <div class="finiquito-total-card shadow-glass">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                                    <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; color: #cbd5e1;">Liquidación Total a Percibir</span>
+                                    <span id="finiquito-badge-tax" class="badge-tax-exempt">Exento de IRPF</span>
+                                </div>
+                                <div id="finiquito-total-payout" style="font-size: 2.2rem; font-weight: 800; color: #38bdf8; font-family: var(--font-header); letter-spacing: -0.02em; line-height: 1.1;">
+                                    0,00 €
+                                </div>
+                                <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 6px; display: flex; align-items: center; gap: 6px;">
+                                    <span>Indemnización por despido + Liquidación de finiquito</span>
+                                </div>
+                            </div>
+
+                            <!-- KPIs Secundarios (Indemnización vs Finiquito Bruto) -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="dashboard-column shadow-glass" style="padding: 14px 16px; border-left: 3px solid #f87171;">
+                                    <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Indemnización Despido</div>
+                                    <div id="kpi-finiquito-indemnity" style="font-size: 1.35rem; font-weight: 700; color: #f87171; margin-top: 4px;">0,00 €</div>
+                                    <div id="kpi-finiquito-days-label" style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px;">0 días indemnizables</div>
+                                </div>
+                                <div class="dashboard-column shadow-glass" style="padding: 14px 16px; border-left: 3px solid #34d399;">
+                                    <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Finiquito Haberes</div>
+                                    <div id="kpi-finiquito-haberes" style="font-size: 1.35rem; font-weight: 700; color: #34d399; margin-top: 4px;">0,00 €</div>
+                                    <div id="kpi-finiquito-haberes-sub" style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px;">Sueldo mes + Pagas + Vacaciones</div>
+                                </div>
+                            </div>
+
+                            <!-- Tabla Detallada de Conceptos Liquidatorios -->
+                            <div class="dashboard-column shadow-glass" style="padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h4 style="font-size: 0.88rem; font-weight: 700; margin: 0; color: var(--text-primary);">Desglose Legal de la Liquidación</h4>
+                                    <button type="button" class="btn-copy-calc" onclick="copyFiniquitoSummary()" style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.74rem; padding: 4px 10px;">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <span>Copiar Informe</span>
+                                    </button>
+                                </div>
+
+                                <div class="table-container" style="margin-top: 4px;">
+                                    <table class="premium-table" style="width: 100%; font-size: 0.8rem;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="color: var(--text-secondary);"><span style="font-weight: 600; color: var(--text-primary);">Salario Diario Base</span> <span style="font-size: 0.72rem; color: var(--text-muted);">(Anual / 365)</span></td>
+                                                <td id="tbl-finiquito-daily-salary" style="text-align: right; font-weight: 600;">0,00 €/día</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: var(--text-secondary);"><span style="font-weight: 600; color: var(--text-primary);">Antigüedad Computable</span> <span id="tbl-finiquito-seniority-desc" style="font-size: 0.72rem; color: var(--text-muted);"></span></td>
+                                                <td id="tbl-finiquito-seniority-months" style="text-align: right; font-weight: 600;">0 meses</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: var(--text-secondary);"><span style="font-weight: 600; color: var(--text-primary);">Indemnización por Despido</span> <span id="tbl-finiquito-indemnity-calc" style="font-size: 0.72rem; color: var(--text-muted);"></span></td>
+                                                <td id="tbl-finiquito-indemnity-amount" style="text-align: right; font-weight: 700; color: #f87171;">0,00 €</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: var(--text-secondary);"><span style="font-weight: 600; color: var(--text-primary);">Días trabajados en el mes</span> <span id="tbl-finiquito-month-days-desc" style="font-size: 0.72rem; color: var(--text-muted);"></span></td>
+                                                <td id="tbl-finiquito-month-salary" style="text-align: right; font-weight: 600; color: var(--text-primary);">0,00 €</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: var(--text-secondary);"><span style="font-weight: 600; color: var(--text-primary);">Pagas Extraordinarias devengadas</span> <span id="tbl-finiquito-extras-desc" style="font-size: 0.72rem; color: var(--text-muted);"></span></td>
+                                                <td id="tbl-finiquito-extras-amount" style="text-align: right; font-weight: 600; color: var(--text-primary);">0,00 €</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: var(--text-secondary);"><span style="font-weight: 600; color: var(--text-primary);">Vacaciones no disfrutadas</span> <span id="tbl-finiquito-vacations-desc" style="font-size: 0.72rem; color: var(--text-muted);"></span></td>
+                                                <td id="tbl-finiquito-vacations-amount" style="text-align: right; font-weight: 600; color: var(--text-primary);">0,00 €</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr style="border-top: 1px solid var(--border-glass-focus);">
+                                                <td style="font-weight: 700; color: #38bdf8;">TOTAL A PERCIBIR BRUTO</td>
+                                                <td id="tbl-finiquito-grand-total" style="text-align: right; font-weight: 800; font-size: 0.92rem; color: #38bdf8;">0,00 €</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Contexto Legal y Fiscal -->
+                            <div class="forex-context-box" style="border-left-color: #38bdf8;">
+                                <p style="margin: 0; font-size: 0.74rem; color: #cbd5e1; line-height: 1.45;">
+                                    ⚖️ <strong>Marco Legal Vigente:</strong> Conforme al <em>art. 56 del Estatuto de los Trabajadores</em>, las fracciones de mes se computan como mes completo. La indemnización legal fijada con carácter obligatorio está <strong>exenta de tributación por IRPF</strong> hasta un límite de 180.000 € (art. 7.e Ley del IRPF). Los conceptos de finiquito (salario, pagas y vacaciones) tributan como rendimientos de trabajo habituales.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
             </section>
 
         </main>
@@ -2560,7 +2935,49 @@
         </div>
     </div>
 
-    <!-- MODAL DE BIENVENIDA / ONBOARDING -->
+    <!-- MODAL DE REGISTRO RÁPIDO DE GASTO -->
+    <div id="modal-quick-expense" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-quick-expense-title" style="z-index: 10000;">
+        <div class="modal-content shadow-glass" style="max-width: 440px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(25px);">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 id="modal-quick-expense-title" style="font-family: var(--font-header); font-weight: 700; color: white; margin: 0; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+                    <span>💸 Registrar Gasto Rápido</span>
+                </h3>
+                <button type="button" id="btn-close-quick-expense" class="btn-close" aria-label="Cerrar modal">&times;</button>
+            </div>
+            <form id="form-quick-expense-modal" style="padding-top: 15px;">
+                <div class="form-group">
+                    <label for="quick-expense-amount" class="currency-label">Importe (€)</label>
+                    <input type="number" id="quick-expense-amount" step="0.01" min="0.01" placeholder="0.00" required style="font-size: 1.4rem; font-weight: 700; text-align: center; color: var(--danger-light); padding: 10px;">
+                </div>
+                <div class="form-group" style="margin-top: 12px;">
+                    <label for="quick-expense-desc">Concepto / Comercio</label>
+                    <input type="text" id="quick-expense-desc" placeholder="Ej. Supermercado, Café, Gasolina..." required>
+                </div>
+                <div class="form-row-grid" style="margin-top: 12px;">
+                    <div class="form-group">
+                        <label for="quick-expense-category">Categoría</label>
+                        <select id="quick-expense-category" required>
+                            <!-- Inyectado dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quick-expense-bank">Cuenta de Cargo</label>
+                        <select id="quick-expense-bank" required>
+                            <!-- Inyectado dinámicamente -->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 12px;">
+                    <label for="quick-expense-date">Fecha</label>
+                    <input type="date" id="quick-expense-date" required>
+                </div>
+                <div class="form-actions" style="margin-top: 18px; border-top: 1px solid var(--border-glass); padding-top: 16px;">
+                    <button type="button" id="btn-cancel-quick-expense" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-submit" style="background: var(--danger); border-color: var(--danger); box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);">Guardar Gasto</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div id="modal-onboarding" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-onboarding-title" style="z-index: 15000;">
         <div class="modal-content onboarding-modal shadow-glass" style="max-width: 600px; border: 1.5px solid var(--border-glass-focus); background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(25px); padding: 30px;">
             <div class="modal-header" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -2757,6 +3174,7 @@
         if (window.location.protocol === 'file:' && !window._finanzasAppStarted) {
             var s = document.createElement('script');
             s.src = 'src/app.js';
+            s.async = false;
             document.body.appendChild(s);
         }
     </script>

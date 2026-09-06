@@ -11,6 +11,7 @@ export default defineConfig({
         calculadoraIrpf: resolve(__dirname, 'calculadora-irpf.html'),
         conversorDivisas: resolve(__dirname, 'conversor-divisas.html'),
         calculadoraMargen: resolve(__dirname, 'calculadora-margen-beneficio.html'),
+        calculadoraFiniquito: resolve(__dirname, 'calculadora-finiquito.html'),
         calculadoraFinanciera: resolve(__dirname, 'calculadora-financiera.html'),
         calculadoraDepositos: resolve(__dirname, 'calculadora-depositos.html'),
         calculadoraHipoteca: resolve(__dirname, 'calculadora-hipoteca.html'),

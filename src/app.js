@@ -1,7 +1,8 @@
 // MOTOR DE FINANZAS PERSONAL: FINANZAS FLEX & SANDBOX PROYECTOS
 // Desarrollado con lógica robusta de doble entrada, persistencia y reactividad.
 
-import CONSEJOS_FINANCIEROS from './consejos.js';
+// CONSEJOS_FINANCIEROS se carga globalmente desde src/consejos.js para soporte file:/// y web
+// (sin import para compatibilidad total con carga clásica directa)
 
 const CONSEJOS = (typeof CONSEJOS_FINANCIEROS !== "undefined" && Array.isArray(CONSEJOS_FINANCIEROS) && CONSEJOS_FINANCIEROS.length)
     ? CONSEJOS_FINANCIEROS
@@ -749,6 +750,410 @@ function renderDepositDestBanksOptions(selectElementId, currentSelectedId = null
         select.appendChild(opt);
     });
 }
+
+
+// ----------------------------------------------------
+// 12.5. ERGONOMÍA Y CONTROL DIARIO DEL TABLERO
+// ----------------------------------------------------
+
+window.navigateToTab = function(tabId) {
+    const tabEl = document.getElementById(tabId);
+    if (tabEl) {
+        tabEl.click();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
+
+window.quickTransferToCoverMinimum = function(toBankId, missingAmount) {
+    const formTransfer = document.getElementById("form-transfer-money");
+    if (!formTransfer) return;
+    
+    // Abrir formulario
+    formTransfer.classList.remove("hidden");
+    renderTransferDropdowns();
+    
+    const toBankSelect = document.getElementById("transfer-to-bank");
+    const fromBankSelect = document.getElementById("transfer-from-bank");
+    const amountInput = document.getElementById("transfer-amount");
+    const dateInput = document.getElementById("transfer-date");
+    const descInput = document.getElementById("transfer-desc");
+    
+    if (toBankSelect) toBankSelect.value = toBankId;
+    if (amountInput) amountInput.value = missingAmount.toFixed(2);
+    if (dateInput) dateInput.value = getTodayString();
+    
+    const targetBank = state.banks.find(b => b.id === toBankId);
+    if (descInput) descInput.value = `Traspaso para cubrir saldo mínimo de "${targetBank ? targetBank.name : 'cuenta'}"`;
+    
+    // Escoger como origen la cuenta líquida con mayor saldo que no sea toBankId
+    const candidates = state.banks.filter(b => b.id !== toBankId && b.bankType !== 'deposit' && b.balance > 0);
+    if (candidates.length > 0) {
+        candidates.sort((a, b) => b.balance - a.balance);
+        if (fromBankSelect) fromBankSelect.value = candidates[0].id;
+    }
+    
+    formTransfer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    showToast(`Preparado traspaso de ${formatCurrency(missingAmount)} hacia "${targetBank ? targetBank.name : 'cuenta'}". Pulsa "Realizar Traspaso" para confirmar.`, "info");
+};
+
+function initDashboardRightTabs() {
+    const btnOverview = document.getElementById("btn-subtab-dash-overview");
+    const btnFunnel = document.getElementById("btn-subtab-dash-funnel");
+    const btnOpenFunnel = document.getElementById("btn-dash-open-funnel");
+    const btnCtaOpenFunnel = document.getElementById("btn-dash-cta-open-funnel");
+    const containerOverview = document.getElementById("container-dash-overview");
+    const containerFunnel = document.getElementById("container-dash-funnel");
+    
+    if (!btnOverview || !btnFunnel || !containerOverview || !containerFunnel) return;
+    
+    const setTab = (tab) => {
+        if (tab === 'overview') {
+            btnOverview.classList.add("active");
+            btnFunnel.classList.remove("active");
+            containerOverview.classList.remove("hidden");
+            containerFunnel.classList.add("hidden");
+            renderDashboardOverview();
+        } else {
+            btnOverview.classList.remove("active");
+            btnFunnel.classList.add("active");
+            containerOverview.classList.add("hidden");
+            containerFunnel.classList.remove("hidden");
+        }
+    };
+    
+    btnOverview.addEventListener("click", () => setTab('overview'));
+    btnFunnel.addEventListener("click", () => setTab('funnel'));
+    if (btnOpenFunnel) btnOpenFunnel.addEventListener("click", () => setTab('funnel'));
+    if (btnCtaOpenFunnel) btnCtaOpenFunnel.addEventListener("click", () => setTab('funnel'));
+}
+
+function renderDashboardOverview() {
+    const containerOverview = document.getElementById("container-dash-overview");
+    if (!containerOverview || containerOverview.classList.contains("hidden")) return;
+    
+    // 1. Ritmo de Gasto y Presupuesto Restante
+    const [currY, currM] = state.currentMonth.split("-").map(Number);
+    const totalDaysInMonth = new Date(currY, currM, 0).getDate();
+    const today = new Date();
+    const isCurrent = (today.getFullYear() === currY && today.getMonth() + 1 === currM);
+    const currentDay = isCurrent ? today.getDate() : totalDaysInMonth;
+    const remainingDays = isCurrent ? Math.max(1, totalDaysInMonth - currentDay + 1) : 1;
+    
+    const monthlyIncomes = (state.transactions || [])
+        .filter(t => t.type === "income" && t.subtype !== "Traspaso" && t.month === state.currentMonth)
+        .reduce((sum, t) => sum + t.amount, 0);
+        
+    const monthlyExpenses = (state.transactions || [])
+        .filter(t => t.type === "expense" && t.subtype !== "Traspaso" && t.month === state.currentMonth)
+        .reduce((sum, t) => sum + t.amount, 0);
+        
+    // Gastos fijos aplicables este mes según periodicidad
+    const currentMNum = String(currM).padStart(2, "0");
+    const applicableFixed = (state.fixedExpenses || []).filter(fe => {
+        const per = fe.periodicity || "Mensual";
+        const refM = parseInt(fe.chargeMonth || "01");
+        if (per === "Mensual") return true;
+        if (per === "Trimestral") return Math.abs(currM - refM) % 3 === 0;
+        if (per === "Semestral") return Math.abs(currM - refM) % 6 === 0;
+        if (per === "Anual") return fe.chargeMonth === currentMNum;
+        return true;
+    });
+
+    const totalFixedCommitted = applicableFixed.reduce((sum, fe) => sum + (parseFloat(fe.amount) || 0), 0);
+        
+    // Presupuesto manual explícito por bancos (si existe en Cierre de Mes)
+    let explicitBudget = 0;
+    if (state.budgets && state.budgets[state.currentMonth]) {
+        Object.values(state.budgets[state.currentMonth]).forEach(b => {
+            explicitBudget += (parseFloat(b.expectedExpense) || 0);
+        });
+    }
+
+    // Nómina / Ingreso planificado en el Embudo
+    const plan = state.plannedIncomes && state.plannedIncomes[state.currentMonth];
+    const plannedSalary = plan && plan.amount > 0 ? parseFloat(plan.amount) : 0;
+    
+    const paceAmountEl = document.getElementById("dash-pace-amount");
+    const paceLabelEl = document.getElementById("dash-pace-label");
+    const remainingBudgetEl = document.getElementById("dash-remaining-budget");
+    const remainingBudgetLabelEl = document.getElementById("dash-remaining-budget-label");
+    const paceProgressBar = document.getElementById("dash-pace-progress-bar");
+    const paceDescEl = document.getElementById("dash-pace-description");
+
+    const dayProgressPct = Math.min(100, Math.round((currentDay / totalDaysInMonth) * 100));
+    if (paceProgressBar) paceProgressBar.style.width = `${dayProgressPct}%`;
+
+    if (explicitBudget > 0) {
+        // Opción 1: Presupuesto configurado explícitamente en Cierre de Mes
+        const remainingBudget = Math.max(0, explicitBudget - monthlyExpenses);
+        const dailyPace = isCurrent ? (remainingBudget / remainingDays) : 0;
+        
+        if (paceLabelEl) paceLabelEl.textContent = "Ritmo de Gasto Disponible";
+        if (paceAmountEl) paceAmountEl.textContent = isCurrent ? `${formatCurrency(dailyPace)} / día` : "Mes finalizado";
+        if (remainingBudgetLabelEl) remainingBudgetLabelEl.textContent = "Presupuesto Restante";
+        if (remainingBudgetEl) remainingBudgetEl.textContent = formatCurrency(remainingBudget);
+        
+        if (paceDescEl) {
+            if (isCurrent) {
+                paceDescEl.innerHTML = `Día <strong>${currentDay}</strong> de ${totalDaysInMonth} (quedan <strong>${remainingDays} días</strong>). Llevas gastados <strong>${formatCurrency(monthlyExpenses)}</strong> de ${formatCurrency(explicitBudget)} presupuestados.`;
+            } else {
+                paceDescEl.textContent = `Resumen de ${formatMonthString(state.currentMonth)}: Gastados ${formatCurrency(monthlyExpenses)} de ${formatCurrency(explicitBudget)} presupuestados.`;
+            }
+        }
+    } else if (plannedSalary > 0) {
+        // Opción 2: Nómina o ingreso mensual previsto registrado en el Embudo
+        const remainingSalary = Math.max(0, plannedSalary - monthlyExpenses);
+        const dailyPace = isCurrent ? (remainingSalary / remainingDays) : 0;
+        
+        if (paceLabelEl) paceLabelEl.textContent = "Margen Diario Disponible";
+        if (paceAmountEl) paceAmountEl.textContent = isCurrent ? `${formatCurrency(dailyPace)} / día` : "Mes finalizado";
+        if (remainingBudgetLabelEl) remainingBudgetLabelEl.textContent = "Disponible de Nómina";
+        if (remainingBudgetEl) remainingBudgetEl.textContent = formatCurrency(remainingSalary);
+        
+        if (paceDescEl) {
+            if (isCurrent) {
+                paceDescEl.innerHTML = `Día <strong>${currentDay}</strong> de ${totalDaysInMonth} (quedan <strong>${remainingDays} días</strong>). Llevas gastados <strong>${formatCurrency(monthlyExpenses)}</strong> sobre tu nómina prevista de ${formatCurrency(plannedSalary)}.`;
+            } else {
+                paceDescEl.textContent = `Resumen de ${formatMonthString(state.currentMonth)}: Gastados ${formatCurrency(monthlyExpenses)} de ${formatCurrency(plannedSalary)} previstos.`;
+            }
+        }
+    } else {
+        // Opción 3: Sin presupuesto fijado aún. Mostramos el gasto medio diario real y los fijos previstos
+        const avgDailySpent = currentDay > 0 ? (monthlyExpenses / currentDay) : 0;
+        
+        if (paceLabelEl) paceLabelEl.textContent = "Gasto Diario Medio";
+        if (paceAmountEl) paceAmountEl.textContent = isCurrent ? `${formatCurrency(avgDailySpent)} / día` : `${formatCurrency(monthlyExpenses / totalDaysInMonth)} / día`;
+        if (remainingBudgetLabelEl) remainingBudgetLabelEl.textContent = "Fijos Comprometidos";
+        if (remainingBudgetEl) remainingBudgetEl.textContent = formatCurrency(totalFixedCommitted);
+        
+        if (paceDescEl) {
+            if (isCurrent) {
+                paceDescEl.innerHTML = `Día <strong>${currentDay}</strong> de ${totalDaysInMonth} (quedan <strong>${remainingDays} días</strong>). Llevas gastados <strong>${formatCurrency(monthlyExpenses)}</strong> en ${currentDay} días. Fijos comprometidos del mes: <strong>${formatCurrency(totalFixedCommitted)}</strong>.`;
+            } else {
+                paceDescEl.textContent = `Total gastado en ${formatMonthString(state.currentMonth)}: ${formatCurrency(monthlyExpenses)}. Gastos fijos: ${formatCurrency(totalFixedCommitted)}.`;
+            }
+        }
+    }
+    
+    // 2. Próximos Recibos Fijos (Pendientes de cobro en el mes)
+    const upcomingContainer = document.getElementById("dash-upcoming-fixed-list");
+    const upcomingBadge = document.getElementById("dash-upcoming-count-badge");
+    
+    if (upcomingContainer) {
+        upcomingContainer.innerHTML = "";
+        
+        // Identificar cuáles ya han sido cobrados/pasados a transacciones este mes
+        const pendingFixed = applicableFixed.filter(fe => {
+            const feNameLower = (fe.name || "").toLowerCase().trim();
+            const isPaid = (state.transactions || []).some(t => {
+                if (t.type !== "expense" || t.month !== state.currentMonth) return false;
+                
+                const tDescLower = (t.description || "").toLowerCase().trim();
+                const isFixedSubtype = (t.subtype === "Fixed" || t.subtype === "Fijo");
+                
+                // 1. Coincidencia exacta por nombre y banco
+                if (t.description === fe.name && (!fe.bankId || t.bankId === fe.bankId)) return true;
+                
+                // 2. Coincidencia por subtipo Fixed y nombre contenido
+                if (isFixedSubtype && (tDescLower.includes(feNameLower) || feNameLower.includes(tDescLower))) return true;
+                
+                // 3. Coincidencia exacta de concepto (ej: usuario apuntó "Netflix" o "YouTube")
+                if (tDescLower === feNameLower) return true;
+                
+                // 4. Coincidencia si el concepto contiene el nombre del gasto fijo e importe coincide
+                if ((tDescLower.includes(feNameLower) || feNameLower.includes(tDescLower)) && Math.abs(t.amount - fe.amount) < 0.01) return true;
+                
+                return false;
+            });
+            return !isPaid;
+        });
+        
+        // Ordenar: Próximos (día de hoy o futuro) primero, y pasados pendientes al final
+        pendingFixed.sort((a, b) => {
+            const dayA = parseInt(a.day || a.chargeDay || 1);
+            const dayB = parseInt(b.day || b.chargeDay || 1);
+            const isPastA = isCurrent && (dayA < currentDay);
+            const isPastB = isCurrent && (dayB < currentDay);
+            
+            if (isPastA !== isPastB) {
+                return isPastA ? 1 : -1; // Los que están por venir van primero
+            }
+            return dayA - dayB;
+        });
+        
+        if (upcomingBadge) upcomingBadge.textContent = pendingFixed.length;
+        
+        if (pendingFixed.length === 0) {
+            upcomingContainer.innerHTML = `
+                <div style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; padding: 12px; text-align: center; color: var(--success-light); font-size: 0.8rem; font-weight: 600;">
+                    🎉 ¡Todos los recibos fijos previstos de este mes están cobrados!
+                </div>
+            `;
+        } else {
+            pendingFixed.slice(0, 5).forEach(fe => {
+                const bank = state.banks.find(b => b.id === fe.bankId);
+                const bankName = bank ? bank.name : "Cuenta";
+                const day = parseInt(fe.day || fe.chargeDay || 1);
+                const isPast = isCurrent && (day < currentDay);
+                const isUrgent = isCurrent && (day >= currentDay && day <= currentDay + 3);
+                
+                let dayBadgeHTML = "";
+                if (isPast) {
+                    dayBadgeHTML = `<span style="font-weight: 700; font-size: 0.72rem; background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 6px; padding: 2px 6px;" title="Fecha de cobro prevista anterior a hoy">Día ${day} (Pendiente)</span>`;
+                } else if (isUrgent) {
+                    dayBadgeHTML = `<span style="font-weight: 700; font-size: 0.72rem; background: rgba(244, 63, 94, 0.2); color: var(--danger-light); border: 1px solid rgba(244, 63, 94, 0.4); border-radius: 6px; padding: 2px 6px;" title="Vence en los próximos 3 días">Día ${day}</span>`;
+                } else {
+                    dayBadgeHTML = `<span style="font-weight: 700; font-size: 0.72rem; background: rgba(0, 229, 255, 0.12); color: var(--primary-light); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 6px; padding: 2px 6px;">Día ${day}</span>`;
+                }
+                
+                const item = document.createElement("div");
+                item.style.cssText = "display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); font-size: 0.82rem;";
+                
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        ${dayBadgeHTML}
+                        <div>
+                            <strong style="color: var(--text-primary); display: block;">${fe.name}</strong>
+                            <span style="font-size: 0.7rem; color: var(--text-muted);">${bankName}</span>
+                        </div>
+                    </div>
+                    <span style="font-weight: 700; color: var(--danger-light); font-size: 0.9rem;">
+                        -${formatCurrency(fe.amount)}
+                    </span>
+                `;
+                upcomingContainer.appendChild(item);
+            });
+        }
+    }
+    
+    // 3. Últimos Movimientos del Mes
+    const recentTxContainer = document.getElementById("dash-recent-tx-list");
+    if (recentTxContainer) {
+        recentTxContainer.innerHTML = "";
+        
+        const monthTx = (state.transactions || [])
+            .filter(t => t.month === state.currentMonth)
+            .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+            
+        if (monthTx.length === 0) {
+            recentTxContainer.innerHTML = `
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.78rem; padding: 10px;">
+                    Aún no hay movimientos registrados este mes.
+                </div>
+            `;
+        } else {
+            monthTx.slice(0, 4).forEach(tx => {
+                const bank = state.banks.find(b => b.id === tx.bankId);
+                const bankName = bank ? bank.name : "";
+                const isExpense = tx.type === "expense";
+                const color = isExpense ? "var(--danger-light)" : "var(--success-light)";
+                const sign = isExpense ? "-" : "+";
+                
+                const row = document.createElement("div");
+                row.style.cssText = "display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem;";
+                
+                row.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
+                        <span style="font-size: 0.7rem; color: var(--text-muted); font-family: monospace; flex-shrink: 0;">${tx.date ? tx.date.substring(8, 10) + '/' + tx.date.substring(5, 7) : '--/--'}</span>
+                        <span style="font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${tx.description}</span>
+                        ${bankName ? `<span style="font-size: 0.66rem; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 1px 5px; border-radius: 4px; flex-shrink: 0;">${bankName}</span>` : ""}
+                    </div>
+                    <span style="font-weight: 700; color: ${color}; margin-left: 8px; flex-shrink: 0;">
+                        ${sign}${formatCurrency(tx.amount)}
+                    </span>
+                `;
+                recentTxContainer.appendChild(row);
+            });
+        }
+    }
+}
+
+function initQuickExpenseModal() {
+    const btnOpen = document.getElementById("btn-quick-add-expense-dash");
+    const modal = document.getElementById("modal-quick-expense");
+    const btnClose = document.getElementById("btn-close-quick-expense");
+    const btnCancel = document.getElementById("btn-cancel-quick-expense");
+    const form = document.getElementById("form-quick-expense-modal");
+    
+    if (!btnOpen || !modal || !form) return;
+    
+    const openModal = () => {
+        modal.classList.remove("hidden");
+        const dateInput = document.getElementById("quick-expense-date");
+        if (dateInput) dateInput.value = getTodayString();
+        
+        const catSelect = document.getElementById("quick-expense-category");
+        if (catSelect) {
+            const categories = ["Alimentación / Super", "Ocio / Salidas", "Transporte / Gasolina", "Hogar / Compras", "Salud / Farmacia", "Suscripciones", "Restaurantes", "Ropa / Calzado", "Educación", "Mascotas", "Regalos", "Otros"];
+            catSelect.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join("");
+        }
+        
+        const bankSelect = document.getElementById("quick-expense-bank");
+        if (bankSelect) {
+            const normalBanks = state.banks.filter(b => b.bankType === "normal" || !b.bankType);
+            bankSelect.innerHTML = normalBanks.map(b => `<option value="${b.id}">${b.name} (${formatCurrency(b.balance)})` + `</option>`).join("");
+        }
+        
+        const amountInput = document.getElementById("quick-expense-amount");
+        if (amountInput) {
+            amountInput.value = "";
+            setTimeout(() => amountInput.focus(), 100);
+        }
+        const descInput = document.getElementById("quick-expense-desc");
+        if (descInput) descInput.value = "";
+    };
+    
+    const closeModal = () => {
+        modal.classList.add("hidden");
+        form.reset();
+    };
+    
+    btnOpen.addEventListener("click", openModal);
+    if (btnClose) btnClose.addEventListener("click", closeModal);
+    if (btnCancel) btnCancel.addEventListener("click", closeModal);
+    
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+    });
+    
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const amount = parseFloat(document.getElementById("quick-expense-amount").value);
+        const desc = document.getElementById("quick-expense-desc").value.trim();
+        const category = document.getElementById("quick-expense-category").value;
+        const bankId = document.getElementById("quick-expense-bank").value;
+        const date = document.getElementById("quick-expense-date").value;
+        
+        if (isNaN(amount) || amount <= 0 || !desc || !bankId || !date) {
+            showToast("Por favor complete todos los datos requeridos.", "danger");
+            return;
+        }
+        
+        const bank = state.banks.find(b => b.id === bankId);
+        if (!bank) return;
+        
+        bank.balance = parseFloat((bank.balance - amount).toFixed(2));
+        
+        const txMonth = date.substring(0, 7);
+        const newTx = {
+            id: "tx_quick_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+            type: "expense",
+            subtype: "Variable",
+            category: category,
+            description: desc,
+            amount: amount,
+            bankId: bankId,
+            date: date,
+            month: txMonth
+        };
+        
+        state.transactions.push(newTx);
+        saveState();
+        closeModal();
+        showToast(`Gasto de ${formatCurrency(amount)} restado de "${bank.name}".`, "success");
+    });
+}
+
 
 function initBanksManager() {
     const btnShowAdd = document.getElementById("btn-show-add-bank");
@@ -2759,6 +3164,7 @@ function renderAll() {
     renderGlobalStats();
     renderBanksList();
     renderInvestmentsList();
+    renderDashboardOverview();
     renderFunnelInputs();
     renderPlannedIncomeBanner();
     renderExpensesDropdowns();
@@ -2921,12 +3327,20 @@ function renderGlobalStats() {
     const netSavings = totalIncome - totalExpense;
     const netEl = document.getElementById("global-monthly-net");
     const netCard = netEl.closest(".stat-card");
+    const netInfo = netCard.querySelector(".stat-info");
 
     netEl.textContent = formatCurrency(netSavings);
     if (netSavings >= 0) {
         netCard.className = "stat-card card-net savings-plus";
+        if (netInfo) netInfo.textContent = "Ingresos menos gastos en el mes actual";
     } else {
-        netCard.className = "stat-card card-net savings-minus";
+        if (totalIncome === 0 && totalExpense > 0) {
+            netCard.className = "stat-card card-net";
+            if (netInfo) netInfo.textContent = "Pendiente de recibir los ingresos del mes";
+        } else {
+            netCard.className = "stat-card card-net savings-minus";
+            if (netInfo) netInfo.textContent = "Ingresos menos gastos en el mes actual";
+        }
     }
 }
 
@@ -3061,9 +3475,9 @@ function renderBanksList() {
             const neededAmount = pendingFixedSum - bank.balance;
             const tooltipText = `Faltan ${formatCurrency(neededAmount)} para cubrir cobros fijos pendientes este mes:&#10;• ` + pendingExpensesNames.join("&#10;• ");
             alertsHTML += `
-                <div class="alert-overdraft" title="${tooltipText}" style="margin-top: 4px;">
+                <div class="alert-overdraft" onclick="quickTransferToCoverMinimum('${bank.id}', ${neededAmount})" title="${tooltipText} (Clic para preparar traspaso)" style="margin-top: 4px; cursor: pointer; transition: var(--transition-smooth);">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                    <span>Faltan ${formatCurrency(neededAmount)} (Fijos)</span>
+                    <span>Faltan ${formatCurrency(neededAmount)} (Fijos) <strong style="text-decoration: underline; margin-left: 2px;">Cubrir ↗</strong></span>
                 </div>
             `;
         }
@@ -3072,9 +3486,9 @@ function renderBanksList() {
             if (bank.balance < bank.minBalance) {
                 const deficit = bank.minBalance - bank.balance;
                 alertsHTML += `
-                    <div class="alert-overdraft" title="Por debajo de tu mínimo de seguridad de ${formatCurrency(bank.minBalance)}" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); margin-top: 4px;">
+                    <div class="alert-overdraft" onclick="quickTransferToCoverMinimum('${bank.id}', ${deficit})" title="Por debajo de tu mínimo de seguridad. Clic para preparar traspaso de ${formatCurrency(deficit)} y cubrir el mínimo." style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); margin-top: 4px; cursor: pointer; transition: var(--transition-smooth);">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                        <span>Mínimo: Faltan ${formatCurrency(deficit)}</span>
+                        <span>Mínimo: Faltan ${formatCurrency(deficit)} <strong style="text-decoration: underline; margin-left: 2px;">Cubrir ↗</strong></span>
                     </div>
                 `;
             } else {
@@ -3404,146 +3818,422 @@ function renderExpensesDropdowns() {
 }
 
 // MÓDULO 2: TABLA DE GASTOS FIJOS (MATRIZ)
+// Variable para almacenar el filtro de banco seleccionado en la matriz
+let selectedFixedBankFilter = 'all';
+
 function renderFixedExpensesTable() {
     const tbody = document.getElementById("tbody-fixed-expenses");
+    const tfoot = document.getElementById("tfoot-fixed-expenses");
+    if (!tbody) return;
     tbody.innerHTML = "";
+    if (tfoot) tfoot.innerHTML = "";
 
-    // Actualizar el estado del botón de aplicación global de fijos
     const btnApply = document.getElementById("btn-execute-fixed-expenses");
     const btnText = document.getElementById("btn-execute-fixed-text");
-    
-    // Contar cuántos faltan por aplicar
-    let pendingToApply = 0;
-
-    if (state.fixedExpenses.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">No hay gastos recurrentes definidos en la matriz.</td></tr>`;
-        btnApply.className = "btn-action-apply applied";
-        btnText.textContent = "Aplicar Gastos Fijos (0 pendientes)";
-        btnApply.setAttribute("disabled", "true");
-        return;
-    }
 
     const currentMonthNumber = state.currentMonth.split("-")[1]; // "MM"
     const currentM = parseInt(currentMonthNumber);
 
-    // Ordenar automáticamente por día de operación
-    const sortedFixedExpenses = [...state.fixedExpenses].sort((a, b) => (a.day || 1) - (b.day || 1));
-    sortedFixedExpenses.forEach(fe => {
-        const bank = state.banks.find(b => b.id === fe.bankId);
-        const bankName = bank ? bank.name : "Desconocido";
-        const destBank = fe.destBankId ? state.banks.find(b => b.id === fe.destBankId) : null;
-        const destBankHTML = destBank ? `<div style="font-size:0.7rem; color:var(--success-light); margin-top:4px; font-weight:500;">➡️ Destino: ${destBank.name}</div>` : "";
+    // 1. Cálculos globales de gastos fijos y por banco (KPIs y periodicidades)
+    let totalThisMonthCommitted = 0;
+    let totalThisMonthPaid = 0;
+    let totalAnnualCost = 0;
+
+    const bankStats = {};
+    const applicableList = [];
+
+    state.fixedExpenses.forEach(fe => {
+        const bId = fe.bankId || "other";
+        if (!bankStats[bId]) {
+            bankStats[bId] = { count: 0, monthTotal: 0, monthPaid: 0, annualTotal: 0 };
+        }
+        bankStats[bId].count++;
 
         const periodicity = fe.periodicity || "Mensual";
         const refM = parseInt(fe.chargeMonth || "01");
 
         let appliesThisMonth = false;
+        let factorAnnual = 12; // Número de veces que se cobra al año
+
         if (periodicity === "Mensual") {
             appliesThisMonth = true;
+            factorAnnual = 12;
         } else if (periodicity === "Trimestral") {
             appliesThisMonth = (Math.abs(currentM - refM) % 3 === 0);
+            factorAnnual = 4;
         } else if (periodicity === "Semestral") {
             appliesThisMonth = (Math.abs(currentM - refM) % 6 === 0);
+            factorAnnual = 2;
         } else if (periodicity === "Anual") {
             appliesThisMonth = (fe.chargeMonth === currentMonthNumber);
+            factorAnnual = 1;
         }
 
-        // Comprobar si ya se aplicó este mes
-        const isAppliedThisMonth = state.transactions.some(tx => 
-            tx.type === "expense" &&
-            tx.subtype === "Fixed" &&
-            tx.description === fe.name &&
-            tx.bankId === fe.bankId &&
-            tx.month === state.currentMonth
-        );
+        const feAnnualCost = fe.amount * factorAnnual;
+        totalAnnualCost += feAnnualCost;
+        bankStats[bId].annualTotal += feAnnualCost;
 
-        if (appliesThisMonth && !isAppliedThisMonth) {
-            pendingToApply++;
+        // Comprobar si ya se aplicó/cobró en el mes en curso
+        const feNameLower = (fe.name || "").toLowerCase().trim();
+        const isPaid = (state.transactions || []).some(t => {
+            if (t.type !== "expense" || t.month !== state.currentMonth) return false;
+            const tDescLower = (t.description || "").toLowerCase().trim();
+            const isFixedSubtype = (t.subtype === "Fixed" || t.subtype === "Fijo");
+            
+            if (t.description === fe.name && (!fe.bankId || t.bankId === fe.bankId)) return true;
+            if (isFixedSubtype && (tDescLower.includes(feNameLower) || feNameLower.includes(tDescLower))) return true;
+            if (tDescLower === feNameLower) return true;
+            if ((tDescLower.includes(feNameLower) || feNameLower.includes(tDescLower)) && Math.abs(t.amount - fe.amount) < 0.01) return true;
+            return false;
+        });
+
+        if (appliesThisMonth) {
+            totalThisMonthCommitted += fe.amount;
+            bankStats[bId].monthTotal += fe.amount;
+            if (isPaid) {
+                totalThisMonthPaid += fe.amount;
+                bankStats[bId].monthPaid += fe.amount;
+            }
         }
+
+        applicableList.push({
+            fe,
+            appliesThisMonth,
+            isPaid,
+            factorAnnual,
+            monthlyEquiv: (fe.amount * factorAnnual) / 12
+        });
+    });
+
+    // 2. Determinar métricas activas para las Tarjetas KPI según la cuenta seleccionada
+    let activeMonthCommitted = 0;
+    let activeMonthPaid = 0;
+    let activeMonthPending = 0;
+    let activeAnnualTotal = 0;
+    let activeMonthlyAvg = 0;
+    let activeCount = 0;
+
+    let monthLabel = "Comprometido Este Mes";
+    let yearLabel = "Coste Total Anual";
+    let yearSub = "";
+    let avgLabel = "Media Mensual Teórica";
+    let avgSub = "";
+
+    if (selectedFixedBankFilter === 'all') {
+        activeMonthCommitted = totalThisMonthCommitted;
+        activeMonthPaid = totalThisMonthPaid;
+        activeMonthPending = Math.max(0, totalThisMonthCommitted - totalThisMonthPaid);
+        activeAnnualTotal = totalAnnualCost;
+        activeMonthlyAvg = state.fixedExpenses.length > 0 ? (totalAnnualCost / 12) : 0;
+        activeCount = state.fixedExpenses.length;
+
+        monthLabel = "Comprometido Este Mes";
+        yearLabel = "Coste Total Anual";
+        yearSub = `Suma anualizada de ${activeCount} fijos`;
+        avgLabel = "Media Mensual Teórica";
+        avgSub = "Media de todas las cuentas";
+    } else {
+        const activeBank = state.banks.find(b => b.id === selectedFixedBankFilter);
+        const activeBankName = activeBank ? activeBank.name : "Cuenta";
+        const stat = bankStats[selectedFixedBankFilter] || { count: 0, monthTotal: 0, monthPaid: 0, annualTotal: 0 };
+
+        activeMonthCommitted = stat.monthTotal;
+        activeMonthPaid = stat.monthPaid;
+        activeMonthPending = Math.max(0, stat.monthTotal - stat.monthPaid);
+        activeAnnualTotal = stat.annualTotal;
+        activeMonthlyAvg = stat.count > 0 ? (stat.annualTotal / 12) : 0;
+        activeCount = stat.count;
+
+        monthLabel = `Comprometido · ${escapeHtml(activeBankName)}`;
+        yearLabel = `Coste Anual · ${escapeHtml(activeBankName)}`;
+        yearSub = `${activeCount} fijos en esta cuenta`;
+        avgLabel = `Media Mensual · ${escapeHtml(activeBankName)}`;
+        avgSub = `Media mensual en ${escapeHtml(activeBankName)}`;
+    }
+
+    // Actualizar Tarjetas KPI en la cabecera
+    const kpiMonthLabelEl = document.getElementById("fixed-kpi-month-label");
+    const kpiMonthTotalEl = document.getElementById("fixed-kpi-month-total");
+    const kpiMonthStatusEl = document.getElementById("fixed-kpi-month-status");
+    const kpiYearLabelEl = document.getElementById("fixed-kpi-year-label");
+    const kpiYearTotalEl = document.getElementById("fixed-kpi-year-total");
+    const kpiYearSubEl = document.getElementById("fixed-kpi-year-sub");
+    const kpiAvgLabelEl = document.getElementById("fixed-kpi-avg-label");
+    const kpiAvgMonthlyEl = document.getElementById("fixed-kpi-avg-monthly");
+    const kpiCountEl = document.getElementById("fixed-kpi-count");
+
+    if (kpiMonthLabelEl) kpiMonthLabelEl.innerHTML = monthLabel;
+    if (kpiMonthTotalEl) kpiMonthTotalEl.textContent = formatCurrency(activeMonthCommitted);
+    if (kpiMonthStatusEl) {
+        kpiMonthStatusEl.innerHTML = `✓ <span style="color:var(--success-light); font-weight:600;">${formatCurrency(activeMonthPaid)}</span> cobrado · ⏳ <span style="color:${activeMonthPending > 0 ? '#f59e0b' : 'var(--text-muted)'}; font-weight:600;">${formatCurrency(activeMonthPending)}</span> pendiente`;
+    }
+
+    if (kpiYearLabelEl) kpiYearLabelEl.innerHTML = yearLabel;
+    if (kpiYearTotalEl) kpiYearTotalEl.textContent = `${formatCurrency(activeAnnualTotal)} / año`;
+    if (kpiYearSubEl) kpiYearSubEl.textContent = yearSub;
+
+    if (kpiAvgLabelEl) kpiAvgLabelEl.innerHTML = avgLabel;
+    if (kpiAvgMonthlyEl) kpiAvgMonthlyEl.textContent = `${formatCurrency(activeMonthlyAvg)} / mes`;
+    if (kpiCountEl) kpiCountEl.textContent = avgSub;
+
+    // 3. Renderizar Filtros de Matriz por Banco (Dropdown select y Segmented buttons sincronizados)
+    const selectEl = document.getElementById("filter-fixed-bank-select");
+    const chipsContainer = document.getElementById("fixed-bank-filter-chips");
+    const filterFeedback = document.getElementById("fixed-filter-feedback");
+
+    if (selectEl) {
+        selectEl.innerHTML = "";
+
+        // Opción Todas las Cuentas
+        const optAll = document.createElement("option");
+        optAll.value = "all";
+        optAll.textContent = `Todas las Cuentas (${state.fixedExpenses.length} fijos · ${formatCurrency(totalThisMonthCommitted)}/mes)`;
+        if (selectedFixedBankFilter === 'all') optAll.selected = true;
+        selectEl.appendChild(optAll);
+
+        Object.keys(bankStats).forEach(bId => {
+            const bank = state.banks.find(b => b.id === bId);
+            const bName = bank ? bank.name : "Otros";
+            const stat = bankStats[bId];
+
+            const opt = document.createElement("option");
+            opt.value = bId;
+            opt.textContent = `${bName} (${stat.count} fijos · ${formatCurrency(stat.monthTotal)}/mes · ${formatCurrency(stat.annualTotal)}/año)`;
+            if (selectedFixedBankFilter === bId) opt.selected = true;
+            selectEl.appendChild(opt);
+        });
+
+        if (!selectEl.dataset.listenerAttached) {
+            selectEl.addEventListener("change", (e) => {
+                selectedFixedBankFilter = e.target.value;
+                renderFixedExpensesTable();
+            });
+            selectEl.dataset.listenerAttached = "true";
+        }
+    }
+
+    if (chipsContainer) {
+        chipsContainer.innerHTML = "";
+
+        // Chip "Todos"
+        const chipAll = document.createElement("button");
+        chipAll.type = "button";
+        chipAll.className = `btn-filter-chip ${selectedFixedBankFilter === 'all' ? 'active' : ''}`;
+        chipAll.innerHTML = `<span>Todos</span> <span class="chip-count">${state.fixedExpenses.length}</span>`;
+        chipAll.title = `Todas las cuentas (${state.fixedExpenses.length} fijos · ${formatCurrency(totalThisMonthCommitted)} este mes · ${formatCurrency(totalAnnualCost)}/año)`;
+        chipAll.addEventListener("click", () => {
+            selectedFixedBankFilter = 'all';
+            renderFixedExpensesTable();
+        });
+        chipsContainer.appendChild(chipAll);
+
+        // Chips por cada banco que tenga fijos
+        Object.keys(bankStats).forEach(bId => {
+            const bank = state.banks.find(b => b.id === bId);
+            const bName = bank ? bank.name : "Otros";
+            const stat = bankStats[bId];
+
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = `btn-filter-chip ${selectedFixedBankFilter === bId ? 'active' : ''}`;
+            chip.innerHTML = `<span>${escapeHtml(bName)}</span> <span class="chip-count">${stat.count}</span>`;
+            chip.title = `${escapeHtml(bName)}: ${stat.count} fijos (${formatCurrency(stat.monthTotal)} este mes · ${formatCurrency(stat.annualTotal)}/año)`;
+            chip.addEventListener("click", () => {
+                selectedFixedBankFilter = bId;
+                renderFixedExpensesTable();
+            });
+            chipsContainer.appendChild(chip);
+        });
+    }
+
+    if (filterFeedback) {
+        if (selectedFixedBankFilter === 'all') {
+            filterFeedback.innerHTML = `Mostrando <strong>todas las cuentas</strong> (${state.fixedExpenses.length} fijos)`;
+        } else {
+            const b = state.banks.find(x => x.id === selectedFixedBankFilter);
+            const stat = bankStats[selectedFixedBankFilter] || { count: 0, monthTotal: 0, annualTotal: 0 };
+            filterFeedback.innerHTML = `Filtrado por <strong>${escapeHtml(b ? b.name : 'Cuenta')}</strong>: ${stat.count} fijos · ${formatCurrency(stat.monthTotal)} este mes`;
+        }
+    }
+
+    // 4. Filtrar y Ordenar Filas de la Tabla
+    let displayList = applicableList;
+    if (selectedFixedBankFilter !== 'all') {
+        displayList = displayList.filter(item => (item.fe.bankId || 'other') === selectedFixedBankFilter);
+    }
+
+    // Ordenar por día de cobro
+    displayList.sort((a, b) => (a.fe.day || 1) - (b.fe.day || 1));
+
+    if (state.fixedExpenses.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No hay gastos recurrentes definidos en la matriz. Use el botón superior para añadir uno.</td></tr>`;
+        if (btnApply && btnText) {
+            btnApply.className = "btn-action-apply applied";
+            btnText.textContent = "Aplicar Gastos Fijos (0 pendientes)";
+            btnApply.setAttribute("disabled", "true");
+        }
+        return;
+    }
+
+    if (displayList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No hay gastos fijos registrados en la cuenta seleccionada.</td></tr>`;
+    } else {
+        let visibleMonthSum = 0;
+        let visibleMonthlyEquivSum = 0;
+        let visiblePaidSum = 0;
+        let visibleAnnualSum = 0;
 
         const monthsNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
         const monthsNamesShort = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
-        // Formatear descripción del estado
-        let statusText = "";
-        if (isAppliedThisMonth) {
-            statusText = `<span style="color: var(--success-light); font-weight: 500;">✓ Cobrado este mes</span>`;
-        } else if (!appliesThisMonth) {
-            if (periodicity === "Anual") {
-                const mName = monthsNames[refM - 1] || "Otro";
-                statusText = `<span style="color: var(--text-secondary); font-size: 0.74rem;">💤 Anual - Cobro en ${mName}</span>`;
-            } else if (periodicity === "Trimestral") {
-                const month2 = (refM + 3 - 1) % 12 + 1;
-                const month3 = (refM + 6 - 1) % 12 + 1;
-                const month4 = (refM + 9 - 1) % 12 + 1;
-                const mText = [refM, month2, month3, month4].map(m => monthsNamesShort[m - 1]).join(", ");
-                statusText = `<span style="color: var(--text-secondary); font-size: 0.74rem;">💤 Trimestral - Meses: ${mText}</span>`;
-            } else if (periodicity === "Semestral") {
-                const month2 = (refM + 6 - 1) % 12 + 1;
-                const mText = [refM, month2].map(m => monthsNamesShort[m - 1]).join(", ");
-                statusText = `<span style="color: var(--text-secondary); font-size: 0.74rem;">💤 Semestral - Meses: ${mText}</span>`;
+        displayList.forEach(item => {
+            const { fe, appliesThisMonth, isPaid, factorAnnual, monthlyEquiv } = item;
+            const bank = state.banks.find(b => b.id === fe.bankId);
+            const bankName = bank ? bank.name : "Desconocido";
+            const destBank = fe.destBankId ? state.banks.find(b => b.id === fe.destBankId) : null;
+            const destBankHTML = destBank ? `<div style="font-size:0.7rem; color:var(--success-light); margin-top:4px; font-weight:500;">➡️ Destino: ${escapeHtml(destBank.name)}</div>` : "";
+
+            if (appliesThisMonth) {
+                visibleMonthSum += fe.amount;
+                if (isPaid) visiblePaidSum += fe.amount;
             }
-        } else {
-            statusText = `<span style="color: var(--warning-light); font-weight: 500;">⚡ Pendiente de cobro</span>`;
-        }
+            visibleMonthlyEquivSum += monthlyEquiv;
+            visibleAnnualSum += (fe.amount * factorAnnual);
 
-        // Formatear periodicidad para mostrar en la columna
-        let periodicityBadge = "";
-        if (periodicity === "Mensual") {
-            periodicityBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--success-light); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">Mensual</span>`;
-        } else if (periodicity === "Trimestral") {
-            const mShort = monthsNamesShort[refM - 1] || "Ene";
-            periodicityBadge = `<span class="badge" style="background: rgba(0, 229, 255, 0.15); color: var(--primary-light); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">Trim. (Ref: ${mShort})</span>`;
-        } else if (periodicity === "Semestral") {
-            const mShort = monthsNamesShort[refM - 1] || "Ene";
-            periodicityBadge = `<span class="badge" style="background: rgba(255, 115, 0, 0.15); color: var(--accent-light); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">Sem. (Ref: ${mShort})</span>`;
-        } else if (periodicity === "Anual") {
-            const mShort = monthsNamesShort[refM - 1] || "Ene";
-            periodicityBadge = `<span class="badge" style="background: rgba(245, 158, 11, 0.15); color: var(--warning-light); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">Anual (${mShort})</span>`;
-        }
+            const periodicity = fe.periodicity || "Mensual";
+            const refM = parseInt(fe.chargeMonth || "01");
 
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>
-                <div style="font-weight: 600;">${escapeHtml(fe.name)}</div>
-                <div style="font-size: 0.72rem; margin-top: 2px;">
-                    ${statusText}
-                </div>
-            </td>
-            <td>
-                <span class="bank-tag" style="background: rgba(0, 229, 255, 0.15); color: var(--primary-light); padding: 4px 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 600;">
-                    ${bankName}
-                </span>
-                ${destBankHTML}
-            </td>
-            <td style="font-weight: 500; color: var(--text-primary);">Día ${fe.day || 1}</td>
-            <td>${periodicityBadge}</td>
-            <td class="amount-col" style="font-weight:700; color: var(--danger-light);">${formatCurrency(fe.amount)}</td>
-            <td class="actions-col">
-                <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
-                    <button onclick="openEditModal('fixedExpense', '${fe.id}')" class="btn-edit-mini-icon" title="Editar Gasto Fijo">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                    </button>
-                    <button onclick="deleteFixedExpense('${fe.id}')" class="btn-delete-mini-icon" title="Borrar de la matriz">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                    </button>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(row);
+            // Formatear descripción del estado
+            let statusText = "";
+            if (isPaid) {
+                statusText = `<span style="color: var(--success-light); font-weight: 600;">✓ Cobrado este mes</span>`;
+            } else if (!appliesThisMonth) {
+                if (periodicity === "Anual") {
+                    const mName = monthsNames[refM - 1] || "Otro";
+                    statusText = `<span style="color: var(--text-muted); font-size: 0.72rem;">💤 Anual - Cobro en ${mName}</span>`;
+                } else if (periodicity === "Trimestral") {
+                    const month2 = (refM + 3 - 1) % 12 + 1;
+                    const month3 = (refM + 6 - 1) % 12 + 1;
+                    const month4 = (refM + 9 - 1) % 12 + 1;
+                    const mText = [refM, month2, month3, month4].map(m => monthsNamesShort[m - 1]).join(", ");
+                    statusText = `<span style="color: var(--text-muted); font-size: 0.72rem;">💤 Trimestral - Meses: ${mText}</span>`;
+                } else if (periodicity === "Semestral") {
+                    const month2 = (refM + 6 - 1) % 12 + 1;
+                    const mText = [refM, month2].map(m => monthsNamesShort[m - 1]).join(", ");
+                    statusText = `<span style="color: var(--text-muted); font-size: 0.72rem;">💤 Semestral - Meses: ${mText}</span>`;
+                }
+            } else {
+                statusText = `<span style="color: #f59e0b; font-weight: 600;">⚡ Pendiente de cobro</span>`;
+            }
+
+            // Badge de periodicidad
+            let periodicityBadge = "";
+            if (periodicity === "Mensual") {
+                periodicityBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--success-light); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">Mensual</span>`;
+            } else if (periodicity === "Trimestral") {
+                const mShort = monthsNamesShort[refM - 1] || "Ene";
+                periodicityBadge = `<span class="badge" style="background: rgba(0, 229, 255, 0.15); color: var(--primary-light); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">Trim. (Ref: ${mShort})</span>`;
+            } else if (periodicity === "Semestral") {
+                const mShort = monthsNamesShort[refM - 1] || "Ene";
+                periodicityBadge = `<span class="badge" style="background: rgba(255, 115, 0, 0.15); color: var(--accent-light); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">Sem. (Ref: ${mShort})</span>`;
+            } else if (periodicity === "Anual") {
+                const mShort = monthsNamesShort[refM - 1] || "Ene";
+                periodicityBadge = `<span class="badge" style="background: rgba(245, 158, 11, 0.15); color: var(--warning-light); padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">Anual (${mShort})</span>`;
+            }
+
+            // Prorrateo si no es mensual
+            let prorateHTML = "";
+            if (periodicity !== "Mensual") {
+                prorateHTML = `<div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;" title="Coste mensual prorrateado">(${formatCurrency(monthlyEquiv)}/mes)</div>`;
+            }
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>
+                    <div style="font-weight: 600; color: var(--text-primary);">${escapeHtml(fe.name)}</div>
+                    <div style="font-size: 0.72rem; margin-top: 2px;">
+                        ${statusText}
+                    </div>
+                </td>
+                <td>
+                    <span class="bank-tag" style="background: rgba(0, 229, 255, 0.15); color: var(--primary-light); padding: 4px 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 600;">
+                        ${escapeHtml(bankName)}
+                    </span>
+                    ${destBankHTML}
+                </td>
+                <td style="font-weight: 500; color: var(--text-primary);">Día ${fe.day || 1}</td>
+                <td>${periodicityBadge}</td>
+                <td class="amount-col" style="font-weight:700; color: var(--danger-light);">
+                    ${formatCurrency(fe.amount)}
+                    ${prorateHTML}
+                </td>
+                <td class="actions-col">
+                    <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                        <button onclick="openEditModal('fixedExpense', '${fe.id}')" class="btn-edit-mini-icon" title="Editar Gasto Fijo">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <button onclick="deleteFixedExpense('${fe.id}')" class="btn-delete-mini-icon" title="Borrar de la matriz">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // Fila de Totales Dinámica (tfoot)
+        if (tfoot) {
+            const selectedBank = state.banks.find(b => b.id === selectedFixedBankFilter);
+            const filterLabel = selectedFixedBankFilter === 'all' 
+                ? 'TOTAL GENERAL' 
+                : `TOTAL (${escapeHtml(selectedBank ? selectedBank.name : 'Cuenta')})`;
+            const pendingSum = Math.max(0, visibleMonthSum - visiblePaidSum);
+
+            tfoot.innerHTML = `
+                <tr>
+                    <td style="color: var(--primary-light); font-weight: 700;">
+                        ${filterLabel}
+                        <div style="font-size: 0.70rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">
+                            ${displayList.length} recibos en plantilla
+                        </div>
+                    </td>
+                    <td colspan="3" style="font-size: 0.78rem; color: var(--text-secondary); font-weight: 500;">
+                        Este mes aplica: <strong style="color: var(--text-primary); font-weight: 700;">${formatCurrency(visibleMonthSum)}</strong> 
+                        <span style="color: var(--text-muted); font-size: 0.74rem;">(✓ ${formatCurrency(visiblePaidSum)} cobrado · ⏳ ${formatCurrency(pendingSum)} pendiente)</span>
+                    </td>
+                    <td class="amount-col" style="text-align: right;">
+                        <div style="font-weight: 800; color: var(--danger-light); font-size: 1.15rem; white-space: nowrap;">
+                            ${formatCurrency(visibleMonthSum)}
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+            `;
+        }
+    }
+
+    // 5. Configurar estado del botón de aplicación global
+    let pendingToApplyGlobal = 0;
+    applicableList.forEach(item => {
+        if (item.appliesThisMonth && !item.isPaid) {
+            pendingToApplyGlobal++;
+        }
     });
 
-    // Configurar estado del botón de aplicación
-    if (pendingToApply > 0) {
-        btnApply.className = "btn-action-apply";
-        btnText.textContent = `Aplicar Gastos Fijos (${pendingToApply} pendientes)`;
-        btnApply.removeAttribute("disabled");
-    } else {
-        btnApply.className = "btn-action-apply applied";
-        btnText.textContent = "Gastos Fijos Aplicados ✓";
-        btnApply.setAttribute("disabled", "true");
+    if (btnApply && btnText) {
+        if (pendingToApplyGlobal > 0) {
+            btnApply.className = "btn-action-apply pending";
+            btnText.textContent = `Aplicar Gastos Fijos (${pendingToApplyGlobal} pendientes)`;
+            btnApply.removeAttribute("disabled");
+        } else {
+            btnApply.className = "btn-action-apply applied";
+            btnText.textContent = "Gastos Fijos Aplicados ✓";
+            btnApply.setAttribute("disabled", "true");
+        }
     }
 }
+
+
 
 // MÓDULO 2: HISTORIAL DE TRANSACCIONES DEL MES
 function renderTransactionsTable() {
@@ -3691,43 +4381,133 @@ function deleteTransaction(txId) {
 // Registro de instancias de Chart.js para el módulo de cierre
 window._closureCharts = {};
 
+// Estado de la pestaña activa en Cierre de Mes ('global' o bank.id)
+let selectedClosureBankTab = 'global';
+
+window.switchClosureBankTab = function(tabId) {
+    selectedClosureBankTab = tabId;
+    renderClosureCharts();
+};
+
 function renderDeviationAnalysisTable() {
     // Alias de compatibilidad — redirige a la nueva función de gráficas
     renderClosureCharts();
 }
 
 // ----------------------------------------------------
-// MÓDULO 3: CIERRE DE MES — GRÁFICAS POR BANCO
+// MÓDULO 3: CIERRE DE MES — GRÁFICAS Y CONSOLIDADO
 // ----------------------------------------------------
 
 function renderClosureCharts() {
     const container = document.getElementById("closure-charts-container");
     const noBanks = document.getElementById("closure-no-banks");
     const badge = document.getElementById("closure-month-badge");
+    const toolbar = document.getElementById("closure-bank-filter-toolbar");
 
     if (badge) badge.textContent = formatMonthString(state.currentMonth);
 
     if (!container) return;
 
-    if (state.banks.length === 0) {
+    if (!state.banks || state.banks.length === 0) {
         container.innerHTML = "";
+        if (toolbar) toolbar.style.display = "none";
         if (noBanks) noBanks.classList.remove("hidden");
         return;
     }
 
+    if (toolbar) toolbar.style.display = "";
     if (noBanks) noBanks.classList.add("hidden");
 
     // Destruir gráficas anteriores
     Object.values(window._closureCharts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     window._closureCharts = {};
 
+    // Validar pestaña activa seleccionada
+    if (selectedClosureBankTab !== 'global' && !state.banks.some(b => b.id === selectedClosureBankTab)) {
+        selectedClosureBankTab = 'global';
+    }
+
+    // ── 1. Renderizar Barra Selectora de Cuentas (Chips desktop + Select móvil) ──
+    const chipsContainer = document.getElementById("closure-bank-filter-chips");
+    const selectEl = document.getElementById("closure-bank-filter-select");
+    const feedbackEl = document.getElementById("closure-filter-feedback");
+
+    if (chipsContainer) {
+        chipsContainer.innerHTML = "";
+
+        // Chip Global
+        const chipGlobal = document.createElement("button");
+        chipGlobal.type = "button";
+        chipGlobal.className = `btn-filter-chip ${selectedClosureBankTab === 'global' ? 'active' : ''}`;
+        chipGlobal.innerHTML = `<span>🌐 Vista Global</span> <span class="chip-count">${state.banks.length}</span>`;
+        chipGlobal.title = `Vista consolidada de todas las cuentas (${state.banks.length})`;
+        chipGlobal.addEventListener("click", () => {
+            selectedClosureBankTab = 'global';
+            renderClosureCharts();
+        });
+        chipsContainer.appendChild(chipGlobal);
+
+        // Chip por cada banco
+        state.banks.forEach(bank => {
+            const chipBank = document.createElement("button");
+            chipBank.type = "button";
+            chipBank.className = `btn-filter-chip ${selectedClosureBankTab === bank.id ? 'active' : ''}`;
+            chipBank.innerHTML = `<span>🏦 ${escapeHtml(bank.name)}</span>`;
+            chipBank.title = `Ver cierre individual para ${bank.name}`;
+            chipBank.addEventListener("click", () => {
+                selectedClosureBankTab = bank.id;
+                renderClosureCharts();
+            });
+            chipsContainer.appendChild(chipBank);
+        });
+    }
+
+    if (selectEl) {
+        selectEl.innerHTML = "";
+
+        const optGlobal = document.createElement("option");
+        optGlobal.value = "global";
+        optGlobal.textContent = `🌐 Vista Global Consolidada (${state.banks.length} cuentas)`;
+        if (selectedClosureBankTab === 'global') optGlobal.selected = true;
+        selectEl.appendChild(optGlobal);
+
+        state.banks.forEach(bank => {
+            const opt = document.createElement("option");
+            opt.value = bank.id;
+            opt.textContent = `🏦 ${bank.name} (${formatCurrency(bank.balance)})`;
+            if (selectedClosureBankTab === bank.id) opt.selected = true;
+            selectEl.appendChild(opt);
+        });
+
+        if (!selectEl.dataset.listenerAttached) {
+            selectEl.addEventListener("change", (e) => {
+                selectedClosureBankTab = e.target.value;
+                renderClosureCharts();
+            });
+            selectEl.dataset.listenerAttached = "true";
+        }
+    }
+
+    if (feedbackEl) {
+        if (selectedClosureBankTab === 'global') {
+            feedbackEl.textContent = `Mostrando consolidado global de las ${state.banks.length} cuentas`;
+        } else {
+            const activeBank = state.banks.find(b => b.id === selectedClosureBankTab);
+            feedbackEl.textContent = `Mostrando cuenta individual: ${activeBank ? activeBank.name : ''}`;
+        }
+    }
+
     container.innerHTML = "";
 
+    // ── 2. Cálculos y Métricas por Banco y Consolidadas ──
     const [year, month] = state.currentMonth.split("-").map(Number);
     const daysInMonth = new Date(year, month, 0).getDate();
     const monthTransactions = state.transactions.filter(tx => tx.month === state.currentMonth);
+    const today = new Date();
+    const currentDay = (today.getFullYear() === year && today.getMonth() + 1 === month)
+        ? today.getDate()
+        : daysInMonth;
 
-    // Paleta de colores para el donut (gastos)
     const DONUT_PALETTE = [
         "rgba(0, 210, 255, 0.85)",
         "rgba(123, 97, 255, 0.85)",
@@ -3741,15 +4521,13 @@ function renderClosureCharts() {
         "rgba(20, 184, 166, 0.85)",
     ];
 
-    state.banks.forEach((bank, bankIndex) => {
-        // ── Datos para la gráfica de línea (evolución del saldo) ──
+    const balanceLabels = [];
+    for (let d = 1; d <= daysInMonth; d++) balanceLabels.push(d);
 
-        // Calcular el saldo inicial del banco al inicio del mes
-        // El saldo actual ya tiene todos los movimientos aplicados.
-        // Reconstruimos el saldo día a día.
+    const bankDataMap = {};
+
+    state.banks.forEach(bank => {
         const bankTxs = monthTransactions.filter(tx => tx.bankId === bank.id);
-
-        // Mapa de delta por día (1..daysInMonth)
         const deltaByDay = {};
         for (let d = 1; d <= daysInMonth; d++) deltaByDay[d] = 0;
 
@@ -3763,7 +4541,6 @@ function renderClosureCharts() {
             }
         });
 
-        // También contar ingresos distribuidos a este banco
         monthTransactions.forEach(tx => {
             if (tx.type === "income" && tx.distributions) {
                 const dist = tx.distributions.find(d => d.bankId === bank.id);
@@ -3774,26 +4551,16 @@ function renderClosureCharts() {
             }
         });
 
-        // Calcular saldo inicial (saldo actual menos todos los deltas del mes)
-        let totalDeltaMonth = Object.values(deltaByDay).reduce((a, b) => a + b, 0);
-        let initialBalance = parseFloat((bank.balance - totalDeltaMonth).toFixed(2));
+        const totalDeltaMonth = Object.values(deltaByDay).reduce((a, b) => a + b, 0);
+        const initialBalance = parseFloat((bank.balance - totalDeltaMonth).toFixed(2));
 
-        // Construir array de saldos día a día
-        const balanceLabels = [];
         const balanceData = [];
         let runningBalance = initialBalance;
-        const today = new Date();
-        const currentDay = (today.getFullYear() === year && today.getMonth() + 1 === month)
-            ? today.getDate()
-            : daysInMonth;
-
         for (let d = 1; d <= daysInMonth; d++) {
             runningBalance = parseFloat((runningBalance + deltaByDay[d]).toFixed(2));
-            balanceLabels.push(d);
             balanceData.push(d <= currentDay ? runningBalance : null);
         }
 
-        // ── Datos para el donut (gastos por concepto) ──
         const expenseTxs = bankTxs.filter(tx => tx.type === "expense" && tx.subtype !== "Traspaso");
         const expenseMap = {};
         expenseTxs.forEach(tx => {
@@ -3801,7 +4568,6 @@ function renderClosureCharts() {
             expenseMap[key] = (expenseMap[key] || 0) + tx.amount;
         });
 
-        // Agrupar categorías pequeñas en "Otros" (si superan 8 categorías)
         let expenseEntries = Object.entries(expenseMap).sort((a, b) => b[1] - a[1]);
         const MAX_CATEGORIES = 8;
         if (expenseEntries.length > MAX_CATEGORIES) {
@@ -3814,28 +4580,342 @@ function renderClosureCharts() {
         const donutLabels = expenseEntries.map(([k]) => k);
         const donutData = expenseEntries.map(([, v]) => parseFloat(v.toFixed(2)));
         const donutColors = donutLabels.map((_, i) => DONUT_PALETTE[i % DONUT_PALETTE.length]);
-
         const totalExpenses = donutData.reduce((a, b) => a + b, 0);
-        const totalIncome = (() => {
-            let inc = 0;
-            // Ingresos directos a este banco (Ej: Ajustes, Extras) Excluyendo traspasos
-            bankTxs.forEach(tx => {
-                if (tx.type === "income" && tx.subtype !== "Traspaso") inc += tx.amount;
-            });
-            // Ingresos distribuidos (Embudos)
-            monthTransactions.forEach(tx => {
-                if (tx.type === "income" && tx.subtype !== "Traspaso" && tx.distributions) {
-                    const dist = tx.distributions.find(d => d.bankId === bank.id);
-                    if (dist) inc += dist.amount;
-                }
-            });
-            return inc;
-        })();
-        const netBalance = totalIncome - totalExpenses;
-        const netClass = netBalance >= 0 ? "closure-stat-positive" : "closure-stat-negative";
-        const netSign = netBalance >= 0 ? "+" : "";
 
-        // ── Generar el HTML de la card ──
+        let totalIncome = 0;
+        bankTxs.forEach(tx => {
+            if (tx.type === "income" && tx.subtype !== "Traspaso") totalIncome += tx.amount;
+        });
+        monthTransactions.forEach(tx => {
+            if (tx.type === "income" && tx.subtype !== "Traspaso" && tx.distributions) {
+                const dist = tx.distributions.find(d => d.bankId === bank.id);
+                if (dist) totalIncome += dist.amount;
+            }
+        });
+
+        const netBalance = totalIncome - totalExpenses;
+
+        bankDataMap[bank.id] = {
+            bank,
+            initialBalance,
+            currentBalance: bank.balance,
+            balanceData,
+            donutLabels,
+            donutData,
+            donutColors,
+            totalIncome,
+            totalExpenses,
+            netBalance
+        };
+    });
+
+    // ── Helper: Crear Gráfica de Línea de Saldo ──
+    function renderLineChart(canvasId, labels, data, tooltipLabel) {
+        const ctxLine = document.getElementById(canvasId);
+        if (!ctxLine) return;
+        const lineCtx = ctxLine.getContext("2d");
+        const gradLine = lineCtx.createLinearGradient(0, 0, 0, 220);
+        gradLine.addColorStop(0, "rgba(0, 210, 255, 0.30)");
+        gradLine.addColorStop(1, "rgba(0, 210, 255, 0.00)");
+
+        window._closureCharts[canvasId] = new Chart(lineCtx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Saldo (€)",
+                    data: data,
+                    borderColor: "rgba(0, 210, 255, 0.9)",
+                    backgroundColor: gradLine,
+                    borderWidth: 2.5,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(0, 210, 255, 1)",
+                    fill: true,
+                    tension: 0.35,
+                    spanGaps: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 700, easing: "easeInOutQuart" },
+                interaction: { mode: "index", intersect: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        mode: "index",
+                        intersect: false,
+                        backgroundColor: "rgba(15, 23, 42, 0.95)",
+                        borderColor: "rgba(0, 210, 255, 0.5)",
+                        borderWidth: 1,
+                        titleColor: "rgba(0, 210, 255, 0.9)",
+                        bodyColor: "rgba(226, 232, 240, 1)",
+                        titleFont: { family: "var(--font-header, 'Outfit', sans-serif)", size: 12, weight: "700" },
+                        bodyFont: { family: "var(--font-header, 'Outfit', sans-serif)", size: 13, weight: "700" },
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            title: ctx => `📅 Día ${ctx[0].label} de ${formatMonthString(state.currentMonth)}`,
+                            label: ctx => ctx.parsed.y !== null ? ` ${tooltipLabel}: ${formatCurrency(ctx.parsed.y)}` : ""
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: "rgba(255,255,255,0.04)" },
+                        ticks: { color: "rgba(148,163,184,0.8)", font: { size: 10 }, maxTicksLimit: 10 }
+                    },
+                    y: {
+                        grid: { color: "rgba(255,255,255,0.04)" },
+                        ticks: { color: "rgba(148,163,184,0.8)", font: { size: 10 }, callback: v => formatCurrency(v) }
+                    }
+                }
+            }
+        });
+    }
+
+    // ── Helper: Crear Gráfica Donut de Gastos con Leyenda ──
+    function renderDonutChart(canvasId, legendId, labels, data, colors, totalExp) {
+        if (!data || data.length === 0) return;
+        const ctxDonut = document.getElementById(canvasId);
+        if (!ctxDonut) return;
+        window._closureCharts[canvasId] = new Chart(ctxDonut.getContext("2d"), {
+            type: "doughnut",
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                    borderColor: "rgba(15, 23, 42, 0.8)",
+                    borderWidth: 2,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 700, easing: "easeInOutQuart" },
+                cutout: "62%",
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: "rgba(15, 23, 42, 0.95)",
+                        borderColor: "rgba(123, 97, 255, 0.3)",
+                        borderWidth: 1,
+                        titleColor: "rgba(148, 163, 184, 1)",
+                        bodyColor: "rgba(226, 232, 240, 1)",
+                        padding: 10,
+                        callbacks: {
+                            label: ctx => {
+                                const pct = totalExp > 0 ? ((ctx.parsed / totalExp) * 100).toFixed(1) : 0;
+                                return ` ${formatCurrency(ctx.parsed)} (${pct}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const legendEl = document.getElementById(legendId);
+        if (legendEl) {
+            legendEl.innerHTML = labels.map((label, i) => {
+                const pct = totalExp > 0 ? ((data[i] / totalExp) * 100).toFixed(1) : 0;
+                return `
+                    <div class="closure-legend-item">
+                        <span class="closure-legend-dot" style="background:${colors[i]};"></span>
+                        <span class="closure-legend-label" title="${label}">${label}</span>
+                        <span class="closure-legend-amount">${formatCurrency(data[i])}</span>
+                        <span class="closure-legend-pct">${pct}%</span>
+                    </div>
+                `;
+            }).join("");
+        }
+    }
+
+    // ── 3. VISTA 1: CONSOLIDADO GLOBAL ──
+    if (selectedClosureBankTab === 'global') {
+        let globalInitial = 0;
+        let globalCurrent = 0;
+        let globalIncome = 0;
+        let globalExpenses = 0;
+
+        state.banks.forEach(b => {
+            const d = bankDataMap[b.id];
+            if (d) {
+                globalInitial += d.initialBalance;
+                globalCurrent += d.currentBalance;
+                globalIncome += d.totalIncome;
+                globalExpenses += d.totalExpenses;
+            }
+        });
+
+        const globalNet = globalIncome - globalExpenses;
+        const globalNetClass = globalNet >= 0 ? "closure-stat-positive" : "closure-stat-negative";
+        const globalNetSign = globalNet >= 0 ? "+" : "";
+
+        // Evolución consolidada del patrimonio líquido (suma diaria)
+        const globalBalanceData = [];
+        for (let dayIdx = 0; dayIdx < daysInMonth; dayIdx++) {
+            if (dayIdx + 1 <= currentDay) {
+                let daySum = 0;
+                state.banks.forEach(b => {
+                    const d = bankDataMap[b.id];
+                    if (d && d.balanceData[dayIdx] !== null) {
+                        daySum += d.balanceData[dayIdx];
+                    }
+                });
+                globalBalanceData.push(parseFloat(daySum.toFixed(2)));
+            } else {
+                globalBalanceData.push(null);
+            }
+        }
+
+        // Desglose global de gastos consolidado
+        const globalExpenseMap = {};
+        monthTransactions.forEach(tx => {
+            if (tx.type === "expense" && tx.subtype !== "Traspaso") {
+                const key = tx.description || "Sin categoría";
+                globalExpenseMap[key] = (globalExpenseMap[key] || 0) + tx.amount;
+            }
+        });
+
+        let globalExpenseEntries = Object.entries(globalExpenseMap).sort((a, b) => b[1] - a[1]);
+        const MAX_CATEGORIES = 8;
+        if (globalExpenseEntries.length > MAX_CATEGORIES) {
+            const topEntries = globalExpenseEntries.slice(0, MAX_CATEGORIES - 1);
+            const otrosSum = globalExpenseEntries.slice(MAX_CATEGORIES - 1).reduce((s, [, v]) => s + v, 0);
+            topEntries.push(["Otros", otrosSum]);
+            globalExpenseEntries = topEntries;
+        }
+
+        const globalDonutLabels = globalExpenseEntries.map(([k]) => k);
+        const globalDonutData = globalExpenseEntries.map(([, v]) => parseFloat(v.toFixed(2)));
+        const globalDonutColors = globalDonutLabels.map((_, i) => DONUT_PALETTE[i % DONUT_PALETTE.length]);
+        const globalDonutTotal = globalDonutData.reduce((a, b) => a + b, 0);
+
+        const card = document.createElement("div");
+        card.className = "closure-bank-card shadow-glass";
+        card.innerHTML = `
+            <div class="closure-bank-card-header">
+                <div class="closure-bank-title">
+                    <div class="closure-bank-icon" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">🌐</div>
+                    <div>
+                        <div class="closure-bank-name">Consolidado Global (Todas las Cuentas)</div>
+                        <div class="closure-bank-month">${formatMonthString(state.currentMonth)} · ${state.banks.length} entidades bancarias</div>
+                    </div>
+                </div>
+                <div class="closure-bank-stats">
+                    <div class="closure-stat">
+                        <span class="closure-stat-label">Ingresos Totales</span>
+                        <span class="closure-stat-value closure-stat-positive">+${formatCurrency(globalIncome)}</span>
+                    </div>
+                    <div class="closure-stat">
+                        <span class="closure-stat-label">Gastos Totales</span>
+                        <span class="closure-stat-value closure-stat-negative">-${formatCurrency(globalExpenses)}</span>
+                    </div>
+                    <div class="closure-stat">
+                        <span class="closure-stat-label">Neto Consolidado</span>
+                        <span class="closure-stat-value ${globalNetClass}">${globalNetSign}${formatCurrency(globalNet)}</span>
+                    </div>
+                    <div class="closure-stat">
+                        <span class="closure-stat-label">Patrimonio Líquido</span>
+                        <span class="closure-stat-value" style="color:var(--text-primary); font-weight: 800;">${formatCurrency(globalCurrent)}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="closure-bank-charts">
+                <div class="closure-chart-panel">
+                    <div class="closure-chart-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        Evolución Patrimonio Líquido Global (€)
+                    </div>
+                    <div class="closure-chart-canvas-wrap">
+                        <canvas id="closure-line-global"></canvas>
+                    </div>
+                </div>
+                <div class="closure-chart-panel">
+                    <div class="closure-chart-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg>
+                        Desglose Global de Gastos
+                    </div>
+                    ${globalDonutData.length === 0
+                        ? `<div class="closure-no-expenses">Sin gastos registrados este mes</div>`
+                        : `<div class="closure-donut-layout">
+                                <div class="closure-donut-canvas-wrap">
+                                    <canvas id="closure-donut-global"></canvas>
+                                </div>
+                                <div class="closure-donut-legend" id="closure-legend-global"></div>
+                           </div>`
+                    }
+                </div>
+            </div>
+            <div class="closure-global-table-container">
+                <div class="closure-global-table-title">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+                    <span>Resumen Comparativo por Cuenta Bancaria a Cierre de Mes</span>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="closure-global-table">
+                        <thead>
+                            <tr>
+                                <th>Cuenta Bancaria</th>
+                                <th class="text-right">Saldo Inicial</th>
+                                <th class="text-right">Ingresos (+)</th>
+                                <th class="text-right">Gastos (-)</th>
+                                <th class="text-right">Neto Mes</th>
+                                <th class="text-right">Saldo Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${state.banks.map(bank => {
+                                const d = bankDataMap[bank.id];
+                                const netCls = d.netBalance >= 0 ? "closure-stat-positive" : "closure-stat-negative";
+                                const netSgn = d.netBalance >= 0 ? "+" : "";
+                                return `
+                                    <tr onclick="switchClosureBankTab('${bank.id}')" style="cursor: pointer;" title="Haz clic para ver el detalle de esta cuenta">
+                                        <td style="font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                                            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--primary);"></span>
+                                            <span>${escapeHtml(bank.name)}</span>
+                                            <span style="font-size: 0.72rem; color: var(--text-muted); margin-left: 4px;">🔍 Ver detalle</span>
+                                        </td>
+                                        <td class="text-right">${formatCurrency(d.initialBalance)}</td>
+                                        <td class="text-right closure-stat-positive">+${formatCurrency(d.totalIncome)}</td>
+                                        <td class="text-right closure-stat-negative">-${formatCurrency(d.totalExpenses)}</td>
+                                        <td class="text-right ${netCls}">${netSgn}${formatCurrency(d.netBalance)}</td>
+                                        <td class="text-right" style="font-weight: 700; color: var(--text-primary);">${formatCurrency(d.currentBalance)}</td>
+                                    </tr>
+                                `;
+                            }).join("")}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Total Consolidado</td>
+                                <td class="text-right">${formatCurrency(globalInitial)}</td>
+                                <td class="text-right closure-stat-positive">+${formatCurrency(globalIncome)}</td>
+                                <td class="text-right closure-stat-negative">-${formatCurrency(globalExpenses)}</td>
+                                <td class="text-right ${globalNetClass}">${globalNetSign}${formatCurrency(globalNet)}</td>
+                                <td class="text-right" style="color:var(--primary); font-size: 0.92rem;">${formatCurrency(globalCurrent)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+
+        renderLineChart("closure-line-global", balanceLabels, globalBalanceData, "💰 Patrimonio Líquido");
+        renderDonutChart("closure-donut-global", "closure-legend-global", globalDonutLabels, globalDonutData, globalDonutColors, globalDonutTotal);
+
+    } else {
+        // ── 4. VISTA 2: CUENTA INDIVIDUAL SELECCIONADA ──
+        const d = bankDataMap[selectedClosureBankTab] || Object.values(bankDataMap)[0];
+        if (!d) return;
+
+        const bank = d.bank;
+        const netClass = d.netBalance >= 0 ? "closure-stat-positive" : "closure-stat-negative";
+        const netSign = d.netBalance >= 0 ? "+" : "";
+
         const lineCanvasId = `closure-line-${bank.id}`;
         const donutCanvasId = `closure-donut-${bank.id}`;
 
@@ -3853,40 +4933,38 @@ function renderClosureCharts() {
                 <div class="closure-bank-stats">
                     <div class="closure-stat">
                         <span class="closure-stat-label">Ingresos</span>
-                        <span class="closure-stat-value closure-stat-positive">+${formatCurrency(totalIncome)}</span>
+                        <span class="closure-stat-value closure-stat-positive">+${formatCurrency(d.totalIncome)}</span>
                     </div>
                     <div class="closure-stat">
                         <span class="closure-stat-label">Gastos</span>
-                        <span class="closure-stat-value closure-stat-negative">-${formatCurrency(totalExpenses)}</span>
+                        <span class="closure-stat-value closure-stat-negative">-${formatCurrency(d.totalExpenses)}</span>
                     </div>
                     <div class="closure-stat">
                         <span class="closure-stat-label">Neto</span>
-                        <span class="closure-stat-value ${netClass}">${netSign}${formatCurrency(netBalance)}</span>
+                        <span class="closure-stat-value ${netClass}">${netSign}${formatCurrency(d.netBalance)}</span>
                     </div>
                     <div class="closure-stat">
                         <span class="closure-stat-label">Saldo Actual</span>
-                        <span class="closure-stat-value" style="color:var(--text-primary)">${formatCurrency(bank.balance)}</span>
+                        <span class="closure-stat-value" style="color:var(--text-primary); font-weight: 800;">${formatCurrency(d.currentBalance)}</span>
                     </div>
                 </div>
             </div>
             <div class="closure-bank-charts">
-                <!-- Gráfica de línea: evolución del saldo -->
                 <div class="closure-chart-panel">
                     <div class="closure-chart-title">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                         Evolución del Saldo (€)
                     </div>
                     <div class="closure-chart-canvas-wrap">
                         <canvas id="${lineCanvasId}"></canvas>
                     </div>
                 </div>
-                <!-- Gráfica de donut: en qué se ha gastado -->
                 <div class="closure-chart-panel">
                     <div class="closure-chart-title">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg>
                         Desglose de Gastos
                     </div>
-                    ${donutData.length === 0
+                    ${d.donutData.length === 0
                         ? `<div class="closure-no-expenses">Sin gastos registrados este mes</div>`
                         : `<div class="closure-donut-layout">
                                 <div class="closure-donut-canvas-wrap">
@@ -3898,144 +4976,11 @@ function renderClosureCharts() {
                 </div>
             </div>
         `;
-
         container.appendChild(card);
 
-        // ── Renderizar Chart.js: Línea de saldo ──
-        const ctxLine = document.getElementById(lineCanvasId);
-        if (ctxLine) {
-            const lineCtx = ctxLine.getContext("2d");
-            const gradLine = lineCtx.createLinearGradient(0, 0, 0, 220);
-            gradLine.addColorStop(0, "rgba(0, 210, 255, 0.30)");
-            gradLine.addColorStop(1, "rgba(0, 210, 255, 0.00)");
-
-            window._closureCharts[lineCanvasId] = new Chart(lineCtx, {
-                type: "line",
-                data: {
-                    labels: balanceLabels,
-                    datasets: [{
-                        label: "Saldo (€)",
-                        data: balanceData,
-                        borderColor: "rgba(0, 210, 255, 0.9)",
-                        backgroundColor: gradLine,
-                        borderWidth: 2.5,
-                        pointRadius: 0,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: "rgba(0, 210, 255, 1)",
-                        fill: true,
-                        tension: 0.35,
-                        spanGaps: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: { duration: 700, easing: "easeInOutQuart" },
-                    interaction: {
-                        mode: "index",
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            mode: "index",
-                            intersect: false,
-                            backgroundColor: "rgba(15, 23, 42, 0.95)",
-                            borderColor: "rgba(0, 210, 255, 0.5)",
-                            borderWidth: 1,
-                            titleColor: "rgba(0, 210, 255, 0.9)",
-                            bodyColor: "rgba(226, 232, 240, 1)",
-                            titleFont: { family: "var(--font-header, 'Outfit', sans-serif)", size: 12, weight: "700" },
-                            bodyFont: { family: "var(--font-header, 'Outfit', sans-serif)", size: 13, weight: "700" },
-                            padding: 12,
-                            displayColors: false,
-                            callbacks: {
-                                title: ctx => `📅 Día ${ctx[0].label} de ${formatMonthString(state.currentMonth)}`,
-                                label: ctx => ctx.parsed.y !== null ? ` 💰 Saldo: ${formatCurrency(ctx.parsed.y)}` : ""
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: "rgba(255,255,255,0.04)" },
-                            ticks: {
-                                color: "rgba(148,163,184,0.8)",
-                                font: { size: 10 },
-                                maxTicksLimit: 10
-                            }
-                        },
-                        y: {
-                            grid: { color: "rgba(255,255,255,0.04)" },
-                            ticks: {
-                                color: "rgba(148,163,184,0.8)",
-                                font: { size: 10 },
-                                callback: v => formatCurrency(v)
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // ── Renderizar Chart.js: Donut de gastos ──
-        if (donutData.length > 0) {
-            const ctxDonut = document.getElementById(donutCanvasId);
-            if (ctxDonut) {
-                window._closureCharts[donutCanvasId] = new Chart(ctxDonut.getContext("2d"), {
-                    type: "doughnut",
-                    data: {
-                        labels: donutLabels,
-                        datasets: [{
-                            data: donutData,
-                            backgroundColor: donutColors,
-                            borderColor: "rgba(15, 23, 42, 0.8)",
-                            borderWidth: 2,
-                            hoverOffset: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        animation: { duration: 700, easing: "easeInOutQuart" },
-                        cutout: "62%",
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                backgroundColor: "rgba(15, 23, 42, 0.95)",
-                                borderColor: "rgba(123, 97, 255, 0.3)",
-                                borderWidth: 1,
-                                titleColor: "rgba(148, 163, 184, 1)",
-                                bodyColor: "rgba(226, 232, 240, 1)",
-                                padding: 10,
-                                callbacks: {
-                                    label: ctx => {
-                                        const pct = totalExpenses > 0 ? ((ctx.parsed / totalExpenses) * 100).toFixed(1) : 0;
-                                        return ` ${formatCurrency(ctx.parsed)} (${pct}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-
-                // Leyenda personalizada
-                const legendEl = document.getElementById(`closure-legend-${bank.id}`);
-                if (legendEl) {
-                    legendEl.innerHTML = donutLabels.map((label, i) => {
-                        const pct = totalExpenses > 0 ? ((donutData[i] / totalExpenses) * 100).toFixed(1) : 0;
-                        return `
-                            <div class="closure-legend-item">
-                                <span class="closure-legend-dot" style="background:${donutColors[i]};"></span>
-                                <span class="closure-legend-label" title="${label}">${label}</span>
-                                <span class="closure-legend-amount">${formatCurrency(donutData[i])}</span>
-                                <span class="closure-legend-pct">${pct}%</span>
-                            </div>
-                        `;
-                    }).join("");
-                }
-            }
-        }
-    });
+        renderLineChart(lineCanvasId, balanceLabels, d.balanceData, "💰 Saldo");
+        renderDonutChart(donutCanvasId, `closure-legend-${bank.id}`, d.donutLabels, d.donutData, d.donutColors, d.totalExpenses);
+    }
 }
 
 
@@ -4837,35 +5782,47 @@ function openEditModal(type, id, extraId = null) {
 window.myMainEvolutionChart = null;
 window.mySecondaryBreakdownChart = null;
 let currentPerfSelectedBankId = "all";
-window.currentSecondaryChartMode = "expenses"; // "expenses" o "distribution"
+let currentPerfTimeRange = 6; // 3, 6, 12 meses
+window.currentSecondaryChartMode = "flow"; // "flow" (Ingresos vs Gastos) o "distribution" (Bancos)
+
+window.setPerformanceTimeRange = function(range) {
+    currentPerfTimeRange = parseInt(range, 10);
+    renderPerformanceModule();
+};
 
 function initPerformanceTab() {
-    const selector = document.getElementById("perf-bank-selector");
-    if (!selector) return;
+    // 1. Selector de Rango Temporal (3M · 6M · 12M)
+    const rangeGroup = document.getElementById("perf-timerange-chips");
+    if (rangeGroup && !rangeGroup.dataset.listenerAttached) {
+        rangeGroup.addEventListener("click", (e) => {
+            const btn = e.target.closest(".btn-filter-chip");
+            if (!btn || !btn.dataset.range) return;
+            currentPerfTimeRange = parseInt(btn.dataset.range, 10);
+            rangeGroup.querySelectorAll(".btn-filter-chip").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            renderPerformanceModule();
+        });
+        rangeGroup.dataset.listenerAttached = "true";
+    }
 
-    selector.addEventListener("change", (e) => {
-        currentPerfSelectedBankId = e.target.value;
-        renderPerformanceModule();
-    });
-
-    // Eventos para el control segmentado de gráficos (Delegación de eventos de alta fiabilidad)
+    // 2. Control segmentado de la gráfica secundaria (Flujo Mensual vs Reparto Capital)
     document.addEventListener("click", (e) => {
-        const btnExpenses = e.target.closest("#btn-perf-show-expenses");
+        const btnFlow = e.target.closest("#btn-perf-show-flow") || e.target.closest("#btn-perf-show-expenses");
         const btnDist = e.target.closest("#btn-perf-show-distribution");
 
-        if (btnExpenses) {
-            const bExp = document.getElementById("btn-perf-show-expenses");
+        if (btnFlow) {
+            const bFlow = document.getElementById("btn-perf-show-flow") || document.getElementById("btn-perf-show-expenses");
             const bDist = document.getElementById("btn-perf-show-distribution");
-            if (bExp) bExp.classList.add("active");
+            if (bFlow) bFlow.classList.add("active");
             if (bDist) bDist.classList.remove("active");
-            window.currentSecondaryChartMode = "expenses";
+            window.currentSecondaryChartMode = "flow";
             renderSecondaryBreakdownChart();
         }
 
         if (btnDist) {
-            const bExp = document.getElementById("btn-perf-show-expenses");
+            const bFlow = document.getElementById("btn-perf-show-flow") || document.getElementById("btn-perf-show-expenses");
             const bDist = document.getElementById("btn-perf-show-distribution");
-            if (bExp) bExp.classList.remove("active");
+            if (bFlow) bFlow.classList.remove("active");
             if (bDist) bDist.classList.add("active");
             window.currentSecondaryChartMode = "distribution";
             renderSecondaryBreakdownChart();
@@ -4874,41 +5831,106 @@ function initPerformanceTab() {
 }
 
 function renderPerformanceSelectorOptions() {
-    const selector = document.getElementById("perf-bank-selector");
-    if (!selector) return;
+    const chipsContainer = document.getElementById("perf-bank-filter-chips");
+    const selectEl = document.getElementById("perf-bank-filter-select") || document.getElementById("perf-bank-selector");
+    const feedbackEl = document.getElementById("perf-filter-feedback");
+    const rangeGroup = document.getElementById("perf-timerange-chips");
 
-    const prevSelected = currentPerfSelectedBankId;
-    selector.innerHTML = "";
+    // Sincronizar botones de rango temporal
+    if (rangeGroup) {
+        rangeGroup.querySelectorAll(".btn-filter-chip").forEach(btn => {
+            if (parseInt(btn.dataset.range, 10) === currentPerfTimeRange) {
+                btn.classList.add("active");
+            } else {
+                btn.classList.remove("active");
+            }
+        });
+    }
 
-    const optAll = document.createElement("option");
-    optAll.value = "all";
-    optAll.textContent = "Consolidado (Todos los Bancos)";
-    selector.appendChild(optAll);
-
-    state.banks.forEach(bank => {
-        const opt = document.createElement("option");
-        opt.value = bank.id;
-        opt.textContent = bank.name;
-        selector.appendChild(opt);
-    });
-
-    if (prevSelected === "all" || state.banks.some(b => b.id === prevSelected)) {
-        selector.value = prevSelected;
-        currentPerfSelectedBankId = prevSelected;
-    } else {
-        selector.value = "all";
+    // Validar selección de banco
+    if (currentPerfSelectedBankId !== "all" && !state.banks.some(b => b.id === currentPerfSelectedBankId)) {
         currentPerfSelectedBankId = "all";
+    }
+
+    // Renderizar chips de escritorio
+    if (chipsContainer) {
+        chipsContainer.innerHTML = "";
+
+        const chipAll = document.createElement("button");
+        chipAll.type = "button";
+        chipAll.className = `btn-filter-chip ${currentPerfSelectedBankId === 'all' ? 'active' : ''}`;
+        chipAll.innerHTML = `<span>🌐 Consolidado</span> <span class="chip-count">${state.banks.length}</span>`;
+        chipAll.title = `Consolidado de todas las cuentas (${state.banks.length})`;
+        chipAll.addEventListener("click", () => {
+            currentPerfSelectedBankId = "all";
+            renderPerformanceModule();
+        });
+        chipsContainer.appendChild(chipAll);
+
+        state.banks.forEach(bank => {
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = `btn-filter-chip ${currentPerfSelectedBankId === bank.id ? 'active' : ''}`;
+            chip.innerHTML = `<span>🏦 ${escapeHtml(bank.name)}</span>`;
+            chip.title = `Analizar únicamente ${bank.name}`;
+            chip.addEventListener("click", () => {
+                currentPerfSelectedBankId = bank.id;
+                renderPerformanceModule();
+            });
+            chipsContainer.appendChild(chip);
+        });
+    }
+
+    // Renderizar select móvil
+    if (selectEl) {
+        selectEl.innerHTML = "";
+
+        const optAll = document.createElement("option");
+        optAll.value = "all";
+        optAll.textContent = `🌐 Consolidado (${state.banks.length} cuentas)`;
+        if (currentPerfSelectedBankId === "all") optAll.selected = true;
+        selectEl.appendChild(optAll);
+
+        state.banks.forEach(bank => {
+            const opt = document.createElement("option");
+            opt.value = bank.id;
+            opt.textContent = `🏦 ${bank.name} (${formatCurrency(bank.balance)})`;
+            if (currentPerfSelectedBankId === bank.id) opt.selected = true;
+            selectEl.appendChild(opt);
+        });
+
+        if (!selectEl.dataset.listenerAttached) {
+            selectEl.addEventListener("change", (e) => {
+                currentPerfSelectedBankId = e.target.value;
+                renderPerformanceModule();
+            });
+            selectEl.dataset.listenerAttached = "true";
+        }
+    }
+
+    // Feedback visual
+    if (feedbackEl) {
+        if (currentPerfSelectedBankId === "all") {
+            feedbackEl.textContent = `Analizando consolidado global (${state.banks.length} cuentas) · Últimos ${currentPerfTimeRange} meses`;
+        } else {
+            const activeBank = state.banks.find(b => b.id === currentPerfSelectedBankId);
+            feedbackEl.textContent = `Analizando cuenta: ${activeBank ? activeBank.name : ''} · Últimos ${currentPerfTimeRange} meses`;
+        }
     }
 }
 
-function getLast6MonthsList(endMonthStr) {
+function getMonthsPeriodList(endMonthStr, count = 6) {
     const list = [endMonthStr];
     let current = endMonthStr;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < count - 1; i++) {
         current = getPreviousMonthString(current);
         list.unshift(current);
     }
     return list;
+}
+
+function getLast6MonthsList(endMonthStr) {
+    return getMonthsPeriodList(endMonthStr, currentPerfTimeRange || 6);
 }
 
 function getHistoricalBalancesForBank(bankId, monthsList) {
@@ -4916,10 +5938,11 @@ function getHistoricalBalancesForBank(bankId, monthsList) {
     const bank = state.banks.find(b => b.id === bankId);
     if (!bank) return monthsList.map(() => 0);
 
+    const n = monthsList.length;
     let currentBal = bank.balance;
-    balances[monthsList[5]] = currentBal;
+    balances[monthsList[n - 1]] = currentBal;
 
-    for (let i = 4; i >= 0; i--) {
+    for (let i = n - 2; i >= 0; i--) {
         const targetMonth = monthsList[i];
         const nextMonth = monthsList[i + 1];
 
@@ -4963,7 +5986,7 @@ function renderPerformanceModule() {
     renderPerformanceSelectorOptions();
 
     const bankId = currentPerfSelectedBankId;
-    const monthsList = getLast6MonthsList(state.currentMonth);
+    const monthsList = getMonthsPeriodList(state.currentMonth, currentPerfTimeRange);
     const monthsLabels = monthsList.map(formatMonthString);
 
     let balancesData = [];
@@ -4978,111 +6001,106 @@ function renderPerformanceModule() {
         selectedBankName = bank ? bank.name : "Banco";
     }
 
-    // 1. Ahorro Promedio Mensual
-    let totalSavingsPeriod = 0;
-    monthsList.forEach(m => {
-        const txs = state.transactions.filter(tx => tx.month === m);
-        let inc = 0;
-        let exp = 0;
+    // ── Cálculos Financieros Consistentes sobre todo el Periodo ──
+    let totalPeriodIncome = 0;
+    let totalPeriodExpenses = 0;
+    window._perfMonthlyFlow = {};
 
+    monthsList.forEach(m => {
+        window._perfMonthlyFlow[m] = { income: 0, expenses: 0 };
+        const txs = state.transactions.filter(tx => tx.month === m);
         txs.forEach(tx => {
             if (tx.subtype === "Traspaso") return;
             if (tx.type === "income") {
                 if (bankId === "all") {
-                    inc += tx.amount;
+                    window._perfMonthlyFlow[m].income += tx.amount;
                 } else {
                     if (tx.distributions) {
                         const d = tx.distributions.find(dist => dist.bankId === bankId);
-                        if (d) inc += d.amount;
+                        if (d) window._perfMonthlyFlow[m].income += d.amount;
                     } else if (tx.bankId === bankId) {
-                        inc += tx.amount;
+                        window._perfMonthlyFlow[m].income += tx.amount;
                     }
                 }
             } else if (tx.type === "expense") {
                 if (bankId === "all" || tx.bankId === bankId) {
-                    exp += tx.amount;
+                    window._perfMonthlyFlow[m].expenses += tx.amount;
                 }
             }
         });
-        totalSavingsPeriod += (inc - exp);
+        totalPeriodIncome += window._perfMonthlyFlow[m].income;
+        totalPeriodExpenses += window._perfMonthlyFlow[m].expenses;
     });
-    const avgSavings = parseFloat((totalSavingsPeriod / monthsList.length).toFixed(2));
-    
-    const avgSavingsEl = document.getElementById("perf-metric-avg-savings");
-    if (avgSavingsEl) {
-        avgSavingsEl.textContent = formatCurrency(avgSavings);
-        if (avgSavings >= 0) {
-            avgSavingsEl.className = "metric-value plus";
-        } else {
-            avgSavingsEl.className = "metric-value minus";
-        }
+
+    const totalNetSavingsPeriod = totalPeriodIncome - totalPeriodExpenses;
+    const avgMonthlySavings = parseFloat((totalNetSavingsPeriod / monthsList.length).toFixed(2));
+    const avgMonthlyExpenses = parseFloat((totalPeriodExpenses / monthsList.length).toFixed(2));
+    const avgMonthlyIncome = parseFloat((totalPeriodIncome / monthsList.length).toFixed(2));
+
+    const oldestBalance = balancesData[0];
+    const latestBalance = balancesData[balancesData.length - 1];
+    const netGrowth = parseFloat((latestBalance - oldestBalance).toFixed(2));
+
+    // Ratio de Gasto / Ingreso en el periodo
+    let expenseRatio = 0;
+    if (totalPeriodIncome > 0) {
+        expenseRatio = parseFloat(((totalPeriodExpenses / totalPeriodIncome) * 100).toFixed(1));
+    } else {
+        expenseRatio = totalPeriodExpenses > 0 ? 100 : 0;
     }
 
-    // 2. Crecimiento Neto (6 meses)
-    const oldestBalance = balancesData[0];
-    const latestBalance = balancesData[5];
-    const netGrowth = parseFloat((latestBalance - oldestBalance).toFixed(2));
-    
+    // Tasa Media de Ahorro en el periodo
+    let savingsRate = 0;
+    if (totalPeriodIncome > 0) {
+        savingsRate = parseFloat(((totalNetSavingsPeriod / totalPeriodIncome) * 100).toFixed(1));
+    } else {
+        savingsRate = totalPeriodExpenses > 0 ? -100 : 0;
+    }
+
+    // Meses de Colchón (Runway de Fondo de Emergencia)
+    let runwayMonths = 0;
+    if (avgMonthlyExpenses > 0) {
+        runwayMonths = parseFloat((latestBalance / avgMonthlyExpenses).toFixed(1));
+    } else {
+        runwayMonths = latestBalance > 0 ? 99 : 0;
+    }
+
+    // ── Actualizar las 5 Tarjetas de Indicadores ──
+    const titleSavingsEl = document.getElementById("perf-metric-title-savings");
+    if (titleSavingsEl) titleSavingsEl.textContent = `Ahorro Promedio (${currentPerfTimeRange}m)`;
+
+    const avgSavingsEl = document.getElementById("perf-metric-avg-savings");
+    if (avgSavingsEl) {
+        avgSavingsEl.textContent = `${formatCurrency(avgMonthlySavings)} / mes`;
+        avgSavingsEl.className = avgMonthlySavings >= 0 ? "metric-value plus" : "metric-value minus";
+    }
+
+    const titleGrowthEl = document.getElementById("perf-metric-title-growth");
+    if (titleGrowthEl) titleGrowthEl.textContent = `Crecimiento Neto (${currentPerfTimeRange}m)`;
+
     const netGrowthEl = document.getElementById("perf-metric-net-growth");
     if (netGrowthEl) {
         netGrowthEl.textContent = (netGrowth >= 0 ? '+' : '') + formatCurrency(netGrowth);
-        if (netGrowth >= 0) {
-            netGrowthEl.className = "metric-value plus";
-        } else {
-            netGrowthEl.className = "metric-value minus";
-        }
+        netGrowthEl.className = netGrowth >= 0 ? "metric-value plus" : "metric-value minus";
     }
 
-    // 3. Ratio Gasto / Ingreso
-    const currentMonthTxs = state.transactions.filter(tx => tx.month === state.currentMonth);
-    let currentIncomes = 0;
-    let currentExpenses = 0;
-
-    currentMonthTxs.forEach(tx => {
-        if (tx.subtype === "Traspaso") return;
-        if (tx.type === "income") {
-            if (bankId === "all") {
-                currentIncomes += tx.amount;
-            } else {
-                if (tx.distributions) {
-                    const d = tx.distributions.find(dist => dist.bankId === bankId);
-                    if (d) currentIncomes += d.amount;
-                } else if (tx.bankId === bankId) {
-                    currentIncomes += tx.amount;
-                }
-            }
-        } else if (tx.type === "expense") {
-            if (bankId === "all" || tx.bankId === bankId) {
-                currentExpenses += tx.amount;
-            }
-        }
-    });
+    const titleRatioEl = document.getElementById("perf-metric-title-ratio");
+    if (titleRatioEl) titleRatioEl.textContent = `Ratio Gasto/Ingreso (${currentPerfTimeRange}m)`;
 
     const expenseRatioEl = document.getElementById("perf-metric-expense-ratio");
     if (expenseRatioEl) {
-        if (currentIncomes > 0) {
-            const ratio = ((currentExpenses / currentIncomes) * 100).toFixed(1);
-            expenseRatioEl.textContent = ratio + "%";
-            if (ratio < 40) {
-                expenseRatioEl.className = "metric-value plus";
-            } else if (ratio < 70) {
-                expenseRatioEl.className = "metric-value";
-            } else {
-                expenseRatioEl.className = "metric-value minus";
-            }
-        } else {
-            expenseRatioEl.textContent = currentExpenses > 0 ? "100.0%" : "0.0%";
+        expenseRatioEl.textContent = expenseRatio + "%";
+        if (expenseRatio < 60) {
+            expenseRatioEl.className = "metric-value plus";
+        } else if (expenseRatio < 80) {
             expenseRatioEl.className = "metric-value";
+        } else {
+            expenseRatioEl.className = "metric-value minus";
         }
     }
 
-    // 4. Tasa de Ahorro Neto
-    let savingsRate = 0;
-    if (currentIncomes > 0) {
-        savingsRate = parseFloat((((currentIncomes - currentExpenses) / currentIncomes) * 100).toFixed(1));
-    } else {
-        savingsRate = currentExpenses > 0 ? -100 : 0;
-    }
+    const titleSaveRateEl = document.getElementById("perf-metric-title-saverate");
+    if (titleSaveRateEl) titleSaveRateEl.textContent = `Tasa Media Ahorro (${currentPerfTimeRange}m)`;
 
     const savingsRateEl = document.getElementById("perf-metric-savings-rate");
     if (savingsRateEl) {
@@ -5096,27 +6114,26 @@ function renderPerformanceModule() {
         }
     }
 
-    // 5. Previsión a 90 días (basado en balance actual + 3 * avgSavings)
-    const forecastBalance = parseFloat((latestBalance + (avgSavings * 3)).toFixed(2));
-    const forecastEl = document.getElementById("perf-metric-forecast");
-    if (forecastEl) {
-        forecastEl.textContent = formatCurrency(forecastBalance);
-        if (forecastBalance >= latestBalance) {
-            forecastEl.className = "metric-value plus";
+    const runwayEl = document.getElementById("perf-metric-runway");
+    if (runwayEl) {
+        runwayEl.textContent = `${runwayMonths} meses`;
+        runwayEl.title = `Gasto medio: ${formatCurrency(avgMonthlyExpenses)}/mes · Previsión a 90d: ${formatCurrency(latestBalance + (avgMonthlySavings * 3))}`;
+        if (runwayMonths >= 6) {
+            runwayEl.className = "metric-value plus";
+        } else if (runwayMonths >= 3) {
+            runwayEl.className = "metric-value";
         } else {
-            forecastEl.className = "metric-value minus";
+            runwayEl.className = "metric-value minus";
         }
     }
 
-    // 6. Asistente Financiero Inteligente (Insights)
-    renderFinancialInsights(avgSavings, netGrowth, currentExpenses / (currentIncomes || 1), savingsRate, currentIncomes, currentExpenses, latestBalance);
+    // ── Renderizar Asistente Financiero Inteligente ──
+    renderFinancialInsights(avgMonthlySavings, netGrowth, expenseRatio, savingsRate, avgMonthlyIncome, avgMonthlyExpenses, latestBalance, runwayMonths);
 
-    // ----------------------------------------------------
-    // GRÁFICO 1: EVOLUCIÓN MENSUAL (LÍNEA GRADIENTE)
-    // ----------------------------------------------------
+    // ── GRÁFICO 1: EVOLUCIÓN MENSUAL (LÍNEA GRADIENTE) ──
     const mainChartTitleEl = document.getElementById("perf-chart-title");
     if (mainChartTitleEl) {
-        mainChartTitleEl.textContent = `Histórico de Saldos: ${selectedBankName}`;
+        mainChartTitleEl.textContent = `Histórico de Saldos (${currentPerfTimeRange}m): ${selectedBankName}`;
     }
 
     if (window.myMainEvolutionChart) {
@@ -5126,7 +6143,6 @@ function renderPerformanceModule() {
     const canvasMain = document.getElementById('chart-main-evolution');
     if (canvasMain) {
         const ctxMain = canvasMain.getContext('2d');
-        
         const gradientFill = ctxMain.createLinearGradient(0, 0, 0, 300);
         gradientFill.addColorStop(0, 'rgba(0, 210, 255, 0.35)');
         gradientFill.addColorStop(1, 'rgba(0, 210, 255, 0.00)');
@@ -5142,7 +6158,7 @@ function renderPerformanceModule() {
                     borderWidth: 3,
                     backgroundColor: gradientFill,
                     fill: true,
-                    tension: 0.4,
+                    tension: 0.35,
                     pointBackgroundColor: '#00d2ff',
                     pointBorderColor: 'rgba(255,255,255,0.8)',
                     pointBorderWidth: 2,
@@ -5155,9 +6171,7 @@ function renderPerformanceModule() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: 'rgba(15, 23, 42, 0.95)',
                         titleFont: { family: 'Outfit', size: 13, weight: 'bold' },
@@ -5168,29 +6182,20 @@ function renderPerformanceModule() {
                         displayColors: false,
                         callbacks: {
                             label: function(context) {
-                                return 'Saldo: ' + formatCurrency(context.parsed.y);
+                                return ' Saldo: ' + formatCurrency(context.parsed.y);
                             }
                         }
                     }
                 },
                 scales: {
                     x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            borderColor: 'rgba(255, 255, 255, 0.1)'
-                        },
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.6)',
-                            font: { family: 'Inter', size: 11 }
-                        }
+                        grid: { color: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)', font: { family: 'Inter', size: 11 } }
                     },
                     y: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            borderColor: 'rgba(255, 255, 255, 0.1)'
-                        },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.1)' },
                         ticks: {
-                            color: 'rgba(255, 255, 255, 0.6)',
+                            color: 'rgba(255, 255, 255, 0.7)',
                             font: { family: 'Inter', size: 11 },
                             callback: function(value) {
                                 return formatCurrency(value).replace(',00', '');
@@ -5202,14 +6207,11 @@ function renderPerformanceModule() {
         });
     }
 
-    // ----------------------------------------------------
-    // GRÁFICO 2: DESGLOSE COMPLETO (DONA CON DOS MODOS)
-    // ----------------------------------------------------
+    // ── GRÁFICO 2: FLUJO MENSUAL (INGRESOS VS GASTOS) O REPARTO CAPITAL ──
     renderSecondaryBreakdownChart();
 }
 
 function renderSecondaryBreakdownChart() {
-    const bankId = currentPerfSelectedBankId;
     const canvasSec = document.getElementById('chart-secondary-breakdown');
     if (!canvasSec) return;
 
@@ -5220,129 +6222,102 @@ function renderSecondaryBreakdownChart() {
     }
 
     const breakdownTitleEl = document.getElementById("perf-breakdown-title");
+    const monthsList = getMonthsPeriodList(state.currentMonth, currentPerfTimeRange);
+    const monthsLabels = monthsList.map(formatMonthString);
 
-    if (window.currentSecondaryChartMode === "expenses") {
+    if (window.currentSecondaryChartMode === "flow") {
+        // MODO "FLOW": Barras de Ingresos vs Gastos mes a mes
         if (breakdownTitleEl) {
-            breakdownTitleEl.textContent = `Gastos por Concepto (${formatMonthString(state.currentMonth)})`;
+            breakdownTitleEl.textContent = `Flujo Mensual: Ingresos vs Gastos (${currentPerfTimeRange}m)`;
         }
 
-        const monthlyExpenses = state.transactions.filter(tx => 
-            tx.month === state.currentMonth && 
-            tx.type === "expense" && 
-            (bankId === "all" || tx.bankId === bankId)
-        );
+        const flow = window._perfMonthlyFlow || {};
+        const incomeData = monthsList.map(m => (flow[m] ? parseFloat(flow[m].income.toFixed(2)) : 0));
+        const expenseData = monthsList.map(m => (flow[m] ? parseFloat(flow[m].expenses.toFixed(2)) : 0));
 
-        const expenseGroups = {};
-        monthlyExpenses.forEach(tx => {
-            const desc = tx.description || "Otros Gastos";
-            expenseGroups[desc] = (expenseGroups[desc] || 0) + tx.amount;
-        });
-
-        const sortedExpenses = Object.entries(expenseGroups).sort((a, b) => b[1] - a[1]);
-
-        const breakdownLabels = [];
-        const breakdownValues = [];
-        let otherSum = 0;
-
-        sortedExpenses.forEach(([desc, val], idx) => {
-            if (idx < 5) {
-                breakdownLabels.push(desc);
-                breakdownValues.push(parseFloat(val.toFixed(2)));
-            } else {
-                otherSum += val;
+        window.mySecondaryBreakdownChart = new Chart(ctxSec, {
+            type: 'bar',
+            data: {
+                labels: monthsLabels,
+                datasets: [
+                    {
+                        label: 'Ingresos (€)',
+                        data: incomeData,
+                        backgroundColor: 'rgba(16, 213, 145, 0.85)',
+                        borderColor: 'rgba(16, 213, 145, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        maxBarThickness: 32
+                    },
+                    {
+                        label: 'Gastos (€)',
+                        data: expenseData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.85)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        maxBarThickness: 32
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            font: { family: 'Outfit', size: 11, weight: '600' },
+                            usePointStyle: true,
+                            boxWidth: 8
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                        titleFont: { family: 'Outfit', size: 12, weight: 'bold' },
+                        bodyFont: { family: 'Inter', size: 11 },
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+                            },
+                            footer: function(tooltipItems) {
+                                let inc = 0, exp = 0;
+                                tooltipItems.forEach(item => {
+                                    if (item.datasetIndex === 0) inc = item.parsed.y;
+                                    if (item.datasetIndex === 1) exp = item.parsed.y;
+                                });
+                                const net = inc - exp;
+                                const sign = net >= 0 ? '+' : '';
+                                return `💰 Ahorro Neto: ${sign}${formatCurrency(net)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)', font: { family: 'Inter', size: 10 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)',
+                            font: { family: 'Inter', size: 10 },
+                            callback: v => formatCurrency(v).replace(',00', '')
+                        }
+                    }
+                }
             }
         });
 
-        if (otherSum > 0) {
-            breakdownLabels.push("Otros Conceptos");
-            breakdownValues.push(parseFloat(otherSum.toFixed(2)));
-        }
-
-        if (breakdownValues.length === 0) {
-            window.mySecondaryBreakdownChart = new Chart(ctxSec, {
-                type: 'doughnut',
-                data: {
-                    labels: ["Sin Gastos Registrados"],
-                    datasets: [{
-                        data: [1],
-                        backgroundColor: ['rgba(255, 255, 255, 0.07)'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: 'rgba(255, 255, 255, 0.4)',
-                                font: { family: 'Inter', size: 11 }
-                            }
-                        },
-                        tooltip: {
-                            enabled: false
-                        }
-                    }
-                }
-            });
-        } else {
-            window.mySecondaryBreakdownChart = new Chart(ctxSec, {
-                type: 'doughnut',
-                data: {
-                    labels: breakdownLabels,
-                    datasets: [{
-                        data: breakdownValues,
-                        backgroundColor: [
-                            '#00d2ff', // Sky Blue / Celeste
-                            '#ff7300', // Orange
-                            '#ffea00', // Yellow
-                            '#0055ff', // Blue
-                            '#ffaa33', // Golden Orange
-                            '#00a2ff', // Mid Blue
-                            '#ffd700'  // Gold
-                        ],
-                        borderWidth: 1,
-                        borderColor: 'rgba(15, 23, 42, 0.6)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: 'rgba(255, 255, 255, 0.7)',
-                                font: { family: 'Inter', size: 11 }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                            titleFont: { family: 'Outfit', size: 12, weight: 'bold' },
-                            bodyFont: { family: 'Inter', size: 12 },
-                            borderColor: 'rgba(255,255,255,0.1)',
-                            borderWidth: 1,
-                            padding: 10,
-                            displayColors: true,
-                            callbacks: {
-                                label: function(context) {
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const pct = ((context.parsed / total) * 100).toFixed(1);
-                                    return ` ${context.label}: ${formatCurrency(context.parsed)} (${pct}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
     } else {
-        // MODO "DISTRIBUTION": Mostrar reparto de saldos en bancos
+        // MODO "DISTRIBUTION": Distribución de saldos por entidad bancaria
         if (breakdownTitleEl) {
-            breakdownTitleEl.textContent = `Distribución de Saldos por Banco`;
+            breakdownTitleEl.textContent = `Distribución de Saldos por Entidad`;
         }
 
         const activeBanks = state.banks.filter(b => {
@@ -5356,7 +6331,7 @@ function renderSecondaryBreakdownChart() {
             window.mySecondaryBreakdownChart = new Chart(ctxSec, {
                 type: 'doughnut',
                 data: {
-                    labels: ["Sin Saldo Disponible"],
+                    labels: ["Sin Saldo Registrado"],
                     datasets: [{
                         data: [1],
                         backgroundColor: ['rgba(255, 255, 255, 0.07)'],
@@ -5368,16 +6343,8 @@ function renderSecondaryBreakdownChart() {
                     maintainAspectRatio: false,
                     cutout: '70%',
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: 'rgba(255, 255, 255, 0.4)',
-                                font: { family: 'Inter', size: 11 }
-                            }
-                        },
-                        tooltip: {
-                            enabled: false
-                        }
+                        legend: { position: 'bottom', labels: { color: 'rgba(255, 255, 255, 0.4)', font: { family: 'Inter', size: 11 } } },
+                        tooltip: { enabled: false }
                     }
                 }
             });
@@ -5389,28 +6356,24 @@ function renderSecondaryBreakdownChart() {
                     datasets: [{
                         data: values,
                         backgroundColor: [
-                            '#00d2ff', // Sky Blue / Celeste
-                            '#ff7300', // Orange
-                            '#ffea00', // Yellow
-                            '#0055ff', // Blue
-                            '#ffaa33', // Golden Orange
-                            '#00a2ff', // Mid Blue
-                            '#ffd700'  // Gold
+                            '#00d2ff', '#ff7300', '#10b981', '#7b61ff', '#ec4899', '#f59e0b', '#3b82f6', '#14b8a6'
                         ],
-                        borderWidth: 1,
-                        borderColor: 'rgba(15, 23, 42, 0.6)'
+                        borderWidth: 2,
+                        borderColor: 'rgba(15, 23, 42, 0.8)',
+                        hoverOffset: 8
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '70%',
+                    cutout: '65%',
                     plugins: {
                         legend: {
                             position: 'bottom',
                             labels: {
-                                color: 'rgba(255, 255, 255, 0.7)',
-                                font: { family: 'Inter', size: 11 }
+                                color: 'rgba(255, 255, 255, 0.8)',
+                                font: { family: 'Outfit', size: 11, weight: '600' },
+                                boxWidth: 10
                             }
                         },
                         tooltip: {
@@ -5424,7 +6387,7 @@ function renderSecondaryBreakdownChart() {
                             callbacks: {
                                 label: function(context) {
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const pct = ((context.parsed / total) * 100).toFixed(1);
+                                    const pct = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
                                     return ` ${context.label}: ${formatCurrency(context.parsed)} (${pct}%)`;
                                 }
                             }
@@ -5436,23 +6399,23 @@ function renderSecondaryBreakdownChart() {
     }
 }
 
-function renderFinancialInsights(avgSavings, netGrowth, expenseRatio, savingsRate, incomes, expenses, latestBalance) {
+function renderFinancialInsights(avgSavings, netGrowth, expenseRatio, savingsRate, avgIncome, avgExpenses, latestBalance, runwayMonths) {
     const container = document.getElementById("perf-insights-container");
     if (!container) return;
 
     container.innerHTML = "";
 
-    // 1. Tasa de Ahorro Insight
+    // 1. Tasa de Ahorro Media del Periodo
     const cardSavings = document.createElement("div");
-    if (savingsRate >= 30) {
+    if (savingsRate >= 25) {
         cardSavings.className = "insight-card success";
         cardSavings.innerHTML = `
             <div class="insight-icon success">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
             </div>
             <div class="insight-content">
-                <h4>¡Tasa de Ahorro Excelente! (${savingsRate}%)</h4>
-                <p>Estás logrando ahorrar un gran porcentaje de tus ingresos este mes. Tienes una salud financiera de alto nivel, ideal para expandir tu Sandbox de proyectos o acelerar tus inversiones.</p>
+                <h4>¡Tasa de Ahorro Sobresaliente! (${savingsRate}%)</h4>
+                <p>Estás reteniendo más de una cuarta parte de tus ingresos de forma consistente durante estos ${currentPerfTimeRange} meses. Tu ritmo de capitalización es óptimo para nutrir inversiones y acelerar objetivos financieros.</p>
             </div>
         `;
     } else if (savingsRate >= 10) {
@@ -5462,8 +6425,8 @@ function renderFinancialInsights(avgSavings, netGrowth, expenseRatio, savingsRat
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             </div>
             <div class="insight-content">
-                <h4>Buen ritmo de Ahorro (${savingsRate}%)</h4>
-                <p>Tu ahorro se encuentra en un rango saludable. Si deseas potenciarlo, intenta recortar un 5% en tus suscripciones o salidas del mes para alcanzar la regla de oro del 50/30/20.</p>
+                <h4>Ahorro Positivo y Saludable (${savingsRate}%)</h4>
+                <p>Tu flujo de ahorro medio es positivo (+${formatCurrency(avgSavings)}/mes). Si buscas alcanzar la regla 50/30/20 (20% de ahorro), puedes revisar si hay un 5% de gastos variables prescindibles.</p>
             </div>
         `;
     } else if (savingsRate >= 0) {
@@ -5474,7 +6437,7 @@ function renderFinancialInsights(avgSavings, netGrowth, expenseRatio, savingsRat
             </div>
             <div class="insight-content">
                 <h4>Margen de Ahorro Ajustado (${savingsRate}%)</h4>
-                <p>Estás muy cerca del punto de equilibrio. Revisa las compras variables recientes y haz un filtro de gastos no esenciales para proteger tu fondo de emergencia.</p>
+                <p>Estás prácticamente en equilibrio operativo. Cualquier gasto extraordinario podría desestabilizar tu patrimonio. Te recomendamos auditar recibos fijos recurrentes para abrir mayor margen.</p>
             </div>
         `;
     } else {
@@ -5484,15 +6447,54 @@ function renderFinancialInsights(avgSavings, netGrowth, expenseRatio, savingsRat
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             </div>
             <div class="insight-content">
-                <h4>⚠️ Déficit Detectado este Mes (${savingsRate}%)</h4>
-                <p>Tus gastos superan a tus ingresos este mes por un margen de ${formatCurrency(Math.abs(incomes - expenses))}. Es prioritario recortar compras no esenciales de inmediato para frenar la pérdida de capital.</p>
+                <h4>⚠️ Déficit Operativo en el Periodo (${savingsRate}%)</h4>
+                <p>En los últimos ${currentPerfTimeRange} meses tus gastos han superado a los ingresos por una media de ${formatCurrency(Math.abs(avgSavings))}/mes. Es prioritario detener la erosión de capital revisando compras variables.</p>
             </div>
         `;
     }
     container.appendChild(cardSavings);
 
-    // 2. Previsión a 90 días Insight
+    // 2. Fondo de Emergencia y Runway (Meses de Colchón)
+    const cardRunway = document.createElement("div");
+    if (runwayMonths >= 6) {
+        cardRunway.className = "insight-card success";
+        cardRunway.innerHTML = `
+            <div class="insight-icon success">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <div class="insight-content">
+                <h4>Fondo de Emergencia Muy Robusto (${runwayMonths} meses)</h4>
+                <p>Tu saldo actual te confiere ${runwayMonths} meses de supervivencia financiera completa cubriendo tu gasto mensual medio (${formatCurrency(avgExpenses)}/mes). Tienes una gran tranquilidad ante imprevistos.</p>
+            </div>
+        `;
+    } else if (runwayMonths >= 3) {
+        cardRunway.className = "insight-card info";
+        cardRunway.innerHTML = `
+            <div class="insight-icon info">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <div class="insight-content">
+                <h4>Colchón Financiero Aceptable (${runwayMonths} meses)</h4>
+                <p>Tu reserva cubre ${runwayMonths} meses de tus gastos medios habituales. La recomendación de los expertos es alcanzar entre 3 y 6 meses antes de destinar excedentes a inversiones de mayor riesgo.</p>
+            </div>
+        `;
+    } else {
+        cardRunway.className = "insight-card warning";
+        cardRunway.innerHTML = `
+            <div class="insight-icon warning">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <div class="insight-content">
+                <h4>Colchón Reducido (${runwayMonths} meses de cobertura)</h4>
+                <p>Tu liquidez disponible cubre menos de un trimestre de tu ritmo de vida habitual (${formatCurrency(avgExpenses)}/mes). Construir tu fondo de emergencia debe ser la máxima prioridad financiera ahora mismo.</p>
+            </div>
+        `;
+    }
+    container.appendChild(cardRunway);
+
+    // 3. Proyección Patrimonial a 90 Días
     const cardForecast = document.createElement("div");
+    const forecast90d = parseFloat((latestBalance + (avgSavings * 3)).toFixed(2));
     if (avgSavings > 0) {
         cardForecast.className = "insight-card success";
         cardForecast.innerHTML = `
@@ -5500,8 +6502,8 @@ function renderFinancialInsights(avgSavings, netGrowth, expenseRatio, savingsRat
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
             </div>
             <div class="insight-content">
-                <h4>Proyección Capital Favorable</h4>
-                <p>Si mantienes tu ritmo de ahorro promedio mensual (+${formatCurrency(avgSavings)}), tu capital consolidado proyecta crecer a ${formatCurrency(latestBalance + (avgSavings * 3))} en los próximos 90 días. ¡Un crecimiento muy sólido!</p>
+                <h4>Proyección Favorable a 90 Días</h4>
+                <p>Manteniendo el ritmo medio de ahorro de estos ${currentPerfTimeRange} meses (+${formatCurrency(avgSavings)}/mes), tu saldo estimado en 3 meses alcanzará los <strong>${formatCurrency(forecast90d)}</strong>. ¡Trayectoria de crecimiento sólida!</p>
             </div>
         `;
     } else if (avgSavings < 0) {
@@ -5511,8 +6513,8 @@ function renderFinancialInsights(avgSavings, netGrowth, expenseRatio, savingsRat
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
             </div>
             <div class="insight-content">
-                <h4>Proyección Capital de Alerta</h4>
-                <p>Debido a tu saldo medio de ahorro negativo (${formatCurrency(avgSavings)}/mes), tu capital consolidado podría disminuir a ${formatCurrency(latestBalance + (avgSavings * 3))} en 90 días si no se ajustan los hábitos de gasto.</p>
+                <h4>Proyección en Riesgo a 90 Días</h4>
+                <p>Si se prolonga el desvío medio actual (${formatCurrency(avgSavings)}/mes), tu capital podría descender a <strong>${formatCurrency(forecast90d)}</strong> en 90 días. Reajustar el ritmo de gasto evitará comprometer reservas.</p>
             </div>
         `;
     } else {
@@ -5522,55 +6524,14 @@ function renderFinancialInsights(avgSavings, netGrowth, expenseRatio, savingsRat
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             </div>
             <div class="insight-content">
-                <h4>Trayectoria Neutral de Fondos</h4>
-                <p>Tu ahorro medio histórico está en el punto de equilibrio. Para consolidar un crecimiento del saldo a 90 días, es aconsejable buscar fuentes adicionales de ingresos o recortar suscripciones fijas.</p>
+                <h4>Trayectoria Neutra a 90 Días</h4>
+                <p>Con un flujo neto en equilibrio, tu saldo dentro de 90 días se mantendrá en torno a los ${formatCurrency(forecast90d)}. Para activar la creación de riqueza, busca aumentar tus ingresos o reducir gastos fijos.</p>
             </div>
         `;
     }
     container.appendChild(cardForecast);
-
-    // 3. Mayor Gasto por Concepto
-    const monthlyExpenses = state.transactions.filter(tx => 
-        tx.month === state.currentMonth && 
-        tx.type === "expense" && 
-        (currentPerfSelectedBankId === "all" || tx.bankId === currentPerfSelectedBankId)
-    );
-    const expenseGroups = {};
-    monthlyExpenses.forEach(tx => {
-        const desc = tx.description || "Otros Gastos";
-        expenseGroups[desc] = (expenseGroups[desc] || 0) + tx.amount;
-    });
-    const sortedExpenses = Object.entries(expenseGroups).sort((a, b) => b[1] - a[1]);
-
-    const cardExpenses = document.createElement("div");
-    if (sortedExpenses.length > 0) {
-        const [topDesc, topVal] = sortedExpenses[0];
-        const pctOfTotal = ((topVal / expenses) * 100).toFixed(0);
-        
-        cardExpenses.className = "insight-card tip";
-        cardExpenses.innerHTML = `
-            <div class="insight-icon tip">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            </div>
-            <div class="insight-content">
-                <h4>Mayor Categoría: "${topDesc}"</h4>
-                <p>El mayor gasto de este mes es en "${topDesc}" con un total de ${formatCurrency(topVal)}, representando el ${pctOfTotal}% de tus gastos totales. Si buscas recortar costes, optimizar este punto tendrá el mayor impacto inmediato.</p>
-            </div>
-        `;
-    } else {
-        cardExpenses.className = "insight-card success";
-        cardExpenses.innerHTML = `
-            <div class="insight-icon success">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            </div>
-            <div class="insight-content">
-                <h4>Cuentas del Mes Impecables</h4>
-                <p>No has registrado ningún gasto variable este mes para esta cuenta de análisis. ¡Excelente autodisciplina! Tu capital permanece 100% intacto frente a gastos superfluos.</p>
-            </div>
-        `;
-    }
-    container.appendChild(cardExpenses);
 }
+
 
 // ----------------------------------------------------
 // 13C. SISTEMA DE CONSEJO DIARIO
@@ -5948,6 +6909,8 @@ async function startApp() {
             initTransferForm();
             initIncomeFunnel();
             initFixedExpenses();
+            initDashboardRightTabs();
+            initQuickExpenseModal();
             initVariableExpenses();
             initBudgetClosure();
             initProjectsSandbox();
@@ -7704,6 +8667,7 @@ function initUtilities() {
     initStandardCalculator();
     initCurrencyConverter();
     initProfitCalculator();
+    initFiniquitoCalculator();
 }
 
 function initIRPFCalculator() {
@@ -8780,12 +9744,14 @@ function openUtilityView(utilityType) {
     const calcView = document.getElementById("utility-view-calc");
     const currencyView = document.getElementById("utility-view-currency");
     const marginView = document.getElementById("utility-view-margin");
+    const finiquitoView = document.getElementById("utility-view-finiquito");
 
     if (catalogView) catalogView.classList.add("hidden");
     if (irpfView) irpfView.classList.add("hidden");
     if (calcView) calcView.classList.add("hidden");
     if (currencyView) currencyView.classList.add("hidden");
     if (marginView) marginView.classList.add("hidden");
+    if (finiquitoView) finiquitoView.classList.add("hidden");
 
     if (utilityType === "irpf" && irpfView) {
         irpfView.classList.remove("hidden");
@@ -8800,6 +9766,10 @@ function openUtilityView(utilityType) {
     } else if (utilityType === "margin" && marginView) {
         marginView.classList.remove("hidden");
         calculateProfitMargin();
+    } else if (utilityType === "finiquito" && finiquitoView) {
+        finiquitoView.classList.remove("hidden");
+        initFiniquitoDefaults();
+        calculateFiniquito();
     }
 
     const panel = document.getElementById("panel-utilities");
@@ -8812,12 +9782,378 @@ function closeUtilityView() {
     const calcView = document.getElementById("utility-view-calc");
     const currencyView = document.getElementById("utility-view-currency");
     const marginView = document.getElementById("utility-view-margin");
+    const finiquitoView = document.getElementById("utility-view-finiquito");
 
     if (irpfView) irpfView.classList.add("hidden");
     if (calcView) calcView.classList.add("hidden");
     if (currencyView) currencyView.classList.add("hidden");
     if (marginView) marginView.classList.add("hidden");
+    if (finiquitoView) finiquitoView.classList.add("hidden");
     if (catalogView) catalogView.classList.remove("hidden");
+}
+
+
+// ====================================================
+// CALCULADORA DE FINIQUITO E INDEMNIZACIÓN (ESPAÑA)
+// ====================================================
+let finiquitoSalaryPeriod = 'monthly'; // 'monthly' | 'annual'
+
+
+function initFiniquitoCalculator() {
+    const salaryInput = document.getElementById("finiquito-salary-input");
+    if (!salaryInput) return;
+    initFiniquitoDefaults();
+    calculateFiniquito();
+}
+
+function initFiniquitoDefaults() {
+    const startInput = document.getElementById("finiquito-start-date");
+    const endInput = document.getElementById("finiquito-end-date");
+    
+    if (endInput && !endInput.value) {
+        const today = new Date();
+        endInput.value = today.toISOString().split("T")[0];
+    }
+    if (startInput && !startInput.value) {
+        const today = new Date();
+        const threeYearsAgo = new Date(today.getFullYear() - 3, today.getMonth(), today.getDate());
+        startInput.value = threeYearsAgo.toISOString().split("T")[0];
+    }
+}
+
+function setFiniquitoSalaryPeriod(period) {
+    if (finiquitoSalaryPeriod === period) return;
+    
+    const salaryInput = document.getElementById("finiquito-salary-input");
+    const numPagas = parseInt(document.getElementById("finiquito-num-pagas")?.value || "14", 10);
+    const btnMonthly = document.getElementById("btn-period-monthly");
+    const btnAnnual = document.getElementById("btn-period-annual");
+    
+    let curVal = parseFloat(salaryInput?.value || "0");
+    if (period === "annual" && curVal > 0) {
+        salaryInput.value = Math.round(curVal * numPagas);
+    } else if (period === "monthly" && curVal > 0) {
+        salaryInput.value = Math.round(curVal / numPagas);
+    }
+    
+    finiquitoSalaryPeriod = period;
+    if (btnMonthly && btnAnnual) {
+        if (period === "monthly") {
+            btnMonthly.classList.add("active");
+            btnAnnual.classList.remove("active");
+        } else {
+            btnAnnual.classList.add("active");
+            btnMonthly.classList.remove("active");
+        }
+    }
+    
+    calculateFiniquito();
+}
+
+function setFiniquitoPreset(amount) {
+    const salaryInput = document.getElementById("finiquito-salary-input");
+    const numPagas = parseInt(document.getElementById("finiquito-num-pagas")?.value || "14", 10);
+    if (!salaryInput) return;
+    
+    if (finiquitoSalaryPeriod === "monthly") {
+        salaryInput.value = amount;
+    } else {
+        salaryInput.value = Math.round(amount * numPagas);
+    }
+    calculateFiniquito();
+}
+
+function computeSeniorityET(dStart, dEnd) {
+    if (dEnd < dStart) return { years: 0, months: 0, days: 0, computableMonths: 0, fullMonths: 0 };
+    
+    // Inclusive: from beginning of dStart to end of dEnd (which is start of dEnd + 1 day)
+    const endPlusOne = new Date(dEnd.getFullYear(), dEnd.getMonth(), dEnd.getDate() + 1);
+    let cur = new Date(dStart.getTime());
+    let fullMonths = 0;
+    
+    while (true) {
+        let next = new Date(cur.getFullYear(), cur.getMonth() + 1, cur.getDate());
+        if (next.getDate() !== cur.getDate()) {
+            next = new Date(cur.getFullYear(), cur.getMonth() + 2, 0);
+        }
+        if (next <= endPlusOne) {
+            fullMonths++;
+            cur = next;
+        } else {
+            break;
+        }
+    }
+    
+    const diffTime = endPlusOne.getTime() - cur.getTime();
+    const remainingDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    // En derecho laboral español, cualquier fracción de mes computa como mes completo
+    const computableMonths = remainingDays > 0 ? fullMonths + 1 : fullMonths;
+    
+    return {
+        years: Math.floor(fullMonths / 12),
+        months: fullMonths % 12,
+        days: remainingDays,
+        fullMonths,
+        computableMonths
+    };
+}
+
+function calculateFiniquito() {
+    const salaryInput = document.getElementById("finiquito-salary-input");
+    const numPagasInput = document.getElementById("finiquito-num-pagas");
+    const startInput = document.getElementById("finiquito-start-date");
+    const endInput = document.getElementById("finiquito-end-date");
+    const dismissalTypeInput = document.getElementById("finiquito-dismissal-type");
+    const vacationsInput = document.getElementById("finiquito-vacations-taken");
+    const hintElem = document.getElementById("finiquito-type-hint");
+
+    if (!salaryInput || !numPagasInput || !startInput || !endInput || !dismissalTypeInput) return;
+
+    const rawSalary = parseFloat(salaryInput.value) || 0;
+    const numPagas = parseInt(numPagasInput.value, 10) || 14;
+    const startDateStr = startInput.value;
+    const endDateStr = endInput.value;
+    const dismissalType = dismissalTypeInput.value;
+    const vacationsTaken = parseFloat(vacationsInput?.value || "0") || 0;
+
+    // Actualizar texto explicativo del tipo de despido
+    if (hintElem) {
+        if (dismissalType === "improcedente") {
+            hintElem.textContent = "33 días/año (máx. 24 meses / 720 días). Contempla tramo previo a feb-2012 (45 días/año) si procede.";
+        } else if (dismissalType === "objetivo") {
+            hintElem.textContent = "20 días de salario por año de servicio (máximo 12 mensualidades / 360 días).";
+        } else if (dismissalType === "temporal") {
+            hintElem.textContent = "12 días de salario por cada año de servicio cumplido.";
+        } else if (dismissalType === "voluntaria") {
+            hintElem.textContent = "Baja voluntaria: no genera derecho a indemnización por despido, solo liquidación de finiquito.";
+        } else if (dismissalType === "disciplinario") {
+            hintElem.textContent = "Despido disciplinario procedente: 0 € de indemnización (solo finiquito de salarios y vacaciones).";
+        }
+    }
+
+    if (!startDateStr || !endDateStr) return;
+
+    const dStart = new Date(startDateStr + "T00:00:00");
+    const dEnd = new Date(endDateStr + "T00:00:00");
+
+    if (dEnd < dStart) {
+        // Fechas invertidas
+        const payoutEl = document.getElementById("finiquito-total-payout");
+        if (payoutEl) payoutEl.textContent = "Fecha inválida";
+        return;
+    }
+
+    // Salario Bruto Anual & Diario
+    let grossAnnual = 0;
+    let baseMensual = 0;
+    if (finiquitoSalaryPeriod === "monthly") {
+        grossAnnual = rawSalary * numPagas;
+        baseMensual = rawSalary;
+    } else {
+        grossAnnual = rawSalary;
+        baseMensual = rawSalary / numPagas;
+    }
+    const dailySalary = grossAnnual / 365;
+
+    // 1. Antigüedad y Días de Indemnización
+    const sen = computeSeniorityET(dStart, dEnd);
+    let daysIndemnity = 0;
+    let indemnityCapReached = false;
+    const reformDate = new Date("2012-02-12T00:00:00");
+
+    if (dismissalType === "improcedente") {
+        if (dStart < reformDate) {
+            const dayBeforeReform = new Date("2012-02-11T00:00:00");
+            const sen1 = computeSeniorityET(dStart, dayBeforeReform);
+            const daysTramo1 = Math.min(1260, sen1.computableMonths * (45 / 12));
+            const sen2 = computeSeniorityET(reformDate, dEnd);
+            const daysTramo2 = sen2.computableMonths * (33 / 12);
+
+            if (daysTramo1 >= 720) {
+                daysIndemnity = Math.min(1260, daysTramo1);
+                indemnityCapReached = daysTramo1 >= 1260;
+            } else {
+                daysIndemnity = Math.min(720, daysTramo1 + daysTramo2);
+                indemnityCapReached = (daysTramo1 + daysTramo2) >= 720;
+            }
+        } else {
+            daysIndemnity = Math.min(720, sen.computableMonths * (33 / 12));
+            indemnityCapReached = (sen.computableMonths * (33 / 12)) >= 720;
+        }
+    } else if (dismissalType === "objetivo") {
+        daysIndemnity = Math.min(360, sen.computableMonths * (20 / 12));
+        indemnityCapReached = (sen.computableMonths * (20 / 12)) >= 360;
+    } else if (dismissalType === "temporal") {
+        daysIndemnity = sen.computableMonths * (12 / 12);
+    } else {
+        daysIndemnity = 0;
+    }
+
+    const indemnityAmount = daysIndemnity * dailySalary;
+
+    // 2. Finiquito - Salario días trabajados del mes
+    const lastDay = dEnd.getDate();
+    const daysInMonth = new Date(dEnd.getFullYear(), dEnd.getMonth() + 1, 0).getDate();
+    const monthSalary = (lastDay / daysInMonth) * baseMensual;
+
+    // 3. Finiquito - Pagas extraordinarias
+    let extrasPending = 0;
+    if (numPagas === 14) {
+        const extraVal = grossAnnual / 14;
+        if (dEnd.getMonth() < 6) {
+            // Semestre 1 (1 ene a 30 jun): Paga de verano
+            const startSem = new Date(dEnd.getFullYear(), 0, 1);
+            const daysElapsed = Math.round((dEnd.getTime() - startSem.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+            const daysInSem = dEnd.getFullYear() % 4 === 0 ? 182 : 181;
+            extrasPending = (daysElapsed / daysInSem) * extraVal;
+        } else {
+            // Semestre 2 (1 jul a 31 dic): Paga de navidad (la de verano ya se cobró)
+            const startSem = new Date(dEnd.getFullYear(), 6, 1);
+            const daysElapsed = Math.round((dEnd.getTime() - startSem.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+            extrasPending = (daysElapsed / 184) * extraVal;
+        }
+    }
+
+    // 4. Finiquito - Vacaciones no disfrutadas
+    const startOfYear = new Date(dEnd.getFullYear(), 0, 1);
+    const effStart = dStart > startOfYear ? dStart : startOfYear;
+    const daysWorkedYear = Math.round((dEnd.getTime() - effStart.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    const daysInYear = dEnd.getFullYear() % 4 === 0 ? 366 : 365;
+    const vacAccrued = (daysWorkedYear / daysInYear) * 30;
+    const vacPending = Math.max(0, vacAccrued - vacationsTaken);
+    const vacAmount = vacPending * dailySalary;
+
+    // Totales
+    const finiquitoTotal = monthSalary + extrasPending + vacAmount;
+    const grandTotal = indemnityAmount + finiquitoTotal;
+
+    // Renderizar en DOM
+    const totalPayoutEl = document.getElementById("finiquito-total-payout");
+    const kpiIndemnityEl = document.getElementById("kpi-finiquito-indemnity");
+    const kpiDaysEl = document.getElementById("kpi-finiquito-days-label");
+    const kpiHaberesEl = document.getElementById("kpi-finiquito-haberes");
+    const kpiHaberesSubEl = document.getElementById("kpi-finiquito-haberes-sub");
+
+    if (totalPayoutEl) totalPayoutEl.textContent = formatCurrency(grandTotal);
+    if (kpiIndemnityEl) kpiIndemnityEl.textContent = formatCurrency(indemnityAmount);
+    if (kpiDaysEl) {
+        kpiDaysEl.textContent = `${daysIndemnity.toFixed(2).replace(".", ",")} días indemnizables${indemnityCapReached ? " (tope alcanzado)" : ""}`;
+    }
+    if (kpiHaberesEl) kpiHaberesEl.textContent = formatCurrency(finiquitoTotal);
+
+    // Tabla de desglose
+    const tblDailySalary = document.getElementById("tbl-finiquito-daily-salary");
+    const tblSeniorityMonths = document.getElementById("tbl-finiquito-seniority-months");
+    const tblSeniorityDesc = document.getElementById("tbl-finiquito-seniority-desc");
+    const tblIndemnityCalc = document.getElementById("tbl-finiquito-indemnity-calc");
+    const tblIndemnityAmount = document.getElementById("tbl-finiquito-indemnity-amount");
+    const tblMonthDaysDesc = document.getElementById("tbl-finiquito-month-days-desc");
+    const tblMonthSalary = document.getElementById("tbl-finiquito-month-salary");
+    const tblExtrasDesc = document.getElementById("tbl-finiquito-extras-desc");
+    const tblExtrasAmount = document.getElementById("tbl-finiquito-extras-amount");
+    const tblVacationsDesc = document.getElementById("tbl-finiquito-vacations-desc");
+    const tblVacationsAmount = document.getElementById("tbl-finiquito-vacations-amount");
+    const tblGrandTotal = document.getElementById("tbl-finiquito-grand-total");
+
+    if (tblDailySalary) tblDailySalary.textContent = `${formatCurrency(dailySalary)}/día`;
+    if (tblSeniorityMonths) tblSeniorityMonths.textContent = `${sen.computableMonths} meses`;
+    if (tblSeniorityDesc) {
+        const parts = [];
+        if (sen.years > 0) parts.push(`${sen.years} ${sen.years === 1 ? "año" : "años"}`);
+        if (sen.months > 0) parts.push(`${sen.months} ${sen.months === 1 ? "mes" : "meses"}`);
+        if (sen.days > 0) parts.push(`${sen.days} ${sen.days === 1 ? "día" : "días"}`);
+        tblSeniorityDesc.textContent = parts.length > 0 ? `(${parts.join(", ")})` : "";
+    }
+    if (tblIndemnityCalc) {
+        tblIndemnityCalc.textContent = `(${daysIndemnity.toFixed(1).replace(".", ",")} días)`;
+    }
+    if (tblIndemnityAmount) tblIndemnityAmount.textContent = formatCurrency(indemnityAmount);
+    if (tblMonthDaysDesc) {
+        tblMonthDaysDesc.textContent = `(${lastDay} de ${daysInMonth} días)`;
+    }
+    if (tblMonthSalary) tblMonthSalary.textContent = formatCurrency(monthSalary);
+    if (tblExtrasDesc) {
+        tblExtrasDesc.textContent = numPagas === 14 
+            ? (dEnd.getMonth() < 6 ? "(Paga Verano en curso)" : "(Paga Navidad en curso)")
+            : "(Prorrateadas en nómina mensual)";
+    }
+    if (tblExtrasAmount) tblExtrasAmount.textContent = formatCurrency(extrasPending);
+    if (tblVacationsDesc) {
+        tblVacationsDesc.textContent = `(${vacPending.toFixed(1).replace(".", ",")} días pendientes)`;
+    }
+    if (tblVacationsAmount) tblVacationsAmount.textContent = formatCurrency(vacAmount);
+    if (tblGrandTotal) tblGrandTotal.textContent = formatCurrency(grandTotal);
+
+    // Guardar último cálculo para copia
+    window._lastFiniquitoCalculation = {
+        grossAnnual,
+        numPagas,
+        dailySalary,
+        sen,
+        dismissalType,
+        daysIndemnity,
+        indemnityAmount,
+        lastDay,
+        daysInMonth,
+        monthSalary,
+        extrasPending,
+        vacPending,
+        vacAmount,
+        finiquitoTotal,
+        grandTotal,
+        startDateStr,
+        endDateStr
+    };
+}
+
+function copyFiniquitoSummary() {
+    const calc = window._lastFiniquitoCalculation;
+    if (!calc) {
+        showToast("No hay cálculo disponible para copiar.", "warning");
+        return;
+    }
+
+    const dismissalNames = {
+        improcedente: "Despido Improcedente (33 días/año)",
+        objetivo: "Despido Objetivo o ERE (20 días/año)",
+        temporal: "Fin de Contrato Temporal (12 días/año)",
+        voluntaria: "Baja Voluntaria / Dimisión",
+        disciplinario: "Despido Disciplinario Procedente"
+    };
+
+    const text = [
+        "================================================",
+        "INFORME DE FINIQUITO E INDEMNIZACIÓN (ESPAÑA)",
+        "Generado con Mi Hucha (mihucha.es)",
+        "================================================",
+        `• Salario Bruto Anual: ${formatCurrency(calc.grossAnnual)} (${calc.numPagas} pagas)`,
+        `• Salario Diario: ${formatCurrency(calc.dailySalary)}/día`,
+        `• Periodo Laboral: ${calc.startDateStr} al ${calc.endDateStr}`,
+        `• Antigüedad Computable: ${calc.sen.computableMonths} meses (${calc.sen.years}a ${calc.sen.months}m ${calc.sen.days}d)`,
+        `• Causa de Extinción: ${dismissalNames[calc.dismissalType] || calc.dismissalType}`,
+        "------------------------------------------------",
+        "DESGLOSE DE LIQUIDACIÓN:",
+        `• Indemnización por Despido: ${formatCurrency(calc.indemnityAmount)} (${calc.daysIndemnity.toFixed(2).replace(".", ",")} días - Exenta de IRPF)`,
+        `• Salario del mes (${calc.lastDay}/${calc.daysInMonth} días): ${formatCurrency(calc.monthSalary)}`,
+        `• Pagas Extraordinarias pendientes: ${formatCurrency(calc.extrasPending)}`,
+        `• Vacaciones no disfrutadas (${calc.vacPending.toFixed(1).replace(".", ",")} días): ${formatCurrency(calc.vacAmount)}`,
+        `• Total Finiquito Bruto (Haberes): ${formatCurrency(calc.finiquitoTotal)}`,
+        "------------------------------------------------",
+        `TOTAL A PERCIBIR: ${formatCurrency(calc.grandTotal)}`,
+        "================================================",
+        "* Indemnización legal exenta de IRPF conforme al art. 7.e Ley del IRPF (límite 180.000 €).",
+        "* Cómputo de fracciones de mes como mes completo conforme al art. 56 Estatuto de los Trabajadores."
+    ].join("\n");
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast("Informe de finiquito copiado al portapapeles.", "success");
+        }).catch(() => {
+            showToast("Error al copiar al portapapeles.", "danger");
+        });
+    } else {
+        showToast("Portapapeles no disponible en este navegador.", "warning");
+    }
 }
 
 // Exponer a window para handlers inline de Utilidades y CRUD
@@ -8860,3 +10196,9 @@ window.escapeHtml = escapeHtml;
 
 
 
+
+window.calculateFiniquito = calculateFiniquito;
+window.setFiniquitoSalaryPeriod = setFiniquitoSalaryPeriod;
+window.setFiniquitoPreset = setFiniquitoPreset;
+window.copyFiniquitoSummary = copyFiniquitoSummary;
+window.initFiniquitoDefaults = initFiniquitoDefaults;

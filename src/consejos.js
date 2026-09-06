@@ -383,7 +383,6 @@ if (typeof globalThis !== "undefined") {
     globalThis.CONSEJOS = CONSEJOS_FINANCIEROS;
     globalThis.CONSEJOS_FINANCIEROS = CONSEJOS_FINANCIEROS;
 }
-
-export default CONSEJOS_FINANCIEROS;
-
-
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = CONSEJOS_FINANCIEROS;
+}

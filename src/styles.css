@@ -1987,6 +1987,84 @@ body {
     flex-shrink: 0;
 }
 
+/* Toolbar selectora de bancos en Cierre de Mes */
+.closure-bank-filter-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    margin-bottom: 20px;
+    padding: 2px 0;
+}
+
+/* Tabla comparativa consolidada */
+.closure-global-table-container {
+    margin-top: 20px;
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid var(--border-glass);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.closure-global-table-title {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-glass);
+    font-family: var(--font-header);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.closure-global-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.closure-global-table th {
+    padding: 10px 18px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-glass);
+    background: rgba(15, 23, 42, 0.3);
+    text-align: left;
+}
+
+.closure-global-table th.text-right,
+.closure-global-table td.text-right {
+    text-align: right;
+}
+
+.closure-global-table td {
+    padding: 12px 18px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.closure-global-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.closure-global-table tfoot tr {
+    background: rgba(15, 23, 42, 0.8);
+    border-top: 1.5px solid var(--border-glass-focus);
+}
+
+.closure-global-table tfoot td {
+    font-weight: 800;
+    color: var(--text-primary);
+    border-bottom: none;
+}
+
 /* Card por banco */
 .closure-bank-card {
     border-radius: 16px;
@@ -2979,6 +3057,28 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.perf-timerange-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.perf-timerange-group .filter-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.perf-timerange-group .filter-label svg {
+    color: var(--primary-light);
 }
 
 .premium-select-inline {
@@ -6075,4 +6175,210 @@ select:focus:not(:focus-visible) {
     transform: scale(1.02) translateY(-2px);
     border: 2px solid var(--primary-light) !important;
     box-shadow: 0 0 25px var(--primary-glow) !important;
+}
+
+/* ---------------------------------------------------- */
+/* MATRIZ DE GASTOS FIJOS: KPIS, FILTROS POR BANCO Y TOTALES */
+/* ---------------------------------------------------- */
+.fixed-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+@media (max-width: 900px) {
+    .fixed-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.fixed-kpi-card {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: 12px 16px;
+    transition: var(--transition-smooth);
+}
+.fixed-kpi-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+/* Barra de Filtro de Matriz Integrada */
+.fixed-matrix-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 2px 0;
+}
+
+.fixed-filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.fixed-matrix-toolbar .filter-label {
+    font-size: 0.80rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.fixed-matrix-toolbar .filter-label svg {
+    color: var(--primary-light);
+}
+
+.fixed-bank-segmented-group {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-glass);
+    padding: 3px;
+    border-radius: 8px;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.fixed-bank-segmented-group::-webkit-scrollbar {
+    display: none;
+}
+
+.btn-filter-chip {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-header);
+    font-weight: 600;
+    font-size: 0.78rem;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.btn-filter-chip:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-filter-chip.active {
+    background: var(--gradient-primary);
+    color: var(--bg-darker);
+    font-weight: 700;
+    box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+.btn-filter-chip .chip-count {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.btn-filter-chip.active .chip-count {
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--bg-darker);
+}
+
+.filter-feedback-text {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+}
+
+.fixed-bank-mobile-select {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .fixed-bank-segmented-group {
+        display: none;
+    }
+    .fixed-bank-mobile-select {
+        display: block;
+        width: 100%;
+    }
+}
+
+.premium-table tfoot tr {
+    background: rgba(15, 23, 42, 0.85);
+    border-top: 2px solid var(--border-glass-focus);
+}
+
+.premium-table tfoot td {
+    padding: 12px 14px;
+    color: var(--text-primary);
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+/* ====================================================
+   CALCULADORA DE FINIQUITO E INDEMNIZACIÓN (ESPAÑA)
+   ==================================================== */
+@media (max-width: 768px) {
+    .finiquito-hub-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.finiquito-period-segmented {
+    display: flex;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 2px;
+}
+
+.btn-period-toggle {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.btn-period-toggle:hover {
+    color: var(--text-primary);
+}
+
+.btn-period-toggle.active {
+    background: rgba(0, 229, 255, 0.15);
+    color: var(--primary-light);
+    font-weight: 700;
+    box-shadow: 0 1px 4px rgba(0, 229, 255, 0.2);
+}
+
+.finiquito-total-card {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(99, 102, 241, 0.08));
+    border: 1.5px solid rgba(56, 189, 248, 0.35);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.badge-tax-exempt {
+    background: rgba(16, 185, 129, 0.18);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #34d399;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
