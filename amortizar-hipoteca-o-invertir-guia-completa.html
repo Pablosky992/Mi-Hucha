@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amortizar Hipoteca o Invertir: La Guía Definitiva con el Euríbor Actual - Mi Hucha</title>
+    
+    <!-- Meta tags SEO Primarios -->
+    <meta name="description" content="¿Es mejor amortizar hipoteca o invertir en fondos o depósitos en España? Analizamos matemáticamente el sistema francés, cuota vs plazo, deducción fiscal de vivienda y el factor psicológico de la deuda cero.">
+    <meta name="keywords" content="amortizar hipoteca o invertir, reducir cuota o plazo hipoteca, sistema de amortizacion frances, amortizar hipoteca euribor, deduccion vivienda habitual irpf 2013, comisiones amortizacion hipoteca ley 2019, calculo amortizacion anticipada">
+    <meta name="author" content="Mi Hucha - Finanzas Personales">
+    <link rel="canonical" href="https://www.mihucha.es/amortizar-hipoteca-o-invertir-guia-completa.html">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.mihucha.es/amortizar-hipoteca-o-invertir-guia-completa.html">
+    <meta property="og:title" content="Amortizar Hipoteca o Invertir: La Guía Definitiva Matemática y Emocional">
+    <meta property="og:description" content="Descubre si te conviene amortizar tu hipoteca o invertir tus ahorros. Simulaciones numéricas, cuota vs plazo, Euríbor y rentabilidad libre de riesgo.">
+    <meta property="og:image" content="https://www.mihucha.es/img/amortizar-hipoteca-o-invertir.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="675">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Amortizar Hipoteca o Invertir: Guía Definitiva">
+    <meta name="twitter:description" content="¿Amortizar cuota o plazo? ¿O invertir en fondos indexados? Descubre la mejor decisión para tu dinero.">
+    <meta name="twitter:image" content="https://www.mihucha.es/img/amortizar-hipoteca-o-invertir.jpg">
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0b0f19">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+
+    <style>
+        body { overflow-y: auto !important; }
+        .article-layout { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px 20px; }
+        .article-header { margin-bottom: 35px; text-align: center; }
+        .article-category { color: var(--primary-light); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.85rem; margin-bottom: 12px; display: inline-block; background: rgba(0, 229, 255, 0.1); padding: 4px 14px; border-radius: 20px; border: 1px solid rgba(0, 229, 255, 0.3); }
+        .article-title { font-size: 2.5rem; color: var(--text-primary); line-height: 1.25; margin-bottom: 18px; font-family: 'Outfit', sans-serif; font-weight: 800; }
+        .article-meta { color: var(--text-muted); font-size: 0.92rem; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .hero-image-container { width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 45px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid var(--border-glass); }
+        .hero-image { width: 100%; height: auto; display: block; }
+        .article-content { font-family: 'Inter', sans-serif; color: var(--text-secondary); font-size: 1.1rem; line-height: 1.85; }
+        .article-content p { margin-bottom: 24px; }
+        .article-content h2 { font-family: 'Outfit', sans-serif; font-size: 1.85rem; color: var(--text-primary); margin-top: 48px; margin-bottom: 20px; font-weight: 700; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; }
+        .article-content h3 { font-family: 'Outfit', sans-serif; font-size: 1.35rem; color: var(--text-primary); margin-top: 32px; margin-bottom: 14px; font-weight: 600; }
+        .article-content strong { color: var(--text-primary); font-weight: 600; }
+        .article-content .lead { font-size: 1.25rem; color: var(--text-primary); font-weight: 400; margin-bottom: 35px; line-height: 1.65; background: rgba(15, 23, 42, 0.5); padding: 22px; border-left: 4px solid var(--primary-light); border-radius: 0 12px 12px 0; }
+        
+        .info-box { background: rgba(0, 229, 255, 0.06); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 12px; padding: 22px; margin: 30px 0; }
+        .info-box h4 { margin: 0 0 10px 0; color: var(--primary-light); font-size: 1.15rem; display: flex; align-items: center; gap: 8px; font-family: 'Outfit', sans-serif; }
+        .info-box p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
+
+        .shield-box { background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.9)); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 14px; padding: 24px; margin: 35px 0; }
+        .shield-box h4 { margin: 0 0 10px 0; color: var(--success-light); font-size: 1.2rem; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; }
+
+        .warning-box { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 14px; padding: 22px; margin: 30px 0; }
+        .warning-box h4 { margin: 0 0 10px 0; color: #f87171; font-size: 1.15rem; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; }
+        .warning-box p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
+
+        .article-table-wrap { overflow-x: auto; margin: 30px 0; border-radius: 12px; border: 1px solid var(--border-glass); }
+        .article-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+        .article-table th { background: rgba(15, 23, 42, 0.85); color: var(--text-primary); padding: 14px 16px; font-weight: 700; border-bottom: 1px solid var(--border-glass); }
+        .article-table td { padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: var(--text-secondary); }
+        .article-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        .step-card { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 14px; padding: 20px 24px; margin-bottom: 18px; display: flex; gap: 18px; align-items: flex-start; }
+        .step-badge { background: linear-gradient(135deg, var(--primary-light), #0077b6); color: #0f172a; font-weight: 800; font-size: 1.1rem; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .step-content h4 { margin: 0 0 6px 0; color: var(--text-primary); font-size: 1.1rem; font-family: 'Outfit', sans-serif; }
+        .step-content p { margin: 0; font-size: 0.95rem; line-height: 1.55; }
+
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 12px; padding: 22px; margin-bottom: 16px; }
+        .faq-item h4 { margin: 0 0 8px 0; color: var(--text-primary); font-size: 1.15rem; font-family: 'Outfit', sans-serif; }
+        .faq-item p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
+
+        .cta-savings-banner { background: linear-gradient(135deg, rgba(0, 229, 255, 0.18), rgba(15, 23, 42, 0.95)); border: 1px solid rgba(0, 229, 255, 0.35); border-radius: 16px; padding: 28px; margin: 45px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; box-shadow: 0 12px 35px rgba(0, 229, 255, 0.15); }
+        .cta-savings-banner h3 { margin: 0 0 8px 0; color: #ffffff; font-size: 1.45rem; font-family: 'Outfit', sans-serif; }
+        .cta-savings-banner p { margin: 0; color: var(--text-secondary); font-size: 0.95rem; max-width: 520px; }
+    </style>
+
+    <!-- Schema.org JSON-LD para Rich Snippets de Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Article",
+          "@id": "https://www.mihucha.es/amortizar-hipoteca-o-invertir-guia-completa.html#article",
+          "isPartOf": {
+            "@type": "WebPage",
+            "@id": "https://www.mihucha.es/amortizar-hipoteca-o-invertir-guia-completa.html"
+          },
+          "headline": "Amortizar Hipoteca o Invertir: La Guía Definitiva Matemática y Emocional con el Euríbor Actual",
+          "description": "Análisis exhaustivo entre amortizar anticipadamente la hipoteca o invertir en fondos indexados y depósitos en España. Comparativa cuota vs plazo, sistema francés y deducción fiscal.",
+          "image": "https://www.mihucha.es/img/amortizar-hipoteca-o-invertir.jpg",
+          "datePublished": "2026-09-12T10:00:00+02:00",
+          "dateModified": "2026-09-12T10:00:00+02:00",
+          "author": {
+            "@type": "Organization",
+            "name": "Mi Hucha",
+            "url": "https://www.mihucha.es/"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Mi Hucha",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.mihucha.es/logo.png"
+            }
+          },
+          "mainEntityOfPage": "https://www.mihucha.es/amortizar-hipoteca-o-invertir-guia-completa.html"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://www.mihucha.es/amortizar-hipoteca-o-invertir-guia-completa.html#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Qué ahorra más intereses: reducir cuota o reducir plazo de la hipoteca?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Reducir plazo ahorra considerablemente más dinero en intereses totales. Al amortizar plazo, eliminas cuotas completas del final del préstamo, impidiendo que el banco devengue intereses durante esos años. Reducir cuota baja la mensualidad inmediata y da liquidez mes a mes, pero ahorra muchos menos intereses acumulados."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cuándo conviene más amortizar hipoteca que invertir en bolsa o fondos?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Conviene amortizar cuando el tipo de interés de la hipoteca (ej. 3,5% o 4%) supera la rentabilidad neta segura que puedes obtener en depósitos o renta fija libre de riesgo, o cuando el inversor tiene baja tolerancia a la volatilidad y valora la paz mental y la reducción del riesgo patrimonial de tener su vivienda pagada."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Quién puede deducirse por amortización de hipoteca en el IRPF en España?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Únicamente los contribuyentes que compraron su vivienda habitual antes del 1 de enero de 2013 y aplicaron la deducción en ejercicios previos. Tienen derecho a desgravar el 15% sobre una base máxima de 9.040 € anuales por titular (hasta 1.356 € de devolución fiscal cada año)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Qué comisiones puede cobrar el banco por amortizar antes de tiempo según la Ley Hipotecaria?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "La Ley 5/2019 de Contratos de Crédito Inmobiliario limita estrictamente las comisiones por amortización anticipada: en hipotecas a tipo variable, como máximo un 0,25% durante los primeros 3 años o 0,15% durante los primeros 5 años (y 0% después). En tipo fijo, un máximo de 2% los primeros 10 años y 1,5% el resto, siempre que exista pérdida financiera para el banco."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://www.mihucha.es/amortizar-hipoteca-o-invertir-guia-completa.html#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Inicio",
+              "item": "https://www.mihucha.es/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Artículos y Guías",
+              "item": "https://www.mihucha.es/articulos.html"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Amortizar Hipoteca o Invertir",
+              "item": "https://www.mihucha.es/amortizar-hipoteca-o-invertir-guia-completa.html"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9370167145239765" crossorigin="anonymous"></script>
+</head>
+<body class="theme-dark">
+    <div class="bg-glow-container">
+        <div class="bg-glow-blob bg-glow-blue"></div>
+        <div class="bg-glow-blob bg-glow-orange"></div>
+        <div class="bg-glow-blob bg-glow-purple"></div>
+    </div>
+
+    <div class="app-desktop-container">
+        <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha - Finanzas Personales" class="sidebar-brand-img" width="180" height="98" fetchpriority="high">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#investments" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span>Inversiones</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+                <a href="articulos.html" class="nav-link active" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+                <a href="utilidades.html" class="nav-btn" style="text-decoration: none;" title="Herramientas y Utilidades">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                    <span>Utilidades</span>
+                </a>
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE&locale.x=es_ES" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL -->
+        <div class="app-body" style="overflow-y: auto;">
+            <div class="app-top-header" style="padding: 16px 30px; border-bottom: 1px solid var(--border-glass); position: sticky; top: 0; background: rgba(11, 15, 25, 0.75); backdrop-filter: blur(20px); z-index: 90; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button id="btn-mobile-menu-toggle" class="mobile-menu-toggle" title="Abrir Menú" style="margin-right: 0;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <a href="articulos.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: color 0.2s;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        Volver a Artículos
+                    </a>
+                </div>
+                <div>
+                    <a href="calculadora-hipoteca.html" class="btn-secondary" style="font-size: 0.8rem; padding: 6px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                        <span>Simular en Calculadora Hipoteca</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    </a>
+                </div>
+            </div>
+
+            <main class="article-layout">
+                <header class="article-header">
+                    <span class="article-category">Hipotecas & Inversión Inteligente</span>
+                    <h1 class="article-title">Amortizar Hipoteca o Invertir: La Guía Definitiva Matemática y Emocional con el Euríbor Actual</h1>
+                    <div class="article-meta">
+                        <span>Por <strong>Mi Hucha</strong></span>
+                        <span>•</span>
+                        <span>10 min de lectura</span>
+                        <span>•</span>
+                        <span>Actualizado 2026</span>
+                    </div>
+                </header>
+
+                <div class="hero-image-container">
+                    <img src="img/amortizar-hipoteca-o-invertir.jpg" alt="Amortizar hipoteca anticipadamente o invertir en fondos indexados" class="hero-image" width="1200" height="675" loading="lazy">
+                </div>
+
+                <div class="article-content">
+                    <p class="lead">
+                        Es el debate por excelencia de las finanzas familiares en España: si consigues ahorrar 5.000 €, 10.000 € o una parte de tu sueldo mes a mes, <strong>¿deberías entregárselo al banco para recortar tu hipoteca o colocarlo a trabajar en fondos indexados y depósitos?</strong> La respuesta no es un dogma de fe ni una frase hecha de sobremesa: es una fórmula matemática cruzada con tu propia tranquilidad mental.
+                    </p>
+
+                    <h2>1. La Gran Encrucijada: Rentabilidad Garantizada vs Rentabilidad Esperada</h2>
+                    <p>
+                        Para tomar una decisión inteligente, lo primero que debemos desterrar son los sesgos. Cuando una persona amortiza hipoteca no está "perdiendo dinero" ni "guardándolo bajo el colchón"; está comprando un <strong>rendimiento libre de riesgo igual al tipo de interés de su deuda</strong>.
+                    </p>
+                    <p>
+                        Piénsalo así: si tienes una hipoteca a tipo variable referenciada al Euríbor con un coste total del <strong>3,80% TIN</strong>, cada euro que devuelves por adelantado te ahorra exactamente un 3,80% anual de intereses futuros. Conseguir ese mismo 3,80% neto en el mercado libre requeriría invertir en un producto que te ofrezca un <strong>4,69% bruto</strong> (debido a la retención fiscal del 19% del IRPF en la base del ahorro).
+                    </p>
+
+                    <div class="info-box">
+                        <h4>💡 La Regla del Rendimiento Equivalente</h4>
+                        <p>
+                            Para saber qué rentabilidad bruta debe darte una inversión para empatar con la amortización de tu hipoteca, divide el tipo de tu préstamo entre 0,81 (efecto del 19% de IRPF):<br>
+                            <strong>Rentabilidad Mínima Inversión = Tipo Hipoteca / (1 - 0,19)</strong>.<br>
+                            Si tu hipoteca está al 3,50%, tu inversión debe rendir más del <strong>4,32% anual neto de comisiones</strong> para que compense financieramente.
+                        </p>
+                    </div>
+
+                    <h2>2. El Sistema Francés: Por Qué Amortizar al Principio Ahorra 3 Veces Más</h2>
+                    <p>
+                        En España, prácticamente el 99% de los préstamos hipotecarios se firman bajo el <strong>Sistema de Amortización Francés</strong>. Su característica fundamental es que la cuota mensual se mantiene constante (salvo revisiones del tipo de interés), pero la composición interna de cada pago cambia drásticamente con el paso del tiempo.
+                    </p>
+                    <p>
+                        Durante los primeros años del préstamo, el capital pendiente de devolver es máximo. Como los intereses se calculan multiplicando el tipo por el dinero que todavía le debes al banco, <strong>la inmensa mayoría de tu cuota mensual va destinada a pagar intereses</strong> y solo una pequeña fracción amortiza capital real. A medida que pasan los años, la proporción se invierte: pagas menos intereses y devuelves más capital.
+                    </p>
+
+                    <div class="warning-box">
+                        <h4>⚠️ La Trampa de los Últimos Años de Hipoteca</h4>
+                        <p>
+                            Si a tu hipoteca a 30 años le quedan solo 5 años de vida, la inmensa mayoría de los intereses de tu vida crediticia <strong>ya se los ha cobrado el banco</strong>. Amortizar capital en los últimos años apenas generará ahorro financiero perceptible; en esa fase, invertir ese dinero casi siempre resulta infinitamente más rentable.
+                        </p>
+                    </div>
+
+                    <h2>3. El Gran Dilema: ¿Reducir Cuota o Reducir Plazo?</h2>
+                    <p>
+                        Cuando decides realizar una amortización anticipada, el banco te pondrá sobre la mesa dos opciones obligatorias por ley. Ambas tienen ventajas, pero su impacto en tu bolsillo es radicalmente opuesto:
+                    </p>
+
+                    <div class="article-table-wrap">
+                        <table class="article-table">
+                            <thead>
+                                <tr>
+                                    <th>Criterio</th>
+                                    <th>Reducir Cuota Mensual</th>
+                                    <th>Reducir Plazo (Tiempo)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Impacto Inmediato</strong></td>
+                                    <td>Baja tu pago mensual el mes siguiente.</td>
+                                    <td>La cuota se mantiene exactamente igual.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ahorro Total de Intereses</strong></td>
+                                    <td>Moderado.</td>
+                                    <td><strong>Máximo</strong> (hasta 2 o 3 veces mayor).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Objetivo Principal</strong></td>
+                                    <td>Aumentar el flujo de caja y la solvencia mensual.</td>
+                                    <td>Eliminar la deuda años antes y pagar lo mínimo al banco.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Riesgo Laboral / Emergencias</strong></td>
+                                    <td>Menor estrés si pierdes ingresos mensuales.</td>
+                                    <td>Mayor compromiso de cuota constante.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Caso Práctico Real: Préstamo de 150.000 € al 3,50% a 25 Años</h3>
+                    <p>
+                        Imaginemos que en el año 3 de tu hipoteca dispones de <strong>10.000 € extraordinarios</strong> para amortizar:
+                    </p>
+                    <ul>
+                        <li><strong>Si reduces cuota:</strong> Tu mensualidad pasa de 751 € a 697 € al mes (ahorras 54 € cada mes). El ahorro total de intereses a lo largo de los 22 años restantes será de aproximadamente <strong>4.250 €</strong>.</li>
+                        <li><strong>Si reduces plazo:</strong> Mantienes tu cuota en 751 €, pero terminas de pagar la hipoteca <strong>2 años y 4 meses antes</strong>. El ahorro directo en intereses asciende a más de <strong>11.600 €</strong>.</li>
+                    </ul>
+                    <p>
+                        <strong>Conclusión matemática:</strong> Reducir plazo genera casi <strong>el triple de ahorro neto</strong> que reducir cuota. Sin embargo, si tu presupuesto mensual va muy apretado, reducir cuota te da oxígeno para destinar esos 54 € al mes a tu fondo de emergencia o a tu sistema de ahorro en Mi Hucha.
+                    </p>
+
+                    <!-- BANNER CTA CALCULADORA HIPOTECA -->
+                    <div class="cta-savings-banner">
+                        <div>
+                            <h3>Simula tu caso exacto en segundos</h3>
+                            <p>Utiliza nuestra Calculadora de Hipoteca y Amortización para ver el cuadro completo y comparar cuánto te ahorras reduciendo cuota vs plazo.</p>
+                        </div>
+                        <a href="calculadora-hipoteca.html" class="btn-primary" style="text-decoration: none; font-weight: 700; white-space: nowrap; padding: 12px 22px;">
+                            Abrir Calculadora Hipoteca
+                        </a>
+                    </div>
+
+                    <h2>4. La Mina de Oro Fiscal: Hipotecas Anteriores a 2013</h2>
+                    <p>
+                        Si compraste tu vivienda habitual antes del <strong>1 de enero de 2013</strong> y aplicaste la deducción en tu IRPF de aquel año, estás ante una de las ventajas fiscales más potentes del ordenamiento tributario español:
+                    </p>
+
+                    <div class="shield-box">
+                        <h4>🛡️ Deducción por Vivienda Habitual (Régimen Transitorio)</h4>
+                        <p>
+                            Hacienda te permite desgravar el <strong>15% de las cantidades aportadas</strong> a tu hipoteca (cuotas ordinarias + amortizaciones extraordinarias) hasta un límite máximo de <strong>9.040 € anuales por titular</strong>.<br><br>
+                            Esto significa que si aportas 9.040 € en el año natural, <strong>Hacienda te devuelve directamente en la Renta 1.356 € en efectivo</strong> (un 15% de rentabilidad neta garantizada solo por tributación). Si la hipoteca tiene dos titulares en declaración individual, el límite conjunto asciende a 18.080 € con una devolución potencial de hasta <strong>2.712 € anuales</strong>.
+                        </p>
+                    </div>
+                    <p>
+                        Si estás en este grupo privilegiado, <strong>la prioridad número uno de tu dinero a final de año debe ser completar los 9.040 € de base de deducción</strong>. Ninguna inversión en renta fija ni variable del planeta te garantiza un 15% de rentabilidad libre de riesgo en el primer año.
+                    </p>
+
+                    <h2>5. Límites Legales de las Comisiones: Ley Hipotecaria 5/2019</h2>
+                    <p>
+                        Muchos hipotecados temen adelantar dinero por las comisiones que pueda cobrar el banco. Desde la entrada en vigor de la Ley 5/2019 reguladora de los contratos de crédito inmobiliario, los costes por amortización anticipada están estrictamente topados por el Banco de España:
+                    </p>
+                    <ul>
+                        <li><strong>Hipotecas a Tipo Variable:</strong> El banco solo puede cobrarte un máximo del <strong>0,25%</strong> durante los primeros 3 años del préstamo o un <strong>0,15%</strong> durante los primeros 5 años. A partir del sexto año, la comisión por ley es del <strong>0,00%</strong>.</li>
+                        <li><strong>Hipotecas a Tipo Fijo:</strong> Comisión máxima del <strong>2,00%</strong> durante los primeros 10 años y <strong>1,50%</strong> en los años restantes, condicionada a que la entidad demuestre que la amortización le genera una pérdida financiera efectiva.</li>
+                    </ul>
+
+                    <h2>6. La Psicología del Propietario: Deuda Cero vs Coste de Oportunidad</h2>
+                    <p>
+                        Hasta aquí hemos hablado de matemáticas puras. Pero las finanzas personales no se viven en una hoja de Excel, sino en el estómago y en la calidad del sueño de cada noche.
+                    </p>
+                    <p>
+                        Un inversor puramente teórico te dirá que si tu hipoteca está al 2% a tipo fijo y el índice global MSCI World renta históricamente un 7-8% anualizado a largo plazo, amortizar es un "error de novato" por culpa del coste de oportunidad. Matemáticamente tiene razón.
+                    </p>
+                    <p>
+                        Sin embargo, <strong>la deuda hipotecaria es una espada de Damocles</strong>. Si vienen mal dadas, pierdes tu empleo o tu negocio se hunde, el fondo indexado puede estar atravesando una caída temporal del 25%, mientras que la cuota del banco seguirá venciendo religiosamente el día 1 de cada mes. Tener tu casa pagada al 100% reduce tus gastos fijos estructurales al mínimo vital, dotándote de una resiliencia psicológica que ningún porcentaje teórico puede igualar.
+                    </p>
+
+                    <h2>7. Plan de Acción en 4 Pasos para Decidir Hoy Mismo</h2>
+                    <div class="step-card">
+                        <div class="step-badge">1</div>
+                        <div class="step-content">
+                            <h4>Blinda tu Fondo de Emergencia</h4>
+                            <p>Jamás amortices hipoteca si eso deja tu cuenta corriente vacía. Mantén intactos de 3 a 6 meses de gastos corrientes en una cuenta remunerada protegida por el FGD.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-badge">2</div>
+                        <div class="step-content">
+                            <h4>Comprueba tu Deducción Fiscal de 2013</h4>
+                            <p>Si compraste antes de 2013, amortiza cada año hasta el límite de 9.040 € por titular para asegurar la deducción del 15% de Hacienda antes de pensar en cualquier otra inversión.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-badge">3</div>
+                        <div class="step-content">
+                            <h4>Compara tu TIN con los Tipos Libres de Riesgo</h4>
+                            <p>Si tu hipoteca supera el 3,50% o 4%, amortizar plazo es una decisión ganadora garantizada. Si tienes una hipoteca fija al 1% o 1,5%, mantén tu hipoteca y rentabiliza tu dinero en activos seguros que paguen más.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-badge">4</div>
+                        <div class="step-content">
+                            <h4>Aplica la Estrategia Híbrida 50/50</h4>
+                            <p>Si no quieres renunciar ni a la paz mental de rebajar tu deuda ni al potencial del interés compuesto, divide tu excedente: destina el 50% a amortizar plazo y el 50% a fondos indexados globales.</p>
+                        </div>
+                    </div>
+
+                    <h2>Preguntas Frecuentes (FAQ)</h2>
+                    <div class="faq-item">
+                        <h4>¿Es mejor amortizar en diciembre o a lo largo de todo el año?</h4>
+                        <p>Matemáticamente, cuanto antes entregues el dinero al banco, antes dejas de generar intereses sobre esa cantidad. Por tanto, amortizar mes a mes o en el momento exacto en que dispones de la liquidez es ligeramente superior a esperar a final de año, salvo que estés cuadrando la deducción fiscal de los 9.040 €.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>¿Si reduzco cuota puedo seguir amortizando más adelante?</h4>
+                        <p>Por supuesto. Reducir cuota no te impide volver a amortizar anticipadamente siempre que quieras en el futuro. De hecho, muchas familias optan por reducir cuota para ganar tranquilidad mensual, y continúan realizando amortizaciones periódicas con el dinero sobrante.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>¿Qué ocurre si tengo una hipoteca mixta en periodo fijo?</h4>
+                        <p>Si tu tramo fijo inicial tiene un tipo muy bajo (ej. 1,80%), aprovecha esos años para invertir y hacer crecer tu dinero en fondos o depósitos remunerados. Cuando falten pocos meses para pasar al tramo variable expuesto al Euríbor, podrás utilizar ese capital acumulado para dar un golpe de amortización contundente.</p>
+                    </div>
+                </div>
+            </main>
+
+            <!-- FOOTER -->
+            <footer class="app-footer-bar">
+                <p>&copy; 2026 Mi Hucha - Peseta a Peseta. Desarrollado con 💖 y excelencia en Vanilla Stack.</p>
+                <p class="footer-legal-links" style="margin-top: 10px; opacity: 0.85;">
+                    <a href="aviso-legal.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px;">Aviso Legal</a> | 
+                    <a href="politica-privacidad.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px;">Política de Privacidad</a> | 
+                    <a href="politica-cookies.html" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px;">Política de Cookies</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <script src="src/consejos.js"></script>
+    <script type="module" src="src/app.js"></script>
+    <script>
+        if (window.location.protocol === 'file:' && !window._finanzasAppStarted) {
+            var s = document.createElement('script');
+            s.src = 'src/app.js';
+            document.body.appendChild(s);
+        }
+    </script>
+</body>
+</html>

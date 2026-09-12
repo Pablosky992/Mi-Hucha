@@ -109,6 +109,36 @@
     <priority>0.85</priority>
   </url>
   <url>
+    <loc>https://www.mihucha.es/calculadora-finiquito.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.mihucha.es/calculadora-rentabilidad-inmobiliaria.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.mihucha.es/amortizar-hipoteca-o-invertir-guia-completa.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.mihucha.es/como-salir-de-deudas-metodo-bola-de-nieve-avalancha.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.mihucha.es/fondos-indexados-guia-invertir-largo-plazo.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://www.mihucha.es/aviso-legal.html</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>yearly</changefreq>

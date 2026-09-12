@@ -15,6 +15,7 @@ export default defineConfig({
         calculadoraFinanciera: resolve(__dirname, 'calculadora-financiera.html'),
         calculadoraDepositos: resolve(__dirname, 'calculadora-depositos.html'),
         calculadoraHipoteca: resolve(__dirname, 'calculadora-hipoteca.html'),
+        calculadoraRentabilidadInmobiliaria: resolve(__dirname, 'calculadora-rentabilidad-inmobiliaria.html'),
         fondoEmergencia: resolve(__dirname, 'fondo-de-emergencia.html'),
         metodoPeseta: resolve(__dirname, 'el-metodo-peseta-a-peseta.html'),
         trampaInflacion: resolve(__dirname, 'la-trampa-de-la-inflacion-del-estilo-de-vida.html'),
@@ -25,6 +26,9 @@ export default defineConfig({
         guiaNominaIrpf: resolve(__dirname, 'de-salario-bruto-a-neto-guia-nomina-irpf.html'),
         guiaCashback: resolve(__dirname, 'guia-cashback-ganar-dinero-compras-beruby.html'),
         cuentasRemuneradas: resolve(__dirname, 'cuentas-remuneradas-depositos-rentabilidad-ahorro.html'),
+        amortizarHipoteca: resolve(__dirname, 'amortizar-hipoteca-o-invertir-guia-completa.html'),
+        salirDeudas: resolve(__dirname, 'como-salir-de-deudas-metodo-bola-de-nieve-avalancha.html'),
+        fondosIndexados: resolve(__dirname, 'fondos-indexados-guia-invertir-largo-plazo.html'),
         politicaCookies: resolve(__dirname, 'politica-cookies.html'),
         politicaPrivacidad: resolve(__dirname, 'politica-privacidad.html')
       }
