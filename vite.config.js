@@ -16,6 +16,7 @@ export default defineConfig({
         calculadoraDepositos: resolve(__dirname, 'calculadora-depositos.html'),
         calculadoraHipoteca: resolve(__dirname, 'calculadora-hipoteca.html'),
         calculadoraRentabilidadInmobiliaria: resolve(__dirname, 'calculadora-rentabilidad-inmobiliaria.html'),
+        contadorHucha: resolve(__dirname, 'contador-hucha.html'),
         fondoEmergencia: resolve(__dirname, 'fondo-de-emergencia.html'),
         metodoPeseta: resolve(__dirname, 'el-metodo-peseta-a-peseta.html'),
         trampaInflacion: resolve(__dirname, 'la-trampa-de-la-inflacion-del-estilo-de-vida.html'),

@@ -1,0 +1,3058 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Monedas y Billetes • Mi Tesoro | Mi Hucha</title>
+    <meta name="description" content="Contador de monedas y billetes para saber con exactitud cuánto dinero tienes acumulado en tu hucha en casa. Báscula en kg, tarjeta gráfica y auto-guardado seguro.">
+    <meta name="keywords" content="contador de monedas, contador hucha, contar monedas euro, peso monedas euro, boveda de ahorro, mi tesoro, hucha en casa, clasificador de monedas">
+    <meta name="author" content="Mi Hucha">
+    <link rel="canonical" href="https://www.mihucha.es/contador-hucha.html">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.mihucha.es/contador-hucha.html">
+    <meta property="og:title" content="Contador de Monedas y Billetes • Mi Tesoro | Mi Hucha">
+    <meta property="og:description" content="Cuenta, clasifica y pesa el dinero en efectivo acumulado en tu hucha en casa. Báscula en kg, tarjeta del tesoro y auto-guardado.">
+    <meta property="og:image" content="https://www.mihucha.es/img/contador-hucha.jpg">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://www.mihucha.es/contador-hucha.html">
+    <meta name="twitter:title" content="Contador de Monedas y Billetes • Mi Tesoro | Mi Hucha">
+    <meta name="twitter:description" content="Cuenta, clasifica y pesa el dinero en efectivo de tu hucha en casa con precisión oficial europea.">
+    <meta name="twitter:image" content="https://www.mihucha.es/img/contador-hucha.jpg">
+
+    <!-- Schema.org Marcado Estructurado -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "Contador de Monedas y Billetes • Mi Tesoro",
+          "url": "https://www.mihucha.es/contador-hucha.html",
+          "description": "Herramienta interactiva para contar, clasificar y pesar el dinero en efectivo y monedas de la hucha en casa con precisión matemática del BCE.",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "All",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Inicio",
+              "item": "https://www.mihucha.es/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Mi Tesoro",
+              "item": "https://www.mihucha.es/contador-hucha.html"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0b0f19">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8'
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
+
+    <!-- Estilos de EuroCash Pro / Mi Tesoro -->
+    <style>
+/* ==========================================================================
+   EuroCash Pro - Diseño Financiero de Alta Gama (Minimalist FinTech)
+   Inspirado en interfaces de Stripe, Apple Financial y Linear
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', sans-serif;
+  --font-num: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', sans-serif;
+}
+
+/* En pantallas de escritorio, encuadra al 100% de la ventana sin scroll vertical */
+@media (min-width: 1024px) and (min-height: 600px) {
+  html, body {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+}
+
+body {
+  font-family: var(--font-main);
+  transition: background-color 0.25s ease, color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fondos con sutil degradado e iluminación ambiental inspirada en "Mi Tesoro" */
+.dark body {
+  background-color: #080a0f;
+  background-image: 
+    radial-gradient(at 12% 12%, rgba(245, 158, 11, 0.13) 0px, transparent 40%),
+    radial-gradient(at 88% 88%, rgba(16, 185, 129, 0.12) 0px, transparent 45%),
+    radial-gradient(at 50% 0%, rgba(59, 130, 246, 0.10) 0px, transparent 55%),
+    radial-gradient(at 85% 15%, rgba(217, 119, 6, 0.08) 0px, transparent 40%);
+  background-attachment: fixed;
+  color: #f8fafc;
+}
+
+html:not(.dark) body {
+  background-color: #fafaf9;
+  background-image: 
+    radial-gradient(at 15% 15%, rgba(254, 243, 199, 0.65) 0px, transparent 45%),
+    radial-gradient(at 85% 85%, rgba(209, 250, 229, 0.4) 0px, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(224, 242, 254, 0.4) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   Superficies Glassmorphism y Acabado Titanio
+   -------------------------------------------------------------------------- */
+.dark .glass-card {
+  background: rgba(13, 19, 33, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html:not(.dark) .glass-card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid #e2e8f0;
+  box-shadow: 
+    0 20px 40px -10px rgba(0, 0, 0, 0.07),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass-header {
+  background: rgba(13, 19, 33, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 
+    0 12px 30px -8px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html:not(.dark) .glass-header {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.06);
+}
+
+.dark .glass-kpi {
+  background: rgba(6, 10, 18, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+html:not(.dark) .glass-kpi {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Tipografía numérica Outfit: cifras claras, abiertas, tabulares y sin ceros tachados */
+.font-num {
+  font-family: var(--font-num) !important;
+  font-feature-settings: "tnum" 1, "cv01" 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+}
+
+/* Ocultar flechas nativas en inputs numéricos */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* --------------------------------------------------------------------------
+   Imágenes Reales de Divisas con Relieve Natural
+   -------------------------------------------------------------------------- */
+.currency-coin-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 9999px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.group:hover .currency-coin-img {
+  transform: scale(1.12);
+}
+
+.currency-bill-img {
+  width: 82px;
+  height: 43px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.group:hover .currency-bill-img {
+  transform: scale(1.08) translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   Selector de Cantidades: Píldora Elegante y Homogénea
+   -------------------------------------------------------------------------- */
+.stepper-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 12px;
+  padding: 3px 5px;
+  transition: all 0.2s ease;
+}
+
+/* Modo Oscuro por defecto */
+.dark .stepper-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dark .stepper-pill:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.dark .stepper-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-weight: 700;
+  font-size: 17px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.dark .stepper-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.dark .stepper-input {
+  width: 80px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.35rem;
+  font-family: var(--font-num);
+  background: transparent;
+  outline: none;
+  color: #ffffff;
+}
+
+/* Modo Claro */
+html:not(.dark) .stepper-pill {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+html:not(.dark) .stepper-pill:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+html:not(.dark) .stepper-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 17px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+html:not(.dark) .stepper-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+html:not(.dark) .stepper-input {
+  width: 80px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.35rem;
+  font-family: var(--font-num);
+  background: transparent;
+  outline: none;
+  color: #0f172a;
+}
+
+.stepper-btn:active {
+  transform: scale(0.9);
+}
+
+/* Sin cambios de color de fondo en filas: elegancia uniforme y limpia */
+tr {
+  background-color: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   Scrollbar Sutil
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 9999px;
+}
+
+/* --------------------------------------------------------------------------
+   Animaciones del Dragón Guardián y Partículas
+   -------------------------------------------------------------------------- */
+@keyframes dragonBounce {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.14) rotate(-6deg); }
+  50% { transform: scale(1.18) rotate(6deg); }
+  75% { transform: scale(1.08) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.dragon-celebrate {
+  animation: dragonBounce 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes floatUpSparkle {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(var(--dx, 8px), -18px) scale(1.25);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx, 14px), -42px) scale(0.7);
+  }
+}
+
+.sparkle-particle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 18px;
+  line-height: 1;
+  animation: floatUpSparkle 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  z-index: 60;
+  user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   Animaciones del Vuelo del Dragón y Ventana Explicativa
+   -------------------------------------------------------------------------- */
+@keyframes dragonHover {
+  0%, 100% {
+    transform: translateY(0px) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.03) rotate(1.5deg);
+  }
+}
+
+.dragon-showcase-hover {
+  animation: dragonHover 3.2s ease-in-out infinite;
+}
+
+@keyframes portalPulse {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.35), inset 0 0 20px rgba(245, 158, 11, 0.25);
+    border-color: rgba(245, 158, 11, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(245, 158, 11, 0.65), inset 0 0 30px rgba(245, 158, 11, 0.45);
+    border-color: rgba(251, 191, 36, 0.9);
+  }
+}
+
+.dragon-portal-glow {
+  animation: portalPulse 2.8s ease-in-out infinite;
+}
+
+/* Actor que vuela por la pantalla: Silueta transparente sin caja ni bordes */
+.flying-dragon-actor {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.9)) drop-shadow(0 12px 25px rgba(0, 0, 0, 0.55));
+  will-change: transform, left, top, opacity;
+  transition: none;
+}
+
+.flying-dragon-actor img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+}
+
+/* Corazón de humo que exhala el dragón */
+@keyframes smokeHeartRise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.35) rotate(-6deg);
+    filter: blur(0px);
+  }
+  20% {
+    opacity: 0.95;
+    transform: translate(8px, -20px) scale(1.15) rotate(4deg);
+    filter: blur(0.5px);
+  }
+  60% {
+    opacity: 0.85;
+    transform: translate(15px, -45px) scale(1.35) rotate(-2deg);
+    filter: blur(1.2px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(24px, -70px) scale(1.6) rotate(6deg);
+    filter: blur(3px);
+  }
+}
+
+.smoke-heart-puff {
+  position: fixed;
+  z-index: 10001;
+  pointer-events: none;
+  color: #fef08a;
+  animation: smokeHeartRise 1.25s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.8));
+  user-select: none;
+}
+
+/* Lluvia de monedas cayendo en la hucha al aterrizar */
+@keyframes coinCascadeDrop {
+  0% {
+    opacity: 0;
+    transform: translate(var(--startX, 0px), var(--startY, 0px)) scale(0.5) rotateY(0deg);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(var(--midX, 10px), var(--midY, -35px)) scale(1.15) rotateY(260deg);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(var(--endX, 0px), var(--endY, 18px)) scale(0.95) rotateY(620deg);
+  }
+  90% {
+    transform: translate(var(--endX, 0px), var(--endY, 12px)) scale(0.9) rotateY(700deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--endX, 0px), var(--endY, 22px)) scale(0.3) rotateY(720deg);
+  }
+}
+
+.cascade-coin {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: drop-shadow(0 4px 10px rgba(245, 158, 11, 0.7));
+  animation: coinCascadeDrop 0.75s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  user-select: none;
+}
+
+/* Destello y choque de llegada al logo */
+@keyframes dragonArrivalPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.95), 0 0 30px rgba(245, 158, 11, 0.9);
+  }
+  30% {
+    transform: scale(1.22) rotate(-4deg);
+    box-shadow: 0 0 0 16px rgba(245, 158, 11, 0.4), 0 0 55px rgba(245, 158, 11, 0.8);
+  }
+  60% {
+    transform: scale(1.12) rotate(3deg);
+    box-shadow: 0 0 0 28px rgba(245, 158, 11, 0), 0 0 35px rgba(245, 158, 11, 0.4);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.dragon-arrival {
+  animation: dragonArrivalPulse 0.9s cubic-bezier(0.2, 0.8, 0.2, 1.2) forwards !important;
+}
+
+/* Estela mágica de partículas durante el vuelo */
+@keyframes stardustDisperse {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dust-x, 0px), var(--dust-y, 14px)) scale(0.2);
+  }
+}
+
+.stardust-trail {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  font-size: 16px;
+  line-height: 1;
+  animation: stardustDisperse 0.65s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  user-select: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   Estilos de Impresión
+   -------------------------------------------------------------------------- */
+@media print {
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-header {
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+}
+
+.print-only {
+  display: none;
+}
+
+
+      /* Integración fluida con el sistema de navegación de Mi Hucha */
+      .app-desktop-container {
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        background-color: transparent;
+      }
+
+      .app-body-treasury {
+        flex: 1;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 10px 14px 14px 14px;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+      }
+
+      @media (max-width: 1024px) {
+        .app-body-treasury {
+          justify-content: flex-start;
+          padding: 12px 10px 30px 10px;
+        }
+      }
+
+      /* Modo Pantalla Completa / Ocultar Barra Lateral */
+      .sidebar-collapsed .app-sidebar {
+        display: none !important;
+      }
+
+      .sidebar-collapsed .app-body-treasury {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        padding: 14px 20px;
+      }
+
+      /* Barra de navegación móvil */
+      .treasury-mobile-bar {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 16px;
+        background: rgba(13, 19, 33, 0.92);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+        margin-bottom: 10px;
+        border-radius: 16px;
+      }
+
+      @media (max-width: 960px) {
+        .treasury-mobile-bar {
+          display: flex;
+        }
+        .app-sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100%;
+          z-index: 100;
+          transform: translateX(-100%);
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .app-sidebar.mobile-open {
+          transform: translateX(0);
+        }
+      }
+    </style>
+</head>
+<body class="selection:bg-amber-500 selection:text-slate-950 overflow-y-auto lg:overflow-hidden">
+
+    <!-- Encabezado para impresión formal -->
+  <div class="print-header print-only p-4">
+    <div class="flex justify-between items-start">
+      <div class="flex items-center space-x-3">
+        <img src="assets/logo.jpg" alt="Logo Mi Tesoro" class="w-12 h-12 rounded-xl object-cover" />
+        <div>
+          <h1 class="text-2xl font-black tracking-tight">INFORME DE RECUENTO • MI TESORO</h1>
+          <p class="text-xs text-slate-600 mt-0.5">Mi Tesoro • Bóveda de Ahorro en Efectivo</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-xs font-semibold text-slate-500">Fecha del Conteo:</p>
+        <p id="print-date" class="text-xs font-bold text-slate-800"></p>
+      </div>
+    </div>
+  </div>
+
+    <div class="app-desktop-container" id="app-container">
+        
+        <!-- BARRA LATERAL NATIVA (SIDEBAR) -->
+        <aside class="app-sidebar" id="app-sidebar">
+            <div class="sidebar-brand-wrapper">
+                <a href="index.html" style="display: block; width: 100%; border: none; background: transparent; text-decoration: none;">
+                    <img src="logo.png" alt="Mi Hucha - Finanzas Personales" class="sidebar-brand-img" width="180" height="98" fetchpriority="high">
+                </a>
+            </div>
+
+            <!-- Menú de navegación vertical -->
+            <nav class="sidebar-nav">
+                <a href="index.html#dashboard" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tablero</span>
+                </a>
+                <a href="index.html#expenses" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Gastos & Matriz</span>
+                </a>
+                <a href="index.html#closure" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Cierre de Mes</span>
+                </a>
+                <a href="index.html#performance" class="nav-btn" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Rendimiento</span>
+                </a>
+                <a href="index.html#investments" class="nav-btn" style="text-decoration: none;" title="Inversiones y Planes de Ahorro">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span>Inversiones</span>
+                </a>
+                <a href="index.html#projects" class="nav-btn" style="text-decoration: none;" title="Proyectos Sandbox (Entorno Simulado)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Proyectos</span>
+                </a>
+
+                <!-- APARTADO: MI TESORO (BÓVEDA DE EFECTIVO) -->
+                <a href="contador-hucha.html" class="nav-link active" title="Mi Tesoro - Bóveda de Ahorro en Efectivo" style="border-color: rgba(245, 158, 11, 0.45); color: #fbbf24; background: rgba(245, 158, 11, 0.12);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M14.5 9h-4a1.5 1.5 0 0 0 0 3h3a1.5 1.5 0 0 1 0 3h-4"></path><path d="M12 7v2"></path><path d="M12 15v2"></path></svg>
+                    <span>Mi Tesoro</span>
+                </a>
+                
+                <a href="articulos.html" class="nav-link" title="Artículos y Guías">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Artículos y Guías</span>
+                </a>
+
+                <a href="utilidades.html" class="nav-link" title="Herramientas y Utilidades">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+                    <span>Utilidades</span>
+                </a>
+                
+                <button id="tab-contact-trigger" class="nav-btn btn-contact-modal" style="background: transparent; border: none; text-align: left; cursor: pointer; width: 100%;" type="button" title="Contacto y Soporte">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Contacto</span>
+                </button>
+                
+                <!-- Botón de Donación -->
+                <a href="https://www.paypal.com/donate/?hosted_button_id=EXG8D9VVRLRTE&locale.x=es_ES" target="_blank" rel="noopener noreferrer" class="nav-link" style="margin-top: auto; color: var(--accent-light); border-color: rgba(255, 106, 0, 0.3);" title="Apoya el proyecto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Invítame un café</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CUERPO PRINCIPAL DEL CONTADOR DE HUCHA -->
+        <div class="app-body-treasury" id="app-body">
+            
+            <!-- Barra móvil con botón menú -->
+            <div class="treasury-mobile-bar no-print">
+                <button id="mobile-menu-btn" type="button" class="flex items-center space-x-2 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    <span class="text-xs font-bold">Menú</span>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <img src="assets/logo.jpg" alt="Logo" class="w-6 h-6 rounded-lg object-cover ring-1 ring-amber-500/40">
+                    <span class="text-xs font-extrabold text-white">Mi Tesoro • Bóveda</span>
+                </div>
+            </div>
+
+            <div class="w-full max-w-[1620px] mx-auto flex flex-col gap-3 lg:gap-3.5 my-auto">
+    
+    <!-- ====================================================================
+         CABECERA SUPERIOR EJECUTIVA: Marca, Total Conjunto y Herramientas
+         ==================================================================== -->
+    <header class="no-print glass-header rounded-2xl px-4 py-2 sm:px-6 sm:py-2 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+      
+      <!-- Izquierda: Identidad y Auto-guardado -->
+      <div class="flex items-center space-x-3.5">
+        <div id="dragon-logo-wrapper" class="relative group shrink-0 cursor-pointer" title="¡Haz clic para interactuar con el dragón guardián!">
+          <div id="dragon-logo-badge" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden ring-2 ring-amber-500/40 dark:ring-amber-400/50 shadow-lg shadow-amber-500/20 bg-slate-900 transition-all duration-300 group-hover:scale-105 group-hover:shadow-amber-500/35">
+            <img src="assets/logo.jpg" alt="Logo Mi Tesoro - Pequeño Dragón Guardián" class="w-full h-full object-cover object-center select-none" />
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              Mi <span class="text-amber-500 dark:text-amber-400">Tesoro</span>
+            </h1>
+            <span class="bg-amber-500/10 dark:bg-amber-400/10 text-amber-600 dark:text-amber-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-amber-500/20 dark:border-amber-400/20 uppercase tracking-wider">
+              Bóveda
+            </span>
+          </div>
+          <div id="autosave-status" class="flex items-center text-xs mt-1 text-slate-500 dark:text-slate-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
+            <span class="font-medium text-emerald-600 dark:text-emerald-400">Guardado automático</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Centro: Tarjeta Destacada de Total Ahorrado (Elegante y Clara) -->
+      <div class="flex items-center space-x-4 glass-kpi rounded-2xl px-5 py-2">
+        <div class="flex items-center space-x-2.5">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <div class="text-right">
+            <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Ahorrado</span>
+            <span id="grand-total-pieces" class="block text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 font-num">0 unidades guardadas</span>
+          </div>
+        </div>
+        <div class="h-9 w-px bg-slate-300 dark:bg-slate-700/60"></div>
+        <div id="grand-total-amount" class="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-emerald-400 font-num tracking-tight drop-shadow-xs">
+          0,00 €
+        </div>
+      </div>
+
+      <!-- Derecha: Acciones Rápidas (Tarjeta, Recuentos, Vaciar, Sonido y Tema) -->
+      <div class="flex items-center space-x-2">
+        <button id="btn-open-intro" type="button" class="inline-flex items-center justify-center px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/70 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700/60 rounded-xl text-xs sm:text-sm font-semibold transition-all active:scale-95 shadow-2xs" title="Ver presentación explicativa y vuelo del dragón guardián">
+          <span class="mr-1.5 text-sm">✨</span>
+          <span>Intro</span>
+        </button>
+
+        <button id="btn-treasure-card" type="button" class="inline-flex items-center justify-center px-3.5 py-2 bg-gradient-to-r from-amber-500/15 to-yellow-500/15 hover:from-amber-500/25 hover:to-yellow-500/25 text-amber-600 dark:text-amber-300 border border-amber-500/30 rounded-xl text-xs sm:text-sm font-semibold transition-all active:scale-95 shadow-2xs" title="Generar y descargar Tarjeta Resumen del Tesoro (.png)">
+          <svg class="w-4 h-4 mr-1.5 text-amber-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="14" x="3" y="5" rx="2"/>
+            <circle cx="8.5" cy="10.5" r="1.5"/>
+            <path d="m21 15-5-5L5 21"/>
+          </svg>
+          <span>Tarjeta</span>
+        </button>
+
+        <button id="btn-open-backups" type="button" class="relative inline-flex items-center justify-center px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/70 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700/60 rounded-xl text-xs sm:text-sm font-semibold transition-all active:scale-95 shadow-2xs" title="Historial de recuentos guardados">
+          <span class="mr-1.5 text-sm">📜</span>
+          <span>Recuentos</span>
+          <span id="backups-count-badge" class="hidden ml-1.5 px-1.5 py-0.2 bg-amber-500 text-slate-950 rounded-full text-[10px] font-bold">0</span>
+        </button>
+
+        <button id="btn-reset" type="button" class="inline-flex items-center justify-center px-3.5 py-2 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50 rounded-xl text-xs sm:text-sm font-semibold transition-all active:scale-95 shadow-2xs" title="Vaciar y empezar un nuevo recuento">
+          <span class="mr-1.5 text-sm">🔄</span>
+          <span>Vaciar</span>
+        </button>
+
+        <button id="sound-toggle" type="button" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/70 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 transition-colors shadow-2xs" title="Activar / Desactivar sonidos de monedas">
+          <span id="sound-icon" class="text-base">🔊</span>
+        </button>
+
+        <button id="theme-toggle" type="button" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/70 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 transition-colors shadow-2xs" title="Cambiar tema claro / oscuro">
+          <span id="theme-icon" class="text-base">🌙</span>
+        </button>
+      </div>
+
+    </header>
+
+    <!-- ====================================================================
+         CUERPO PRINCIPAL: 2 Columnas Alineadas con Totales a la Misma Altura
+         ==================================================================== -->
+    <main class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 lg:gap-4 items-stretch">
+
+      <!-- COLUMNA 1: MONEDAS -->
+      <section class="glass-card rounded-2xl flex flex-col justify-between overflow-hidden h-full">
+        <div class="flex-1 flex flex-col">
+          <!-- Cabecera de la tabla con Insignia Vectorial -->
+          <div class="px-5 py-2.5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/60 dark:bg-slate-950/40">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M14.5 9h-4a1.5 1.5 0 0 0 0 3h3a1.5 1.5 0 0 1 0 3h-4"/>
+                  <path d="M12 7v2"/>
+                  <path d="M12 15v2"/>
+                </svg>
+              </div>
+              <h2 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">MONEDAS</h2>
+            </div>
+            <div class="flex items-center space-x-2 text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 font-num">
+              <span id="coins-total-count">0 monedas</span>
+              <span class="text-slate-300 dark:text-slate-700 font-normal">•</span>
+              <span id="coins-weight-badge" class="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400" title="Peso físico aproximado de las monedas en la hucha">
+                <span class="text-xs">⚖️</span>
+                <span id="coins-weight-val">0,00 kg</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Tabla de Monedas -->
+          <div class="px-2 sm:px-3 py-1 flex-1 flex flex-col justify-center overflow-x-auto">
+            <table class="w-full text-left h-full">
+              <thead>
+                <tr class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800/80">
+                  <th class="py-2 px-3.5">Denominación</th>
+                  <th class="py-2 px-2 text-center">Cantidad</th>
+                  <th class="py-2 px-3.5 text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody id="coins-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/50">
+                <!-- Inyectado por JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pie de Monedas: Subtotal con Acento Champán -->
+        <div class="px-5 py-3.5 border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-950/50 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Subtotal Monedas</span>
+          </div>
+          <div id="coins-table-total" class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white font-num">
+            0,00 €
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 2: BILLETES -->
+      <section class="glass-card rounded-2xl flex flex-col justify-between overflow-hidden h-full">
+        <div class="flex-1 flex flex-col">
+          <!-- Cabecera de la tabla con Insignia Vectorial -->
+          <div class="px-5 py-2.5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/60 dark:bg-slate-950/40">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-7 h-7 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="12" x="2" y="6" rx="2"/>
+                  <circle cx="12" cy="12" r="2"/>
+                  <path d="M6 12h.01M18 12h.01"/>
+                </svg>
+              </div>
+              <h2 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">BILLETES</h2>
+            </div>
+            <span id="bills-total-count" class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 font-num">
+              0 billetes
+            </span>
+          </div>
+
+          <!-- Tabla de Billetes -->
+          <div class="px-2 sm:px-3 py-1 flex-1 flex flex-col justify-center overflow-x-auto">
+            <table class="w-full text-left h-full">
+              <thead>
+                <tr class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800/80">
+                  <th class="py-2 px-3.5">Denominación</th>
+                  <th class="py-2 px-2 text-center">Cantidad</th>
+                  <th class="py-2 px-3.5 text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody id="bills-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/50">
+                <!-- Inyectado por JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pie de Billetes: Subtotal a la Misma Altura Exacta con Acento Zafiro -->
+        <div class="px-5 py-3.5 border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-950/50 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Subtotal Billetes</span>
+          </div>
+          <div id="bills-table-total" class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white font-num">
+            0,00 €
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+        </div>
+    </div>
+
+    <div id="backups-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div id="backups-modal-backdrop" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs transition-opacity"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+      <div class="inline-block align-bottom bg-white dark:bg-slate-900 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-slate-200 dark:border-slate-800">
+        
+        <div class="bg-slate-50 dark:bg-slate-950 px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl overflow-hidden ring-1 ring-amber-500/30 bg-slate-900 shrink-0 shadow-xs">
+              <img src="assets/logo.jpg" alt="Logo Mi Tesoro" class="w-full h-full object-cover" />
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white" id="modal-title">Historial de Recuentos de la Hucha</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Guarda el estado de tu tesoro o recupera recuentos anteriores</p>
+            </div>
+          </div>
+          <button id="btn-close-backups" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg font-bold">
+            ✕
+          </button>
+        </div>
+
+        <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-wrap gap-2.5 bg-white dark:bg-slate-900">
+          <button id="btn-create-backup" type="button" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition-all shadow-xs active:scale-95 flex items-center space-x-1.5">
+            <span>➕</span>
+            <span>Guardar Recuento Ahora</span>
+          </button>
+
+          <button id="btn-export-backup-file" type="button" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs sm:text-sm rounded-xl transition-all shadow-2xs active:scale-95 flex items-center space-x-1.5" title="Descargar archivo .json a tu ordenador">
+            <span>💾</span>
+            <span>Descargar Archivo (.json)</span>
+          </button>
+
+          <label class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs sm:text-sm rounded-xl transition-all shadow-2xs active:scale-95 flex items-center space-x-1.5 cursor-pointer" title="Cargar un archivo .json guardado previamente">
+            <span>📂</span>
+            <span>Cargar Recuento</span>
+            <input type="file" id="file-restore-input" accept=".json" class="hidden" />
+          </label>
+        </div>
+
+        <div class="p-6 max-h-[50vh] overflow-y-auto">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">Recuentos Guardados</h4>
+          <div id="backups-list" class="space-y-3">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+        <div class="bg-slate-50 dark:bg-slate-950 px-6 py-3 border-t border-slate-200 dark:border-slate-800">
+          <p class="text-xs text-slate-500 dark:text-slate-400">💡 Al pulsar "Vaciar", la aplicación siempre guarda automáticamente una copia del recuento anterior para evitar pérdidas accidentales.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+    <div id="card-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="card-modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div id="card-modal-backdrop" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs transition-opacity"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+      <div class="inline-block align-bottom bg-slate-900 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full border border-amber-500/30">
+        
+        <div class="bg-slate-950 px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="14" x="3" y="5" rx="2"/>
+                <circle cx="8.5" cy="10.5" r="1.5"/>
+                <path d="m21 15-5-5L5 21"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-bold text-white" id="card-modal-title">Tarjeta Oficial del Tesoro</h3>
+              <p class="text-xs text-slate-400">Certificado gráfico de alta definición con el estado de tu hucha</p>
+            </div>
+          </div>
+          <button id="btn-close-card-modal" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-200 text-lg font-bold">
+            ✕
+          </button>
+        </div>
+
+        <div class="p-4 sm:p-6 bg-slate-900/90 flex flex-col items-center">
+          <!-- Canvas donde se dibuja la tarjeta en HD -->
+          <div class="w-full max-w-[660px] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-amber-500/20 bg-slate-950">
+            <canvas id="treasure-canvas" width="1200" height="750" class="w-full h-auto block select-none"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 px-6 py-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+          <div class="text-xs text-slate-400 flex items-center space-x-1.5">
+            <span>✨</span>
+            <span>Lista para descargar en formato PNG de alta resolución.</span>
+          </div>
+          <div class="flex items-center space-x-2.5">
+            <button id="btn-close-card-modal-bottom" type="button" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm rounded-xl transition-all">
+              Cerrar
+            </button>
+            <button id="btn-download-card-png" type="button" class="px-5 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-extrabold text-xs sm:text-sm rounded-xl transition-all shadow-md shadow-amber-500/20 active:scale-95 flex items-center space-x-2">
+              <span>💾</span>
+              <span>Descargar Imagen PNG</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+    <div id="intro-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="intro-modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen p-3 sm:p-4 text-center">
+      <div id="intro-modal-backdrop" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md transition-opacity"></div>
+      
+      <!-- Contenedor de la miniventana -->
+      <div class="relative inline-block w-full max-w-xl bg-slate-900/95 dark:bg-slate-900/95 rounded-3xl text-left overflow-hidden shadow-2xl border-2 border-amber-500/40 transform transition-all my-auto z-10">
+        
+        <!-- Botón cerrar rápido (esquina superior) -->
+        <button id="btn-close-intro-x" type="button" class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition-colors" title="Cerrar ventana">
+          ✕
+        </button>
+
+        <!-- Cabecera de la miniventana -->
+        <div class="px-6 pt-6 pb-2 text-center relative">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
+            <span>✨ Bóveda de Ahorro en Efectivo</span>
+          </div>
+          <h2 id="intro-modal-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Mi <span class="text-amber-400">Tesoro</span>
+          </h2>
+          <p class="text-sm text-slate-300 mt-1 max-w-md mx-auto leading-relaxed">
+            Tu contador personal de monedas y billetes para saber con exactitud cuánto dinero tienes acumulado en tu hucha en casa.
+          </p>
+        </div>
+
+        <!-- Vitrina Central con el Pequeño Dragón Volador -->
+        <div class="flex flex-col items-center justify-center py-3 relative">
+          <div id="intro-dragon-source" class="relative group cursor-pointer" title="¡Haz clic para ver volar al dragón!">
+            <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden border-2 border-amber-400/80 p-1.5 dragon-portal-glow bg-radial from-amber-500/25 via-slate-900 to-slate-950 shadow-2xl flex items-center justify-center">
+              <div class="w-full h-full rounded-full overflow-hidden dragon-showcase-hover flex items-center justify-center">
+                <img id="intro-dragon-img" src="assets/dragon_flying_transparent.png" alt="Dragón Guardián Alado" class="w-full h-full object-contain select-none p-1 drop-shadow-[0_0_12px_rgba(245,158,11,0.6)]" />
+              </div>
+            </div>
+            <!-- Chispas decorativas -->
+            <span class="absolute -top-1 -right-1 text-base select-none">✨</span>
+            <span class="absolute -bottom-1 -left-1 text-base select-none">⭐</span>
+          </div>
+          <span class="text-xs font-semibold text-amber-400/90 mt-2 flex items-center gap-1.5">
+            <img src="assets/dragon_flying_transparent.png" alt="Dragón" class="w-4 h-4 object-contain inline-block -mt-0.5" />
+            <span>Tu Pequeño Dragón Guardián listo para volar a custodiar tu bóveda</span>
+          </span>
+        </div>
+
+        <!-- 4 Puntos Clave Explicativos -->
+        <div class="px-6 py-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            
+            <div class="bg-slate-800/60 rounded-2xl p-3 border border-slate-700/60 flex items-start space-x-3">
+              <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
+                <img src="assets/coin_200.png" alt="Monedas" class="w-5 h-5 object-contain" />
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Recuento al Céntimo</h4>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">Monedas de 1 ct a 2€ y billetes de 5€ a 500€ con suma automática inmediata.</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-800/60 rounded-2xl p-3 border border-slate-700/60 flex items-start space-x-3">
+              <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0 text-emerald-400">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+                  <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+                  <path d="M7 21h10"/>
+                  <path d="M12 3v18"/>
+                  <path d="M3 7h18"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Báscula de la Hucha</h4>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">Descubre en tiempo real los kilos y gramos de metal que pesa tu tesoro.</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-800/60 rounded-2xl p-3 border border-slate-700/60 flex items-start space-x-3">
+              <div class="w-8 h-8 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center shrink-0 text-blue-400">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="14" x="3" y="5" rx="2"/>
+                  <circle cx="8.5" cy="10.5" r="1.5"/>
+                  <path d="m21 15-5-5L5 21"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Tarjeta del Tesoro</h4>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">Descarga un certificado de alta calidad en imagen PNG con el estado de tu ahorro.</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-800/60 rounded-2xl p-3 border border-slate-700/60 flex items-start space-x-3">
+              <div class="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0 text-purple-400">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Protección Total</h4>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">Auto-guardado continuo en tu equipo e historial de recuentos recuperable.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Pie de Acción -->
+        <div class="px-6 py-4 mt-2 bg-slate-950/80 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <label class="flex items-center space-x-2 text-xs text-slate-400 select-none cursor-pointer">
+            <input type="checkbox" id="check-dont-show-intro" class="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-amber-500" />
+            <span>No mostrar automáticamente al abrir</span>
+          </label>
+
+          <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+            <button id="btn-skip-intro" type="button" class="px-3.5 py-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors">
+              Saltar
+            </button>
+            <button id="btn-fly-dragon" type="button" class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-black text-xs sm:text-sm rounded-xl transition-all shadow-lg shadow-amber-500/25 active:scale-95 flex items-center justify-center space-x-2">
+              <span>🚀</span>
+              <span>¡Despegar y Contar!</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <script src="assets/logo_data.js"></script>
+    <script>
+/**
+ * Mi Tesoro - Bóveda de Ahorro en Efectivo
+ * Tipografía numérica ultra clara (Outfit), cálculo de peso físico de monedas y diseño de alta definición
+ */
+
+const COINS = [
+  { id: 'coin_200', name: '2,00 €', value: 200, img: 'assets/coin_200.png', alt: 'Moneda de 2 Euros' },
+  { id: 'coin_100', name: '1,00 €', value: 100, img: 'assets/coin_100.png', alt: 'Moneda de 1 Euro' },
+  { id: 'coin_50',  name: '0,50 €', value: 50,  img: 'assets/coin_50.png',  alt: 'Moneda de 50 Céntimos' },
+  { id: 'coin_20',  name: '0,20 €', value: 20,  img: 'assets/coin_20.png',  alt: 'Moneda de 20 Céntimos' },
+  { id: 'coin_10',  name: '0,10 €', value: 10,  img: 'assets/coin_10.png',  alt: 'Moneda de 10 Céntimos' },
+  { id: 'coin_5',   name: '0,05 €', value: 5,   img: 'assets/coin_5.png',   alt: 'Moneda de 5 Céntimos' },
+  { id: 'coin_2',   name: '0,02 €', value: 2,   img: 'assets/coin_2.png',   alt: 'Moneda de 2 Céntimos' },
+  { id: 'coin_1',   name: '0,01 €', value: 1,   img: 'assets/coin_1.png',   alt: 'Moneda de 1 Céntimo' }
+];
+
+// Pesos oficiales en gramos según las especificaciones del Banco Central Europeo
+const COIN_WEIGHTS = {
+  coin_200: 8.50, // 2,00 € -> 8.50 g
+  coin_100: 7.50, // 1,00 € -> 7.50 g
+  coin_50:  7.80, // 0,50 € -> 7.80 g
+  coin_20:  5.74, // 0,20 € -> 5.74 g
+  coin_10:  4.10, // 0,10 € -> 4.10 g
+  coin_5:   3.92, // 0,05 € -> 3.92 g
+  coin_2:   3.06, // 0,02 € -> 3.06 g
+  coin_1:   2.30  // 0,01 € -> 2.30 g
+};
+
+const BILLS = [
+  { id: 'bill_500', name: '500,00 €', value: 50000, img: 'assets/bill_500.jpg', alt: 'Billete de 500 Euros' },
+  { id: 'bill_200', name: '200,00 €', value: 20000, img: 'assets/bill_200.jpg', alt: 'Billete de 200 Euros' },
+  { id: 'bill_100', name: '100,00 €', value: 10000, img: 'assets/bill_100.jpg', alt: 'Billete de 100 Euros' },
+  { id: 'bill_50',  name: '50,00 €',  value: 5000,  img: 'assets/bill_50.png',  alt: 'Billete de 50 Euros' },
+  { id: 'bill_20',  name: '20,00 €',  value: 2000,  img: 'assets/bill_20.jpg',  alt: 'Billete de 20 Euros' },
+  { id: 'bill_10',  name: '10,00 €',  value: 1000,  img: 'assets/bill_10.png',  alt: 'Billete de 10 Euros' },
+  { id: 'bill_5',   name: '5,00 €',   value: 500,   img: 'assets/bill_5.png',   alt: 'Billete de 5 Euros' }
+];
+
+const STORAGE_KEY = 'eurocash_pro_autosave_v2';
+const BACKUPS_KEY = 'eurocash_pro_backups_v2';
+const THEME_KEY = 'eurocash_pro_theme';
+const SOUND_KEY = 'mi_tesoro_sound';
+
+let soundEnabled = localStorage.getItem(SOUND_KEY) !== 'off'; // Activado por defecto
+let audioCtx = null;
+
+// Perímetro del círculo donut SVG con r = 40 (2 * PI * 40 ≈ 251.327)
+const CIRCUMFERENCE = 251.327;
+
+/**
+ * Formateador de moneda con punto en miles y coma en decimales garantizados
+ * Ejemplo: 137818 -> "1.378,18 €"
+ */
+function formatEuro(cents) {
+  const isNegative = cents < 0;
+  const absCents = Math.abs(cents);
+  const euros = Math.floor(absCents / 100);
+  const remCents = absCents % 100;
+  const formattedEuros = euros.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const formattedCents = remCents.toString().padStart(2, '0');
+  return `${isNegative ? '-' : ''}${formattedEuros},${formattedCents} €`;
+}
+
+function formatUnits(units) {
+  return units.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Inicialización de la aplicación
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  initSound();
+  renderTables();
+  bindEvents();
+  loadAutoSavedData();
+  updateCalculations();
+  updateBackupsBadge();
+  initIntroModal();
+});
+
+// Renderizado de las tablas con filas compactas (sin scroll vertical)
+function renderTables() {
+  const coinsContainer = document.getElementById('coins-tbody');
+  const billsContainer = document.getElementById('bills-tbody');
+
+  if (coinsContainer) {
+    coinsContainer.innerHTML = COINS.map(coin => createCoinRowHtml(coin)).join('');
+  }
+
+  if (billsContainer) {
+    billsContainer.innerHTML = BILLS.map(bill => createBillRowHtml(bill)).join('');
+  }
+}
+
+function createCoinRowHtml(item) {
+  return `
+    <tr class="group hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-100 dark:border-slate-800/50 last:border-0" data-id="${item.id}" data-value="${item.value}">
+      <!-- Imagen y Denominación -->
+      <td class="py-2.5 px-3.5">
+        <div class="flex items-center space-x-3">
+          <div class="w-11 h-11 flex items-center justify-center shrink-0">
+            <img src="${item.img}" alt="${item.alt}" class="currency-coin-img" loading="lazy" />
+          </div>
+          <span class="font-bold text-slate-800 dark:text-slate-100 text-base sm:text-lg font-num tracking-tight">${item.name}</span>
+        </div>
+      </td>
+
+      <!-- Selector de cantidad minimalista -->
+      <td class="py-2.5 px-2 text-center">
+        <div class="stepper-pill inline-flex items-center">
+          <button 
+            type="button" 
+            class="btn-step-minus stepper-btn" 
+            data-target="${item.id}" 
+            tabindex="-1"
+            title="Restar 1"
+          >−</button>
+
+          <input 
+            type="number" 
+            id="${item.id}" 
+            name="${item.id}" 
+            min="0" 
+            step="1" 
+            placeholder="0"
+            value="" 
+            class="qty-input stepper-input"
+            data-type="coin"
+            data-value="${item.value}"
+          />
+
+          <button 
+            type="button" 
+            class="btn-step-plus stepper-btn" 
+            data-target="${item.id}" 
+            tabindex="-1"
+            title="Sumar 1"
+          >+</button>
+        </div>
+      </td>
+
+      <!-- Subtotal -->
+      <td class="py-2.5 px-3.5 text-right">
+        <span id="subtotal-${item.id}" class="font-medium text-slate-400 dark:text-slate-500 text-base sm:text-lg font-num transition-colors">0,00 €</span>
+      </td>
+    </tr>
+  `;
+}
+
+function createBillRowHtml(item) {
+  return `
+    <tr class="group hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-100 dark:border-slate-800/50 last:border-0" data-id="${item.id}" data-value="${item.value}">
+      <!-- Imagen y Denominación -->
+      <td class="py-3.5 px-3.5">
+        <div class="flex items-center space-x-3">
+          <div class="w-20 h-11 flex items-center justify-center shrink-0">
+            <img src="${item.img}" alt="${item.alt}" class="currency-bill-img" loading="lazy" />
+          </div>
+          <span class="font-bold text-slate-800 dark:text-slate-100 text-base sm:text-lg font-num tracking-tight">${item.name}</span>
+        </div>
+      </td>
+
+      <!-- Selector de cantidad minimalista -->
+      <td class="py-3.5 px-2 text-center">
+        <div class="stepper-pill inline-flex items-center">
+          <button 
+            type="button" 
+            class="btn-step-minus stepper-btn" 
+            data-target="${item.id}" 
+            tabindex="-1"
+            title="Restar 1"
+          >−</button>
+
+          <input 
+            type="number" 
+            id="${item.id}" 
+            name="${item.id}" 
+            min="0" 
+            step="1" 
+            placeholder="0"
+            value="" 
+            class="qty-input stepper-input"
+            data-type="bill"
+            data-value="${item.value}"
+          />
+
+          <button 
+            type="button" 
+            class="btn-step-plus stepper-btn" 
+            data-target="${item.id}" 
+            tabindex="-1"
+            title="Sumar 1"
+          >+</button>
+        </div>
+      </td>
+
+      <!-- Subtotal -->
+      <td class="py-3.5 px-3.5 text-right">
+        <span id="subtotal-${item.id}" class="font-medium text-slate-400 dark:text-slate-500 text-base sm:text-lg font-num transition-colors">0,00 €</span>
+      </td>
+    </tr>
+  `;
+}
+
+// Vinculación de Eventos
+function bindEvents() {
+  // Auto-guardado instantáneo al teclear con sonido y reacción del dragón
+  document.addEventListener('input', (e) => {
+    if (e.target.classList.contains('qty-input')) {
+      const isCoin = e.target.getAttribute('data-type') === 'coin';
+      if (isCoin) {
+        playCoinSound();
+      } else {
+        playBillSound();
+      }
+      triggerDragonReaction('sparkle');
+      updateCalculations();
+      triggerAutoSave();
+    }
+  });
+
+  // Selección rápida de todo el valor al hacer foco
+  document.addEventListener('focusin', (e) => {
+    if (e.target.classList.contains('qty-input')) {
+      e.target.select();
+    }
+  });
+
+  // Navegación con teclado (Enter, Flechas)
+  document.addEventListener('keydown', (e) => {
+    if (e.target.classList.contains('qty-input')) {
+      const allInputs = Array.from(document.querySelectorAll('.qty-input'));
+      const currentIndex = allInputs.indexOf(e.target);
+
+      if (e.key === 'Enter' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const nextInput = allInputs[currentIndex + 1];
+        if (nextInput) nextInput.focus();
+      } else if (e.key === 'ArrowUp' || (e.key === 'Enter' && e.shiftKey)) {
+        e.preventDefault();
+        const prevInput = allInputs[currentIndex - 1];
+        if (prevInput) prevInput.focus();
+      }
+    }
+  });
+
+  // Botones +/- con sonidos diferenciados y reacción del dragón
+  document.addEventListener('click', (e) => {
+    const minusBtn = e.target.closest('.btn-step-minus');
+    if (minusBtn) {
+      const targetId = minusBtn.getAttribute('data-target');
+      const input = document.getElementById(targetId);
+      if (input) {
+        let val = parseInt(input.value, 10) || 0;
+        input.value = val > 0 ? (val - 1 || '') : '';
+        const isCoin = input.getAttribute('data-type') === 'coin';
+        if (isCoin) {
+          playCoinSound();
+        } else {
+          playBillSound();
+        }
+        updateCalculations();
+        triggerAutoSave();
+      }
+      return;
+    }
+
+    const plusBtn = e.target.closest('.btn-step-plus');
+    if (plusBtn) {
+      const targetId = plusBtn.getAttribute('data-target');
+      const input = document.getElementById(targetId);
+      if (input) {
+        let val = parseInt(input.value, 10) || 0;
+        input.value = val + 1;
+        const isCoin = input.getAttribute('data-type') === 'coin';
+        if (isCoin) {
+          playCoinSound();
+        } else {
+          playBillSound();
+        }
+        triggerDragonReaction('sparkle');
+        updateCalculations();
+        triggerAutoSave();
+      }
+      return;
+    }
+  });
+
+  // Interacción al pulsar en el Dragón Guardián
+  const dragonLogo = document.getElementById('dragon-logo-wrapper');
+  if (dragonLogo) {
+    dragonLogo.addEventListener('click', onDragonClick);
+  }
+
+  // Botón Vaciar con respaldo previo automático
+  const btnReset = document.getElementById('btn-reset');
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      if (hasAnyData()) {
+        createAutoSafetyBackup();
+      }
+      if (confirm('¿Deseas vaciar la hucha e iniciar un nuevo recuento?\n(Se ha guardado automáticamente una copia del recuento actual en "Recuentos" por si deseas consultarlo o recuperarlo).')) {
+        resetAll();
+      }
+    });
+  }
+
+  // Toggle Sonido On / Off
+  const soundToggle = document.getElementById('sound-toggle');
+  if (soundToggle) {
+    soundToggle.addEventListener('click', toggleSound);
+  }
+
+  // Toggle Tema Claro / Oscuro
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+  }
+
+  // Botón y Modal de Tarjeta del Tesoro
+  const btnTreasureCard = document.getElementById('btn-treasure-card');
+  if (btnTreasureCard) {
+    btnTreasureCard.addEventListener('click', openCardModal);
+  }
+
+  const btnCloseCardModal = document.getElementById('btn-close-card-modal');
+  if (btnCloseCardModal) {
+    btnCloseCardModal.addEventListener('click', closeCardModal);
+  }
+
+  const btnCloseCardModalBottom = document.getElementById('btn-close-card-modal-bottom');
+  if (btnCloseCardModalBottom) {
+    btnCloseCardModalBottom.addEventListener('click', closeCardModal);
+  }
+
+  const cardModalBackdrop = document.getElementById('card-modal-backdrop');
+  if (cardModalBackdrop) {
+    cardModalBackdrop.addEventListener('click', closeCardModal);
+  }
+
+  const btnDownloadCardPng = document.getElementById('btn-download-card-png');
+  if (btnDownloadCardPng) {
+    btnDownloadCardPng.addEventListener('click', downloadCardPng);
+  }
+
+  // Modal de Recuentos (Historial)
+  const btnOpenBackups = document.getElementById('btn-open-backups');
+  if (btnOpenBackups) {
+    btnOpenBackups.addEventListener('click', openBackupsModal);
+  }
+
+  const btnCloseBackups = document.getElementById('btn-close-backups');
+  if (btnCloseBackups) {
+    btnCloseBackups.addEventListener('click', closeBackupsModal);
+  }
+
+  const backupsBackdrop = document.getElementById('backups-modal-backdrop');
+  if (backupsBackdrop) {
+    backupsBackdrop.addEventListener('click', closeBackupsModal);
+  }
+
+  const btnCreateBackup = document.getElementById('btn-create-backup');
+  if (btnCreateBackup) {
+    btnCreateBackup.addEventListener('click', promptCreateBackup);
+  }
+
+  const btnExportBackupFile = document.getElementById('btn-export-backup-file');
+  if (btnExportBackupFile) {
+    btnExportBackupFile.addEventListener('click', exportBackupToFile);
+  }
+
+  const fileRestoreInput = document.getElementById('file-restore-input');
+  if (fileRestoreInput) {
+    fileRestoreInput.addEventListener('change', handleFileRestore);
+  }
+
+  // Eventos de la Miniventana Explicativa y Vuelo del Dragón
+  const btnOpenIntro = document.getElementById('btn-open-intro');
+  if (btnOpenIntro) {
+    btnOpenIntro.addEventListener('click', () => openIntroModal(true));
+  }
+
+  const btnCloseIntroX = document.getElementById('btn-close-intro-x');
+  if (btnCloseIntroX) {
+    btnCloseIntroX.addEventListener('click', closeIntroModal);
+  }
+
+  const btnSkipIntro = document.getElementById('btn-skip-intro');
+  if (btnSkipIntro) {
+    btnSkipIntro.addEventListener('click', closeIntroModal);
+  }
+
+  const introModalBackdrop = document.getElementById('intro-modal-backdrop');
+  if (introModalBackdrop) {
+    introModalBackdrop.addEventListener('click', closeIntroModal);
+  }
+
+  const btnFlyDragon = document.getElementById('btn-fly-dragon');
+  if (btnFlyDragon) {
+    btnFlyDragon.addEventListener('click', startDragonFlight);
+  }
+
+  const introDragonSource = document.getElementById('intro-dragon-source');
+  if (introDragonSource) {
+    introDragonSource.addEventListener('click', startDragonFlight);
+  }
+}
+
+function hasAnyData() {
+  const inputs = document.querySelectorAll('.qty-input');
+  for (const inp of inputs) {
+    if (inp.value && inp.value !== '0') return true;
+  }
+  return false;
+}
+
+// Cálculo en tiempo real de subtotales, total conjunto y peso de monedas
+function updateCalculations() {
+  let totalCoinsCents = 0;
+  let totalCoinsCount = 0;
+  let totalCoinsWeightGrams = 0;
+  let totalBillsCents = 0;
+  let totalBillsCount = 0;
+
+  // Monedas
+  COINS.forEach(coin => {
+    const input = document.getElementById(coin.id);
+    const subtotalEl = document.getElementById(`subtotal-${coin.id}`);
+    const qty = input ? parseInt(input.value, 10) || 0 : 0;
+    const subtotalCents = qty * coin.value;
+    const weightGrams = qty * (COIN_WEIGHTS[coin.id] || 0);
+
+    totalCoinsCents += subtotalCents;
+    totalCoinsCount += qty;
+    totalCoinsWeightGrams += weightGrams;
+
+    if (subtotalEl) {
+      subtotalEl.textContent = formatEuro(subtotalCents);
+      if (subtotalCents > 0) {
+        subtotalEl.className = 'font-bold text-slate-900 dark:text-white text-base sm:text-lg font-num transition-colors';
+      } else {
+        subtotalEl.className = 'font-medium text-slate-400 dark:text-slate-500 text-base sm:text-lg font-num transition-colors';
+      }
+    }
+  });
+
+  // Billetes
+  BILLS.forEach(bill => {
+    const input = document.getElementById(bill.id);
+    const subtotalEl = document.getElementById(`subtotal-${bill.id}`);
+    const qty = input ? parseInt(input.value, 10) || 0 : 0;
+    const subtotalCents = qty * bill.value;
+
+    totalBillsCents += subtotalCents;
+    totalBillsCount += qty;
+
+    if (subtotalEl) {
+      subtotalEl.textContent = formatEuro(subtotalCents);
+      if (subtotalCents > 0) {
+        subtotalEl.className = 'font-bold text-slate-900 dark:text-white text-base sm:text-lg font-num transition-colors';
+      } else {
+        subtotalEl.className = 'font-medium text-slate-400 dark:text-slate-500 text-base sm:text-lg font-num transition-colors';
+      }
+    }
+  });
+
+  const grandTotalCents = totalCoinsCents + totalBillsCents;
+  const totalPieces = totalCoinsCount + totalBillsCount;
+
+  // Subtotales y Pie de Tablas
+  setText('coins-total-count', `${formatUnits(totalCoinsCount)} ${totalCoinsCount === 1 ? 'moneda' : 'monedas'}`);
+  setText('coins-table-total', formatEuro(totalCoinsCents));
+
+  // Peso físico estimado de monedas en kg
+  const weightKg = totalCoinsWeightGrams / 1000;
+  const formattedWeight = weightKg.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' kg';
+  setText('coins-weight-val', formattedWeight);
+
+  const weightBadge = document.getElementById('coins-weight-badge');
+  if (weightBadge) {
+    weightBadge.title = `Peso estimado: ${totalCoinsWeightGrams.toLocaleString('es-ES', { maximumFractionDigits: 1 })} gramos de metal (${formattedWeight})`;
+  }
+
+  setText('bills-total-count', `${formatUnits(totalBillsCount)} ${totalBillsCount === 1 ? 'billete' : 'billetes'}`);
+  setText('bills-table-total', formatEuro(totalBillsCents));
+
+  // Gran Total Ahorrado en Cabecera
+  setText('grand-total-amount', formatEuro(grandTotalCents));
+  setText('grand-total-pieces', `${formatUnits(totalPieces)} ${totalPieces === 1 ? 'unidad guardada' : 'unidades guardadas'}`);
+
+  // Fecha para impresión
+  const printDateEl = document.getElementById('print-date');
+  if (printDateEl) {
+    printDateEl.textContent = new Date().toLocaleString('es-ES', { dateStyle: 'full', timeStyle: 'medium' });
+  }
+}
+
+function updateDonutChart(coinsCents, billsCents, totalCents) {
+  // Sin gráfico Donut en favor del diseño minimalista de alta gama
+}
+
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+// ==========================================================================
+// AUTO-GUARDADO AUTOMÁTICO CONTINUO
+// ==========================================================================
+let autoSaveTimeout = null;
+
+function triggerAutoSave() {
+  const statusIndicator = document.getElementById('autosave-status');
+  if (statusIndicator) {
+    statusIndicator.innerHTML = `
+      <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping mr-1.5"></span>
+      <span class="text-amber-500 font-semibold">Guardando...</span>
+    `;
+  }
+
+  clearTimeout(autoSaveTimeout);
+  autoSaveTimeout = setTimeout(() => {
+    executeAutoSave();
+  }, 250);
+}
+
+function executeAutoSave() {
+  const payload = getCurrentStateObject();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+
+  const statusIndicator = document.getElementById('autosave-status');
+  if (statusIndicator) {
+    statusIndicator.innerHTML = `
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+      <span class="text-emerald-600 dark:text-emerald-400 font-semibold">Guardado automático</span>
+    `;
+  }
+}
+
+function getCurrentStateObject() {
+  const inputs = {};
+  document.querySelectorAll('.qty-input').forEach(input => {
+    if (input.value && input.value !== '0') {
+      inputs[input.id] = input.value;
+    }
+  });
+
+  return {
+    inputs: inputs,
+    timestamp: Date.now()
+  };
+}
+
+function loadAutoSavedData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+
+  try {
+    const payload = JSON.parse(raw);
+    applyStateObject(payload);
+  } catch (err) {
+    console.error('Error al restaurar auto-guardado:', err);
+  }
+}
+
+function applyStateObject(state) {
+  document.querySelectorAll('.qty-input').forEach(i => i.value = '');
+
+  if (state && state.inputs) {
+    Object.keys(state.inputs).forEach(id => {
+      const input = document.getElementById(id);
+      if (input) input.value = state.inputs[id];
+    });
+  }
+
+  updateCalculations();
+}
+
+function resetAll() {
+  document.querySelectorAll('.qty-input').forEach(input => {
+    input.value = '';
+  });
+
+  localStorage.removeItem(STORAGE_KEY);
+  updateCalculations();
+  triggerAutoSave();
+  showToast('✓ Hucha vaciada. Listo para un nuevo recuento');
+}
+
+// ==========================================================================
+// SISTEMA DE RECUENTOS Y RESTAURACIÓN
+// ==========================================================================
+function getBackups() {
+  try {
+    return JSON.parse(localStorage.getItem(BACKUPS_KEY) || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveBackups(list) {
+  localStorage.setItem(BACKUPS_KEY, JSON.stringify(list));
+  updateBackupsBadge();
+}
+
+function updateBackupsBadge() {
+  const badge = document.getElementById('backups-count-badge');
+  if (badge) {
+    const count = getBackups().length;
+    badge.textContent = count;
+    badge.classList.toggle('hidden', count === 0);
+  }
+}
+
+function createAutoSafetyBackup() {
+  const current = getCurrentStateObject();
+  const grandTotal = document.getElementById('grand-total-amount')?.textContent || '0,00 €';
+  const now = new Date();
+
+  const backup = {
+    id: 'safe_' + Date.now(),
+    name: `🛡️ Recuento previo a vaciar (${now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })})`,
+    date: now.toLocaleString('es-ES'),
+    grandTotal: grandTotal,
+    state: current,
+    isAutoSafety: true
+  };
+
+  const backups = getBackups();
+  backups.unshift(backup);
+  if (backups.length > 25) backups.pop();
+  saveBackups(backups);
+}
+
+function promptCreateBackup() {
+  const defaultName = `Recuento Hucha - ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
+  const name = prompt('Introduce un nombre o etiqueta para este recuento:', defaultName);
+  if (name === null) return;
+
+  const current = getCurrentStateObject();
+  const grandTotal = document.getElementById('grand-total-amount')?.textContent || '0,00 €';
+
+  const backup = {
+    id: 'bk_' + Date.now(),
+    name: name.trim() || defaultName,
+    date: new Date().toLocaleString('es-ES'),
+    grandTotal: grandTotal,
+    state: current
+  };
+
+  const backups = getBackups();
+  backups.unshift(backup);
+  saveBackups(backups);
+  renderBackupsList();
+  showToast('✓ Recuento guardado en el historial');
+}
+
+function openBackupsModal() {
+  const modal = document.getElementById('backups-modal');
+  if (!modal) return;
+  renderBackupsList();
+  modal.classList.remove('hidden');
+}
+
+function closeBackupsModal() {
+  const modal = document.getElementById('backups-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function renderBackupsList() {
+  const container = document.getElementById('backups-list');
+  if (!container) return;
+
+  const backups = getBackups();
+  if (backups.length === 0) {
+    container.innerHTML = `
+      <div class="text-center py-12 text-slate-400 dark:text-slate-500">
+        <span class="text-3xl">📜</span>
+        <p class="font-bold text-base mt-2 text-slate-600 dark:text-slate-400">No hay recuentos anteriores guardados</p>
+        <p class="text-xs mt-1">Pulsa en "Guardar Recuento Ahora" para almacenar el estado de tu hucha.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = backups.map(b => `
+    <div class="p-4 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div>
+        <div class="flex items-center space-x-2">
+          <h4 class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">${escapeHtml(b.name)}</h4>
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">${b.date}</p>
+        <div class="flex items-center space-x-3 mt-1.5 text-xs text-slate-600 dark:text-slate-300">
+          <span>Ahorro: <strong class="text-emerald-600 dark:text-emerald-400 font-num font-black">${b.grandTotal}</strong></span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2 self-end sm:self-center">
+        <button type="button" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-xs active:scale-95" onclick="restoreBackup('${b.id}')">
+          Restaurar
+        </button>
+        <button type="button" class="px-2.5 py-1.5 bg-rose-100 dark:bg-rose-950/40 hover:bg-rose-200 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-400 font-bold text-xs rounded-xl transition-all" onclick="deleteBackup('${b.id}')" title="Eliminar recuento">
+          ✕
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.restoreBackup = function(id) {
+  const backups = getBackups();
+  const item = backups.find(b => b.id === id);
+  if (!item) return;
+
+  if (confirm(`¿Restaurar el recuento "${item.name}"?\nSe cargarán todas las monedas y billetes guardados en ese momento.`)) {
+    applyStateObject(item.state);
+    triggerAutoSave();
+    closeBackupsModal();
+    showToast(`✓ Recuento "${item.name}" restaurado`);
+  }
+};
+
+window.deleteBackup = function(id) {
+  if (confirm('¿Deseas eliminar este recuento del historial?')) {
+    let backups = getBackups();
+    backups = backups.filter(b => b.id !== id);
+    saveBackups(backups);
+    renderBackupsList();
+    showToast('Recuento eliminado');
+  }
+};
+
+function exportBackupToFile() {
+  const current = getCurrentStateObject();
+  const dateStr = new Date().toISOString().replace(/[:.]/g, '-');
+  const backupData = {
+    app: 'Mi Tesoro',
+    version: '2.0',
+    exportDate: new Date().toISOString(),
+    state: current,
+    allBackups: getBackups()
+  };
+
+  const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Recuento_Mi_Tesoro_${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✓ Archivo de recuento (.json) descargado en tu PC');
+}
+
+function handleFileRestore(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    try {
+      const data = JSON.parse(event.target.result);
+      if (data.state && data.state.inputs) {
+        applyStateObject(data.state);
+        if (Array.isArray(data.allBackups)) {
+          saveBackups(data.allBackups);
+        }
+        triggerAutoSave();
+        closeBackupsModal();
+        showToast('✓ Recuento importado con éxito desde archivo');
+      } else {
+        alert('El archivo no es un formato válido de recuento.');
+      }
+    } catch (err) {
+      alert('Error al leer el archivo de recuento: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
+}
+
+// ==========================================================================
+// TEMA (Modo Claro y Oscuro)
+// ==========================================================================
+function initTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (saved === 'dark' || (!saved && prefersDark)) {
+    document.documentElement.classList.add('dark');
+    updateThemeIcon(true);
+  } else {
+    document.documentElement.classList.remove('dark');
+    updateThemeIcon(false);
+  }
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+  updateThemeIcon(isDark);
+}
+
+function updateThemeIcon(isDark) {
+  const icon = document.getElementById('theme-icon');
+  if (icon) {
+    icon.textContent = isDark ? '☀️' : '🌙';
+  }
+}
+
+let toastTimeout = null;
+
+function showToast(message, duration = 5000) {
+  let toast = document.getElementById('app-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'app-toast';
+    toast.className = 'fixed bottom-5 right-5 z-50 bg-slate-900/95 dark:bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl font-bold text-sm sm:text-base transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-auto flex items-center space-x-3 border-2 border-amber-500/40 backdrop-blur-md max-w-md';
+    document.body.appendChild(toast);
+  }
+
+  // Limpiar temporizador previo para evitar que se cierre antes de tiempo
+  clearTimeout(toastTimeout);
+
+  toast.innerHTML = `
+    <div class="w-8 h-8 rounded-lg overflow-hidden ring-1 ring-amber-400/50 bg-slate-950 shrink-0 shadow-xs">
+      <img src="assets/logo.jpg" alt="Dragón Guardián" class="w-full h-full object-cover" />
+    </div>
+    <span class="flex-1 leading-snug text-slate-100 text-xs sm:text-sm font-semibold">${message}</span>
+    <button type="button" class="ml-2 text-slate-400 hover:text-white text-sm font-black p-1 transition-colors" onclick="dismissToast()" title="Cerrar">✕</button>
+  `;
+
+  toast.classList.remove('translate-y-4', 'opacity-0', 'pointer-events-none');
+  toast.classList.add('translate-y-0', 'opacity-100');
+
+  toastTimeout = setTimeout(() => {
+    dismissToast();
+  }, duration);
+}
+
+function dismissToast() {
+  clearTimeout(toastTimeout);
+  const toast = document.getElementById('app-toast');
+  if (toast) {
+    toast.classList.remove('translate-y-0', 'opacity-100');
+    toast.classList.add('translate-y-4', 'opacity-0', 'pointer-events-none');
+  }
+}
+
+// ==========================================================================
+// 1. EFECTOS DE SONIDO REALISTAS (WEB AUDIO API - SIN DEPENDENCIAS EXTERNAS)
+// ==========================================================================
+function initSound() {
+  const saved = localStorage.getItem(SOUND_KEY);
+  soundEnabled = saved !== 'off';
+  updateSoundIcon();
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  localStorage.setItem(SOUND_KEY, soundEnabled ? 'on' : 'off');
+  updateSoundIcon();
+  if (soundEnabled) {
+    playCoinSound();
+    triggerDragonReaction('sparkle');
+    showToast('🔊 Sonido activado', 3000);
+  } else {
+    showToast('🔇 Sonido silenciado', 3000);
+  }
+}
+
+function updateSoundIcon() {
+  const icon = document.getElementById('sound-icon');
+  if (icon) {
+    icon.textContent = soundEnabled ? '🔊' : '🔇';
+  }
+}
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+/**
+ * Síntesis física de tintineo de monedas de oro reales:
+ * Combina un transitorio mecánico de impacto metálico (click) con armónicos
+ * de vibración de disco de aleación (Bessel modes) y un micro-rebote natural.
+ */
+function strikeMetalCoin(ctx, time, basePitch, volume) {
+  // 1. Transitorio de impacto metálico (ruido blanco filtrado de 10ms)
+  const bufferLen = Math.floor(ctx.sampleRate * 0.012);
+  const noiseBuff = ctx.createBuffer(1, bufferLen, ctx.sampleRate);
+  const data = noiseBuff.getChannelData(0);
+  for (let i = 0; i < bufferLen; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferLen * 0.3));
+  }
+  const noiseSrc = ctx.createBufferSource();
+  noiseSrc.buffer = noiseBuff;
+
+  const bandFilter = ctx.createBiquadFilter();
+  bandFilter.type = 'bandpass';
+  bandFilter.frequency.setValueAtTime(4200, time);
+  bandFilter.Q.setValueAtTime(4.0, time);
+
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.setValueAtTime(volume * 0.40, time);
+  noiseGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.014);
+
+  noiseSrc.connect(bandFilter);
+  bandFilter.connect(noiseGain);
+  noiseGain.connect(ctx.destination);
+  noiseSrc.start(time);
+
+  // 2. Modos armónicos resonantes de aleación cuproníquel/oro (f, 1.58f, 2.52f)
+  const partials = [
+    { freq: basePitch,        decay: 0.28, rel: 0.50 },
+    { freq: basePitch * 1.58, decay: 0.22, rel: 0.35 },
+    { freq: basePitch * 2.52, decay: 0.16, rel: 0.20 }
+  ];
+
+  partials.forEach(p => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(p.freq, time);
+
+    gain.gain.setValueAtTime(volume * p.rel, time);
+    gain.gain.exponentialRampToValueAtTime(0.0001, time + p.decay);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(time);
+    osc.stop(time + p.decay + 0.02);
+  });
+}
+
+function playCoinSound() {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+    const randomPitch = 2100 + Math.random() * 180;
+    strikeMetalCoin(ctx, t, randomPitch, 0.24);
+    strikeMetalCoin(ctx, t + 0.042, randomPitch * 1.12, 0.15);
+  } catch (err) {
+    console.warn('Audio play error:', err);
+  }
+}
+
+/**
+ * Cascada acústica de múltiples monedas cayendo rápidamente dentro de la hucha
+ */
+function playCoinCascadeSound() {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const t = ctx.currentTime;
+
+    const pitches = [2150, 2480, 1960, 2350, 2600, 2220, 2450];
+    pitches.forEach((freq, idx) => {
+      const dropTime = t + idx * 0.055;
+      strikeMetalCoin(ctx, dropTime, freq + (Math.random() * 60 - 30), 0.22);
+      strikeMetalCoin(ctx, dropTime + 0.038, freq * 1.12, 0.12);
+    });
+  } catch (e) {
+    console.warn('Cascade audio error:', e);
+  }
+}
+
+/**
+ * Sonido realista para billetes de papel:
+ * Frotamiento suave de papel moneda con sutil tono armónico aterciopelado.
+ */
+function playBillSound() {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+
+    // Fricción de papel (ruido con filtro pasa bajos modulado)
+    const bufferLen = Math.floor(ctx.sampleRate * 0.05);
+    const noiseBuff = ctx.createBuffer(1, bufferLen, ctx.sampleRate);
+    const data = noiseBuff.getChannelData(0);
+    for (let i = 0; i < bufferLen; i++) {
+      data[i] = (Math.random() * 2 - 1);
+    }
+    const noiseSrc = ctx.createBufferSource();
+    noiseSrc.buffer = noiseBuff;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1400, t);
+    filter.frequency.exponentialRampToValueAtTime(700, t + 0.05);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.09, t);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.055);
+
+    noiseSrc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noiseSrc.start(t);
+
+    // Tono cálido suave
+    const osc = ctx.createOscillator();
+    const oscGain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, t); // Re5 cálido
+    osc.frequency.exponentialRampToValueAtTime(880, t + 0.12);
+
+    oscGain.gain.setValueAtTime(0.05, t);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+
+    osc.connect(oscGain);
+    oscGain.connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.19);
+  } catch (err) {
+    console.warn('Bill audio error:', err);
+  }
+}
+
+// ==========================================================================
+// 2. REACCIÓN DEL PEQUEÑO DRAGÓN GUARDIÁN
+// ==========================================================================
+const DRAGON_QUOTES = [
+  "¡El dragón vigila con orgullo cada céntimo de tu tesoro! ✨",
+  "¡Rooar! Tu hucha está cada día más llena y protegida ⭐",
+  "¡A este dragón le encanta oír el tintineo de tu ahorro! 💰✨",
+  "¡Bóveda segura! Cada moneda cuenta para hacer crecer el tesoro 🛡️✨",
+  "¡Guardián del tesoro en servicio! Buen trabajo con tu ahorro ⭐✨"
+];
+
+let lastDragonReaction = 0;
+
+function triggerDragonReaction(type = 'bounce') {
+  const now = Date.now();
+  if (now - lastDragonReaction < 180) return; // Debounce suave
+  lastDragonReaction = now;
+
+  const badge = document.getElementById('dragon-logo-badge');
+  const wrapper = document.getElementById('dragon-logo-wrapper');
+  if (!badge) return;
+
+  // Animación del badge
+  badge.classList.remove('dragon-celebrate');
+  void badge.offsetWidth; // Trigger reflow
+  badge.classList.add('dragon-celebrate');
+
+  // Partículas flotantes con emojis 100% universales compatibles con Windows
+  if (wrapper) {
+    const emojis = type === 'click' ? ['✨', '⭐', '💎', '💰'] : ['✨', '⭐', '💰'];
+    const count = type === 'click' ? 4 : 1;
+
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const particle = document.createElement('span');
+        particle.className = 'sparkle-particle';
+        particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        const dx = (Math.random() * 34 - 17) + 'px';
+        particle.style.setProperty('--dx', dx);
+        particle.style.left = (24 + Math.random() * 24) + 'px';
+        particle.style.top = (8 + Math.random() * 16) + 'px';
+        wrapper.appendChild(particle);
+
+        setTimeout(() => {
+          particle.remove();
+        }, 850);
+      }, i * 75);
+    }
+  }
+}
+
+function onDragonClick() {
+  triggerDragonReaction('click');
+  playCoinSound();
+  const quote = DRAGON_QUOTES[Math.floor(Math.random() * DRAGON_QUOTES.length)];
+  showToast(quote, 5500); // 5.5 segundos para leer cómodamente
+}
+
+// ==========================================================================
+// 3. TARJETA RESUMEN DEL TESORO (CANVAS HD Y DESCARGA PNG SIN BLOQUEOS)
+// ==========================================================================
+function openCardModal() {
+  const modal = document.getElementById('card-modal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  drawTreasureCard();
+}
+
+function closeCardModal() {
+  const modal = document.getElementById('card-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function drawTreasureCard() {
+  const canvas = document.getElementById('treasure-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 1200;
+  const H = 750;
+  canvas.width = W;
+  canvas.height = H;
+
+  // 1. Fondo elegante oscuro con iluminación ambiental
+  ctx.fillStyle = '#080b12';
+  ctx.fillRect(0, 0, W, H);
+
+  // Halo ámbar superior izquierdo
+  const radAmber = ctx.createRadialGradient(180, 160, 20, 180, 160, 500);
+  radAmber.addColorStop(0, 'rgba(217, 119, 6, 0.28)');
+  radAmber.addColorStop(1, 'rgba(8, 11, 18, 0)');
+  ctx.fillStyle = radAmber;
+  ctx.fillRect(0, 0, W, H);
+
+  // Halo esmeralda inferior derecho
+  const radGreen = ctx.createRadialGradient(W - 200, H - 180, 20, W - 200, H - 180, 500);
+  radGreen.addColorStop(0, 'rgba(16, 185, 129, 0.22)');
+  radGreen.addColorStop(1, 'rgba(8, 11, 18, 0)');
+  ctx.fillStyle = radGreen;
+  ctx.fillRect(0, 0, W, H);
+
+  // 2. Doble marco con esquinas redondeadas y filigranas
+  drawRoundedRect(ctx, 30, 30, W - 60, H - 60, 28);
+  ctx.strokeStyle = 'rgba(245, 158, 11, 0.50)';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  drawRoundedRect(ctx, 42, 42, W - 84, H - 84, 20);
+  ctx.strokeStyle = 'rgba(245, 158, 11, 0.18)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Estrellas ornamentales en las 4 esquinas
+  ctx.fillStyle = '#f59e0b';
+  ctx.font = '22px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('✦', 64, 64);
+  ctx.fillText('✦', W - 64, 64);
+  ctx.fillText('✦', 64, H - 64);
+  ctx.fillText('✦', W - 64, H - 64);
+
+  // 3. Logo del Dragón (usando base64 para evitar contaminar el canvas bajo file:///)
+  const logoImg = new Image();
+
+  const renderCardContent = () => {
+    // Dibujo del logo
+    const lx = 75, ly = 75, lw = 100, lh = 100, lr = 22;
+    if (logoImg.complete && logoImg.naturalWidth > 0) {
+      try {
+        ctx.save();
+        drawRoundedRect(ctx, lx, ly, lw, lh, lr);
+        ctx.clip();
+        ctx.drawImage(logoImg, lx, ly, lw, lh);
+        ctx.restore();
+
+        drawRoundedRect(ctx, lx, ly, lw, lh, lr);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      } catch (e) {
+        drawDragonFallback(ctx, lx, ly, lw, lh, lr);
+      }
+    } else {
+      drawDragonFallback(ctx, lx, ly, lw, lh, lr);
+    }
+
+    // Títulos de Marca
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+
+    ctx.fillStyle = '#f59e0b';
+    ctx.font = 'bold 15px "Plus Jakarta Sans", -apple-system, sans-serif';
+    ctx.fillText('BÓVEDA DE AHORRO EN EFECTIVO', 195, 84);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 42px "Plus Jakarta Sans", -apple-system, sans-serif';
+    ctx.fillText('MI TESORO', 195, 106);
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '500 16px "Plus Jakarta Sans", -apple-system, sans-serif';
+    ctx.fillText('Certificado Oficial de Recuento de la Hucha', 195, 153);
+
+    // Fecha en el lateral derecho
+    const now = new Date();
+    const dateFormatted = now.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+    const timeFormatted = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 13px "Plus Jakarta Sans", -apple-system, sans-serif';
+    ctx.fillText('FECHA DE RECUENTO', W - 80, 88);
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 20px "Plus Jakarta Sans", -apple-system, sans-serif';
+    ctx.fillText(`${dateFormatted}`, W - 80, 110);
+
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = '600 15px "Outfit", sans-serif';
+    ctx.fillText(`${timeFormatted} h`, W - 80, 140);
+
+    // 4. Tarjeta Hero Central: TOTAL AHORRADO
+    const heroX = 75, heroY = 205, heroW = W - 150, heroH = 210;
+    drawRoundedRect(ctx, heroX, heroY, heroW, heroH, 22);
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 15px "Plus Jakarta Sans", -apple-system, sans-serif';
+    ctx.fillText('TOTAL AHORRADO EN LA HUCHA', W / 2, heroY + 45);
+
+    const grandTotalEl = document.getElementById('grand-total-amount');
+    const grandTotalText = grandTotalEl ? grandTotalEl.textContent.trim() : '0,00 €';
+
+    ctx.fillStyle = '#34d399';
+    ctx.font = '900 78px "Outfit", -apple-system, sans-serif';
+    ctx.fillText(grandTotalText, W / 2, heroY + 112);
+
+    const grandPiecesEl = document.getElementById('grand-total-pieces');
+    const grandPiecesText = grandPiecesEl ? grandPiecesEl.textContent.trim() : '0 unidades guardadas';
+
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = '600 18px "Outfit", sans-serif';
+    ctx.fillText(`💰 ${grandPiecesText}`, W / 2, heroY + 172);
+
+    // 5. Dos Columnas Inferiores: MONEDAS y BILLETES
+    const colY = 440, colW = (W - 150 - 24) / 2, colH = 215;
+
+    // Columna Monedas
+    const col1X = 75;
+    drawRoundedRect(ctx, col1X, colY, colW, colH, 20);
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.28)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#f59e0b';
+    ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('💰  SUBTOTAL MONEDAS', col1X + 26, colY + 38);
+
+    const coinsTotalEl = document.getElementById('coins-table-total');
+    const coinsTotalText = coinsTotalEl ? coinsTotalEl.textContent.trim() : '0,00 €';
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 42px "Outfit", sans-serif';
+    ctx.fillText(coinsTotalText, col1X + 26, colY + 88);
+
+    const coinsCountEl = document.getElementById('coins-total-count');
+    const coinsCountText = coinsCountEl ? coinsCountEl.textContent.trim() : '0 monedas';
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '600 17px "Outfit", sans-serif';
+    ctx.fillText(`• ${coinsCountText}`, col1X + 26, colY + 134);
+
+    const weightEl = document.getElementById('coins-weight-val');
+    const weightText = weightEl ? weightEl.textContent.trim() : '0,00 kg';
+    ctx.fillStyle = '#fef08a';
+    ctx.font = 'bold 17px "Outfit", sans-serif';
+    ctx.fillText(`⚖️ Peso de metal: ${weightText}`, col1X + 26, colY + 168);
+
+    // Columna Billetes
+    const col2X = col1X + colW + 24;
+    drawRoundedRect(ctx, col2X, colY, colW, colH, 20);
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(59, 130, 246, 0.28)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#60a5fa';
+    ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('💶  SUBTOTAL BILLETES', col2X + 26, colY + 38);
+
+    const billsTotalEl = document.getElementById('bills-table-total');
+    const billsTotalText = billsTotalEl ? billsTotalEl.textContent.trim() : '0,00 €';
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 42px "Outfit", sans-serif';
+    ctx.fillText(billsTotalText, col2X + 26, colY + 88);
+
+    const billsCountEl = document.getElementById('bills-total-count');
+    const billsCountText = billsCountEl ? billsCountEl.textContent.trim() : '0 billetes';
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '600 17px "Outfit", sans-serif';
+    ctx.fillText(`• ${billsCountText}`, col2X + 26, colY + 134);
+
+    ctx.fillStyle = '#93c5fd';
+    ctx.font = 'bold 17px "Outfit", sans-serif';
+    ctx.fillText(`🛡️ Billetes ordenados y protegidos`, col2X + 26, colY + 168);
+
+    // 6. Pie de Tarjeta / Sello Oficial
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#64748b';
+    ctx.font = '500 13px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('🛡️ Certificado oficial de ahorro emitido por Mi Tesoro • Bóveda Personal', W / 2, H - 42);
+  };
+
+  logoImg.onload = renderCardContent;
+  logoImg.onerror = renderCardContent;
+
+  // Cargar base64 limpio (no contamina el lienzo bajo file:///)
+  if (typeof LOGO_DATA_URL !== 'undefined') {
+    logoImg.src = LOGO_DATA_URL;
+  } else {
+    logoImg.src = 'assets/logo.jpg';
+  }
+
+  if (logoImg.complete) {
+    renderCardContent();
+  }
+}
+
+function drawDragonFallback(ctx, x, y, w, h, r) {
+  drawRoundedRect(ctx, x, y, w, h, r);
+  ctx.fillStyle = '#1e1b4b';
+  ctx.fill();
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '48px sans-serif';
+  ctx.fillText('✨', x + w / 2, y + h / 2);
+}
+
+/**
+ * Descarga de la Tarjeta en formato PNG (100% compatible y segura)
+ */
+function downloadCardPng() {
+  const canvas = document.getElementById('treasure-canvas');
+  if (!canvas) return;
+
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  const dateStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const timeStr = `${pad(now.getHours())}${pad(now.getMinutes())}`;
+  const filename = `Tarjeta_Mi_Tesoro_${dateStr}_${timeStr}.png`;
+
+  try {
+    if (canvas.toBlob) {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          fallbackDownloadDataUrl(canvas, filename);
+          return;
+        }
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = blobUrl;
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(blobUrl);
+        }, 400);
+
+        playCoinSound();
+        triggerDragonReaction('sparkle');
+        showToast('✓ ¡Tarjeta guardada como imagen PNG en tu carpeta de descargas!', 4500);
+      }, 'image/png');
+    } else {
+      fallbackDownloadDataUrl(canvas, filename);
+    }
+  } catch (err) {
+    console.warn('toBlob falló, intentando dataUrl:', err);
+    fallbackDownloadDataUrl(canvas, filename);
+  }
+}
+
+function fallbackDownloadDataUrl(canvas, filename) {
+  try {
+    const dataUrl = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      document.body.removeChild(link);
+    }, 400);
+
+    playCoinSound();
+    triggerDragonReaction('sparkle');
+    showToast('✓ ¡Tarjeta descargada con éxito!', 4500);
+  } catch (e) {
+    console.error('Error al exportar PNG:', e);
+    alert('No se pudo descargar la imagen directamente: ' + e.message);
+  }
+}
+
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.arcTo(x + width, y, x + width, y + radius, radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+  ctx.lineTo(x + radius, y + height);
+  ctx.arcTo(x, y + height, x, y + height - radius, radius);
+  ctx.lineTo(x, y + radius);
+  ctx.arcTo(x, y, x + radius, y, radius);
+  ctx.closePath();
+}
+
+// ==========================================================================
+// 4. MINIVENTANA EXPLICATIVA Y VUELO DEL DRAGÓN GUARDIÁN
+// ==========================================================================
+const DONT_SHOW_INTRO_KEY = 'mi_tesoro_dont_show_intro';
+let isDragonFlying = false;
+
+function initIntroModal() {
+  const dontShow = localStorage.getItem(DONT_SHOW_INTRO_KEY) === 'true';
+  const checkbox = document.getElementById('check-dont-show-intro');
+  if (checkbox) {
+    checkbox.checked = dontShow;
+    checkbox.addEventListener('change', (e) => {
+      localStorage.setItem(DONT_SHOW_INTRO_KEY, e.target.checked ? 'true' : 'false');
+    });
+  }
+
+  // Si el usuario no ha marcado "No mostrar automáticamente", abrimos la miniventana
+  if (!dontShow) {
+    setTimeout(() => {
+      openIntroModal(false);
+    }, 350);
+  }
+}
+
+function openIntroModal(manual = false) {
+  const modal = document.getElementById('intro-modal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  modal.style.opacity = '1';
+  modal.style.transition = 'opacity 0.35s ease';
+
+  const source = document.getElementById('intro-dragon-source');
+  if (source) {
+    source.style.opacity = '1';
+  }
+}
+
+function closeIntroModal() {
+  const modal = document.getElementById('intro-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+/**
+ * Síntesis de sonido de vuelo mágico y aleteo del dragón
+ */
+function playDragonFlightSound() {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const t = ctx.currentTime;
+
+    // Suave ráfaga de aire mágico de alas (viento suave y cálido)
+    const bufferLen = Math.floor(ctx.sampleRate * 0.55);
+    const noiseBuff = ctx.createBuffer(1, bufferLen, ctx.sampleRate);
+    const data = noiseBuff.getChannelData(0);
+    for (let i = 0; i < bufferLen; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.sin((i / bufferLen) * Math.PI);
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = noiseBuff;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(400, t);
+    filter.frequency.exponentialRampToValueAtTime(1600, t + 0.45);
+    filter.Q.value = 2.4;
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.01, t);
+    gain.gain.linearRampToValueAtTime(0.12, t + 0.22);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.52);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start(t);
+
+    // Campanillas doradas arpegiadas de despegue
+    const notes = [659.25, 830.61, 987.77, 1318.51, 1661.22]; // E5, G#5, B5, E6, G#6
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+      const noteTime = t + 0.06 + idx * 0.085;
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, noteTime);
+
+      oscGain.gain.setValueAtTime(0.06, noteTime);
+      oscGain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 0.32);
+
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      osc.start(noteTime);
+      osc.stop(noteTime + 0.35);
+    });
+  } catch (e) {
+    console.warn('Flight sound error:', e);
+  }
+}
+
+/**
+ * Exhala un corazón de vapor/humo brillante (como en la ilustración)
+ */
+function triggerSmokeHeartPuff(x, y) {
+  const puff = document.createElement('div');
+  puff.className = 'smoke-heart-puff';
+  puff.style.left = `${x - 16}px`;
+  puff.style.top = `${y - 16}px`;
+  puff.innerHTML = `
+    <svg viewBox="0 0 24 24" class="w-8 h-8 fill-current drop-shadow-lg">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+  `;
+  document.body.appendChild(puff);
+  setTimeout(() => puff.remove(), 1300);
+}
+
+/**
+ * Lluvia de monedas doradas virtuales cayendo en la hucha al aterrizar el dragón
+ */
+function triggerCoinCascade(targetBadge) {
+  if (!targetBadge) return;
+  const rect = targetBadge.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  const coinImages = [
+    'assets/coin_200.png',
+    'assets/coin_100.png',
+    'assets/coin_50.png',
+    'assets/coin_200.png',
+    'assets/coin_20.png',
+    'assets/coin_100.png',
+    'assets/coin_200.png'
+  ];
+
+  coinImages.forEach((src, idx) => {
+    setTimeout(() => {
+      const coin = document.createElement('img');
+      coin.src = src;
+      coin.alt = 'Moneda';
+      coin.className = 'cascade-coin';
+
+      const size = 26 + Math.floor(Math.random() * 8); // 26px a 34px
+      coin.style.width = `${size}px`;
+      coin.style.height = `${size}px`;
+
+      const spreadX = (Math.random() * 44 - 22);
+      const startX = centerX + spreadX;
+      const startY = centerY - 14;
+
+      coin.style.left = `${startX - size / 2}px`;
+      coin.style.top = `${startY - size / 2}px`;
+
+      const midOffsetX = (Math.random() * 32 - 16);
+      const midOffsetY = -(34 + Math.random() * 22); // Salto en arco hacia arriba
+      const endOffsetY = 24 + Math.random() * 12; // Caída dentro del cofre/hucha
+
+      coin.style.setProperty('--startX', '0px');
+      coin.style.setProperty('--startY', '0px');
+      coin.style.setProperty('--midX', `${midOffsetX}px`);
+      coin.style.setProperty('--midY', `${midOffsetY}px`);
+      coin.style.setProperty('--endX', `${midOffsetX * 0.4}px`);
+      coin.style.setProperty('--endY', `${endOffsetY}px`);
+
+      document.body.appendChild(coin);
+
+      setTimeout(() => {
+        coin.remove();
+      }, 760);
+    }, idx * 55);
+  });
+}
+
+/**
+ * Inicia la animación realista del dragón con silueta transparente,
+ * exhalación de corazón de humo, aleteo cinemático y lluvia de monedas.
+ */
+function startDragonFlight() {
+  if (isDragonFlying) return;
+  isDragonFlying = true;
+
+  const targetBadge = document.getElementById('dragon-logo-badge');
+  const sourceDragon = document.getElementById('intro-dragon-source');
+  const introModal = document.getElementById('intro-modal');
+
+  if (!targetBadge || !sourceDragon) {
+    closeIntroModal();
+    isDragonFlying = false;
+    return;
+  }
+
+  // Reproducir sonido de despegue y aleteo
+  playDragonFlightSound();
+
+  // Coordenadas de inicio exactas
+  const startRect = sourceDragon.getBoundingClientRect();
+  const startX = startRect.left + startRect.width / 2;
+  const startY = startRect.top + startRect.height / 2;
+  const startSize = startRect.width;
+
+  // Coordenadas de destino exactas (el logo de la cabecera)
+  const targetRect = targetBadge.getBoundingClientRect();
+  const targetX = targetRect.left + targetRect.width / 2;
+  const targetY = targetRect.top + targetRect.height / 2;
+  const targetSize = targetRect.width;
+
+  // 1. Exhala el corazón de humo al despegar (hocico del dragón)
+  triggerSmokeHeartPuff(startX + startSize * 0.22, startY - startSize * 0.20);
+
+  // 2. Crear el actor del dragón recortado transparente que volará por la pantalla
+  const actor = document.createElement('div');
+  actor.className = 'flying-dragon-actor';
+  actor.innerHTML = `<img src="assets/dragon_flying_transparent.png" alt="Dragón Volador" />`;
+  actor.style.width = `${startSize}px`;
+  actor.style.height = `${startSize}px`;
+  actor.style.left = `${startX - startSize / 2}px`;
+  actor.style.top = `${startY - startSize / 2}px`;
+  document.body.appendChild(actor);
+
+  // Ocultar suavemente el dragón de la vitrina para dar la sensación física de que ha despegado
+  sourceDragon.style.opacity = '0';
+
+  // Desvanecer la miniventana suavemente mientras el dragón emprende el vuelo
+  setTimeout(() => {
+    if (introModal) {
+      introModal.style.transition = 'opacity 0.55s ease';
+      introModal.style.opacity = '0';
+    }
+  }, 160);
+
+  // Parámetros de la trayectoria parabólica suave
+  const duration = 1350; // 1.35 segundos para contemplar el vuelo
+  const startTime = performance.now();
+
+  // Punto de control de curvatura (se eleva hacia el cielo en arco dinámico)
+  const cpX = (startX + targetX) / 2 + (startX > targetX ? 85 : -85);
+  const cpY = Math.min(startY, targetY) - 150;
+
+  let lastParticleTime = 0;
+
+  function easeInOutCubic(x) {
+    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  }
+
+  function frame(now) {
+    const elapsed = now - startTime;
+    const rawProgress = Math.min(1, elapsed / duration);
+    const t = easeInOutCubic(rawProgress);
+
+    // Posición en la curva Bézier cuadrática
+    const currentX = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * cpX + t * t * targetX;
+    const currentY = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * cpY + t * t * targetY;
+    const currentSize = startSize + (targetSize - startSize) * t;
+
+    // Vector dirección para calcular cabeceo / inclinación aerodinámica
+    const dx = 2 * (1 - t) * (cpX - startX) + 2 * t * (targetX - cpX);
+    const dy = 2 * (1 - t) * (cpY - startY) + 2 * t * (targetY - cpY);
+
+    // Inclinación aerodinámica natural
+    const bankAngle = Math.max(-26, Math.min(26, (dx < 0 ? -16 : 16) + (dy < 0 ? -7 : 7)));
+
+    // Aleteo rítmico
+    const wingFlap = Math.sin(rawProgress * Math.PI * 14) * 0.07;
+
+    actor.style.width = `${currentSize}px`;
+    actor.style.height = `${currentSize}px`;
+    actor.style.left = `${currentX - currentSize / 2}px`;
+    actor.style.top = `${currentY - currentSize / 2}px`;
+    actor.style.transform = `scale(${1 + wingFlap}) rotate(${bankAngle}deg)`;
+
+    // Estela de polvo de estrellas mágicas
+    if (now - lastParticleTime > 38 && rawProgress < 0.95) {
+      lastParticleTime = now;
+      spawnStardustTrail(currentX, currentY);
+    }
+
+    if (rawProgress < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      // Llegada triunfal al logo
+      actor.remove();
+
+      if (introModal) {
+        introModal.classList.add('hidden');
+        introModal.style.opacity = '1';
+        introModal.style.transition = '';
+      }
+      sourceDragon.style.opacity = '1';
+
+      // 3. Exhala el corazón de humo sobre el logo al aterrizar
+      triggerSmokeHeartPuff(targetX + 12, targetY - 22);
+
+      // 4. Lluvia de monedas cayendo dentro de la hucha
+      triggerCoinCascade(targetBadge);
+
+      // 5. Cascada de tintineos acústicos de monedas
+      playCoinCascadeSound();
+
+      // Efecto de choque dorado en el badge
+      targetBadge.classList.remove('dragon-arrival');
+      void targetBadge.offsetWidth;
+      targetBadge.classList.add('dragon-arrival');
+
+      // Partículas y mensaje de bienvenida
+      triggerDragonReaction('sparkle');
+      showToast('✨ ¡El pequeño dragón ha aterrizado en la hucha! Monedas a buen recaudo <img src="assets/coin_200.png" class="w-4 h-4 inline-block align-middle mx-0.5 -mt-0.5" alt="Moneda" /><img src="assets/dragon_flying_transparent.png" class="w-5 h-5 inline-block align-middle mx-0.5 -mt-0.5" alt="Dragón" />', 5500);
+
+      setTimeout(() => {
+        targetBadge.classList.remove('dragon-arrival');
+        isDragonFlying = false;
+      }, 1000);
+    }
+  }
+
+  requestAnimationFrame(frame);
+}
+
+function spawnStardustTrail(x, y) {
+  const particle = document.createElement('span');
+  particle.className = 'stardust-trail';
+  const sparks = ['✨', '⭐', '💛', '✦', '✨'];
+  particle.textContent = sparks[Math.floor(Math.random() * sparks.length)];
+  const offsetX = (Math.random() * 24 - 12);
+  const offsetY = (Math.random() * 24 - 12);
+  particle.style.left = `${x + offsetX}px`;
+  particle.style.top = `${y + offsetY}px`;
+  particle.style.setProperty('--dust-x', `${(Math.random() * 32 - 16)}px`);
+  particle.style.setProperty('--dust-y', `${(Math.random() * 24 + 8)}px`);
+  document.body.appendChild(particle);
+
+  setTimeout(() => {
+    particle.remove();
+  }, 650);
+}
+
+
+
+        // =====================================================================
+        // INTEGRACIÓN DE NAVEGACIÓN Y PANTALLA COMPLETA EN MI HUCHA
+        // =====================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Añadir botón de Pantalla Completa en la cabecera ejecutiva si existe
+            const headerRight = document.querySelector('header.no-print .flex.items-center.space-x-2');
+            if (headerRight) {
+                const btnFullscreen = document.createElement('button');
+                btnFullscreen.id = 'btn-toggle-sidebar';
+                btnFullscreen.type = 'button';
+                btnFullscreen.className = 'inline-flex items-center justify-center px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/70 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700/60 rounded-xl text-xs sm:text-sm font-semibold transition-all active:scale-95 shadow-2xs';
+                btnFullscreen.title = 'Alternar entre vista con menú y pantalla completa';
+                btnFullscreen.innerHTML = '<span class="mr-1.5 text-sm" id="sidebar-toggle-icon">⛶</span><span id="sidebar-toggle-text" class="hidden sm:inline">Pantalla Completa</span>';
+                headerRight.insertBefore(btnFullscreen, headerRight.firstChild);
+
+                btnFullscreen.addEventListener('click', () => {
+                    const container = document.getElementById('app-container');
+                    if (container) {
+                        const isCollapsed = container.classList.toggle('sidebar-collapsed');
+                        const icon = document.getElementById('sidebar-toggle-icon');
+                        const text = document.getElementById('sidebar-toggle-text');
+                        if (icon) icon.textContent = isCollapsed ? '⇤' : '⛶';
+                        if (text) text.textContent = isCollapsed ? 'Mostrar Menú' : 'Pantalla Completa';
+                    }
+                });
+            }
+
+            // Soporte para menú móvil
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('app-sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('mobile-open');
+                    if (backdrop) backdrop.classList.toggle('show');
+                });
+            }
+
+            if (backdrop && sidebar) {
+                backdrop.addEventListener('click', () => {
+                    sidebar.classList.remove('mobile-open');
+                    backdrop.classList.remove('show');
+                });
+            }
+        });
+    </script>
+
+    <!-- Scripts de Mi Hucha para compatibilidad universal -->
+    <script src="src/consejos.js"></script>
+    <script type="module" src="src/app.js"></script>
+    <script>
+        if (window.location.protocol === 'file:' && !window._finanzasAppStarted) {
+            var s = document.createElement('script');
+            s.src = 'src/app.js';
+            document.body.appendChild(s);
+        }
+    </script>
+</body>
+</html>
